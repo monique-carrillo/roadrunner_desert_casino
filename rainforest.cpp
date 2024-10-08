@@ -527,7 +527,7 @@ void checkMouse(XEvent *e)
 		savey = e->xbutton.y;
 	}
 }
-
+extern int monique_show;
 int checkKeys(XEvent *e)
 {
 	//keyboard input?
@@ -599,6 +599,9 @@ int checkKeys(XEvent *e)
 			break;
 		case XK_n:
 			break;
+		case XK_g:
+            		monique_show = !monique_show;
+            		break;
 		case XK_w:
 			if (shift) {
 				//shrink the umbrella
@@ -899,7 +902,7 @@ void drawRaindrops()
 	}
 	glLineWidth(1);
 }
-
+extern void show_my_feature(int, int);
 void render()
 {
 	Rect r;
@@ -907,6 +910,10 @@ void render()
 	//Clear the screen
 	glClearColor(1.0, 1.0, 1.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
+	if (monique_show == 1) {
+        show_my_feature(10, gl.yres - 80);
+    }   
+
 	//
 	//draw a quad with texture
 	float wid = 120.0f;
