@@ -911,7 +911,7 @@ void render()
 	glClearColor(1.0, 1.0, 1.0, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT);
 	if (monique_show == 1) {
-        show_my_feature(10, gl.yres - 80);
+        show_my_feature(10, g.yres - 80);
     }   
 
 	//
