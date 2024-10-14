@@ -17,14 +17,18 @@ void background_time() {
 
     if (5 <= hours < 6) {
         // Dawn
+        return "./images/DawnBG.jpg"
     } else if (6 <= hours < 12) {
         // Morning
+        return "./images/MorningBG.jpg"
     } else if (12 <= hours < 17) {
         // Afternoon
+        return "./images/Afternoon.jpg"
     } else if (17 <= hours < 20) {
         // Evening
+        return "./images/EveningBG.webp"
     } else if (20 <= hours || hours < 5) {
         // Night
+        return "./images/NightBG.jpg"
     }
 };
-
