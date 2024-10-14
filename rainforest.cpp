@@ -1,18 +1,10 @@
-//3350
-//program: rainforest.cpp
-//author:  Gordon Griesel
-//date:    2013 to 2021
-//
-//to do list:
-// 1. need credits for student work in get-alpha-channel function.
-//    done
-//
-//This program demonstrates the use of OpenGL and XWindows
-//
-//Texture maps are displayed.
-//Press B to see bigfoot roaming his forest.
-//
-//
+/*
+ * modified by: 3350 group 1
+ *
+ * program:     rainforest.cpp
+ * author:      Gordon Griesel
+ * date:        2013 to 2021
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -88,11 +80,13 @@ public:
 		} else {
 			name[slen-4] = '\0';
 			//printf("name **%s**\n", name);
-			sprintf(ppmname,"%s.ppm", name);
+			//sprintf(ppmname, "%s.ppm", name);
+			snprintf(ppmname, sizeof(ppmname), "%s.ppm", name);
 			//printf("ppmname **%s**\n", ppmname);
 			char ts[100];
 			//system("convert eball.jpg eball.ppm");
-			sprintf(ts, "convert %s %s", fname, ppmname);
+			//sprintf(ts, "convert %s %s", fname, ppmname);
+			snprintf(ts, sizeof(ts), "convert %s %s", fname, ppmname);
 			system(ts);
 		}
 		//sprintf(ts, "%s", name);
@@ -527,7 +521,10 @@ void checkMouse(XEvent *e)
 		savey = e->xbutton.y;
 	}
 }
+
 extern int monique_show;
+extern int joshua_show;
+
 int checkKeys(XEvent *e)
 {
 	//keyboard input?
@@ -545,6 +542,9 @@ int checkKeys(XEvent *e)
 		return 0;
 	}
 	switch (key) {
+        case XK_j:
+            joshua_show = !joshua_show;
+            break;
 		case XK_b:
 			g.showBigfoot ^= 1;
 			if (g.showBigfoot) {
@@ -902,7 +902,10 @@ void drawRaindrops()
 	}
 	glLineWidth(1);
 }
+
 extern void show_my_feature(int, int);
+extern void show_joshua_feature(int, int);
+
 void render()
 {
 	Rect r;
@@ -912,7 +915,10 @@ void render()
 	glClear(GL_COLOR_BUFFER_BIT);
 	if (monique_show == 1) {
         show_my_feature(10, g.yres - 80);
-    }   
+    }
+
+    if (joshua_show == 1)
+        show_joshua_feature(10, g.yres - 70);
 
 	//
 	//draw a quad with texture
