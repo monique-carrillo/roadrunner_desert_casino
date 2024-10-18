@@ -1,6 +1,6 @@
 //Josef Chicas
 //Currently contains the basic functions needed to open a window
-//need rework into title screen, implement support for Davids photo function for background images
+//need rework into title screen, implement support for Darrens photo function for background images
 #include <stdio.h>
 #include <stdlib.h>
 #include <X11/Xlib.h>
