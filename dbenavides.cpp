@@ -17,6 +17,7 @@
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
+#include <ctime>
 using namespace std;
 
 // Obtained Structure from: 
