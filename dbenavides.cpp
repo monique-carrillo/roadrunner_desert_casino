@@ -22,7 +22,7 @@ using namespace std;
 
 // Obtained Structure from: 
 // https://www.geeksforgeeks.org/print-system-time-c-3-different-ways/
-void background_time() {
+string background_time() {
     time_t my_time = time(0);
     tm * ltime = localtime(&my_time);
     
