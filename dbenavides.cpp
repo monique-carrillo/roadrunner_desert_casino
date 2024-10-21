@@ -18,6 +18,7 @@
 //#include "ppm.h"
 #include "fonts.h"
 #include <ctime>
+/*
 using namespace std;
 
 // Obtained Structure from: 
@@ -45,4 +46,19 @@ std::string background_time() {
         // Night
         return "./images/NightBG.jpg";
     }
+}*/
+
+int db_show = 0;
+
+void show_my_feature_db(int x, int y)
+{
+    //draw a rectangle
+    //show some text
+    Rect r;
+    r.bot = y;
+    r.left = x;
+    r.center = 0;
+    ggprint8b(&r, 16, 0x0000ff00, "Darren's Feature");
+
 }
+
