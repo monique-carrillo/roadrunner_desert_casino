@@ -28,6 +28,7 @@
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
+#include "dbenavides.cpp"
 
 //defined types
 typedef double Flt;
@@ -120,11 +121,12 @@ public:
 			unlink(ppmname);
 	}
 };
-Image img[4] = {
+Image img[5] = {
 "./images/bigfoot.png",
 "./images/forest.png",
 "./images/forestTrans.png",
-"./images/umbrella.png" };
+"./images/umbrella.png",
+background_time() };
 
 class Global {
 public:
