@@ -528,6 +528,11 @@ void checkMouse(XEvent *e)
 	}
 }
 
+extern int monique_show;
+extern int db_show;
+extern int joshua_show;
+extern int jc_show;
+
 int checkKeys(XEvent *e)
 {
 	//keyboard input?
@@ -550,6 +555,12 @@ int checkKeys(XEvent *e)
 			if (g.showBigfoot) {
 				bigfoot.pos[0] = -250.0;
 			}
+			break;
+		case XK_g:
+			monique_show = !monique_show;
+			db_show = !db_show;
+			joshua_show = !joshua_show;
+			jc_show = !jc_show;
 			break;
 		case XK_d:
 			g.deflection ^= 1;
@@ -900,6 +911,11 @@ void drawRaindrops()
 	glLineWidth(1);
 }
 
+extern void show_my_feature(int, int);
+extern void show_joshua_feature(int, int);
+extern void show_my_feature_db(int, int);
+extern void show_my_feature_jc(int, int);
+
 void render()
 {
 	Rect r;
@@ -911,6 +927,18 @@ void render()
 	//draw a quad with texture
 	float wid = 120.0f;
 	glColor3f(1.0, 1.0, 1.0);
+    if (monique_show == 1) {
+        show_my_feature(10, g.yres - 80);
+    }
+    if (db_show == 1) {
+        show_my_feature(30, g.yres - 80);
+    }
+    if (joshua_show == 1) {
+        show_my_feature(50, g.yres - 80);
+    }
+    if (jc_show == 1) {
+        show_my_feature(70, g.yres - 80);
+    }
 	if (g.forest) {
 		glBindTexture(GL_TEXTURE_2D, g.forestTexture);
 		glBegin(GL_QUADS);
