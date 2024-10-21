@@ -12,6 +12,7 @@
 #include "log.h"
 #include "fonts.h"
 
+/*
 //render main menu text
 //In progress - when mouse cursor is over an option,
 //change the text color for that option
@@ -61,4 +62,19 @@ void render_main_menu(XEvent *e)
 	ggprint40(&k, 20, 0x00ff0000, "Exit");
 
 
+}*/
+
+int jc_show = 0;
+
+void show_my_feature_jc(int x, int y)
+{
+    //draw a rectangle
+    //show some text
+    Rect r;                                                                                                
+    r.bot = y;
+    r.left = x;
+    r.center = 0;
+    ggprint8b(&r, 16, 0x0000ff00, "Josef's Feature");
+
 }
+
