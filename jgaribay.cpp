@@ -1,7 +1,7 @@
 /*
  * name: joshua garibay
  * date: fall 2024
- * purpose: 3350 group project personal source file
+ * purpose: 3350 personal source file
  */
 #include "fonts.h"
 
