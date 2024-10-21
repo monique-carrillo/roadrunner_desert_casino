@@ -88,11 +88,13 @@ public:
 		} else {
 			name[slen-4] = '\0';
 			//printf("name **%s**\n", name);
-			sprintf(ppmname,"%s.ppm", name);
+			//sprintf(ppmname,"%s.ppm", name);
+			snprintf(ppmname, sizeof(ppmname), "%s.ppm", name);
 			//printf("ppmname **%s**\n", ppmname);
 			char ts[100];
 			//system("convert eball.jpg eball.ppm");
-			sprintf(ts, "convert %s %s", fname, ppmname);
+			//sprintf(ts, "convert %s %s", fname, ppmname);
+			snprintf(ts, sizeof(ts), "convert %s %s", fname, ppmname);
 			system(ts);
 		}
 		//sprintf(ts, "%s", name);
