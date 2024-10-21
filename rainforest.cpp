@@ -16,7 +16,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <string>
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
@@ -29,7 +28,6 @@
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
-#include "dbenavides.cpp"
 
 //defined types
 typedef double Flt;
@@ -122,12 +120,11 @@ public:
 			unlink(ppmname);
 	}
 };
-Image img[5] = {
+Image img[4] = {
 "./images/bigfoot.png",
 "./images/forest.png",
 "./images/forestTrans.png",
-"./images/umbrella.png",
-background_time() };
+"./images/umbrella.png" };
 
 class Global {
 public:
