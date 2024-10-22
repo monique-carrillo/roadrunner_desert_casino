@@ -918,13 +918,10 @@ void render()
 {
 	Rect r;
 
-	//Clear the screen
-	glClearColor(1.0, 1.0, 1.0, 1.0);
-	glClear(GL_COLOR_BUFFER_BIT);
-	//
-	//draw a quad with texture
-	float wid = 120.0f;
-	glColor3f(1.0, 1.0, 1.0);
+    //Clear the screen
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glClear(GL_COLOR_BUFFER_BIT);
+
     if (monique_show == 1) {
         show_my_feature(10, g.yres - 80);
     }
@@ -932,11 +929,17 @@ void render()
         show_my_feature(30, g.yres - 80);
     }
     if (joshua_show == 1) {
+        start_game(g.xres, g.yres);
         show_joshua_feature(80, g.yres - 80);
     }
     if (jc_show == 1) {
         show_my_feature(70, g.yres - 80);
     }
+
+    glClear(GL_COLOR_BUFFER_BIT);
+    //draw a quad with texture
+    float wid = 120.0f;
+	glColor3f(1.0, 1.0, 1.0);
 	if (g.forest) {
 		glBindTexture(GL_TEXTURE_2D, g.forestTexture);
 		glBegin(GL_QUADS);
@@ -983,7 +986,7 @@ void render()
 		}
 		glDisable(GL_ALPHA_TEST);
 	}
-
+    
 	glDisable(GL_TEXTURE_2D);
 	//glColor3f(1.0f, 0.0f, 0.0f);
 	//glBegin(GL_QUADS);
