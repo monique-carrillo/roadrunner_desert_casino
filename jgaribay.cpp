@@ -13,5 +13,5 @@ void show_joshua_feature(int x, int y)
     r.bot = y;
     r.left = x;
     r.center = 0;
-    ggprint8b(&r, 14, 0x000000ff, "joshua feature");
+    ggprint8b(&r, 14, 0x0000ff00, "joshua feature");
 }
