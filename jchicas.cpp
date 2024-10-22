@@ -1,5 +1,11 @@
 //Josef Chicas
 
+#ifndef _JCHICAS_
+#define _JCHICAS_
+
+
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,4 +83,7 @@ void show_my_feature_jc(int x, int y)
     ggprint8b(&r, 16, 0x0000ff00, "Josef's Feature");
 
 }
+
+#endif
+
 
