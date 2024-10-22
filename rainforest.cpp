@@ -1,18 +1,12 @@
-//3350
-//program: rainforest.cpp
-//author:  Gordon Griesel
-//date:    2013 to 2021
-//
-//to do list:
-// 1. need credits for student work in get-alpha-channel function.
-//    done
-//
-//This program demonstrates the use of OpenGL and XWindows
-//
-//Texture maps are displayed.
-//Press B to see bigfoot roaming his forest.
-//
-//
+/*
+ * 3350
+ * program: rainforest.cpp
+ * author:  Gordon Griesel
+ * date:    2013 to 2021
+ *
+ * modified by: group 1
+ * date: fall 2024
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
