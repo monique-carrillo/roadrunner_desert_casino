@@ -7,6 +7,7 @@
  * modified by: group 1
  * date: fall 2024
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -22,6 +23,7 @@
 #include "log.h"
 //#include "ppm.h"
 #include "fonts.h"
+#include "jgaribay.h"
 
 //defined types
 typedef double Flt;
@@ -526,7 +528,6 @@ void checkMouse(XEvent *e)
 
 extern int monique_show;
 extern int db_show;
-extern int joshua_show;
 extern int jc_show;
 
 int checkKeys(XEvent *e)
@@ -555,10 +556,12 @@ int checkKeys(XEvent *e)
 		case XK_g:
 			monique_show = !monique_show;
 			db_show = !db_show;
-			joshua_show = !joshua_show;
 			jc_show = !jc_show;
 			break;
-		case XK_d:
+        case XK_j:
+			joshua_show = !joshua_show;
+		    break;
+        case XK_d:
 			g.deflection ^= 1;
 			break;
 		case XK_f:
@@ -908,7 +911,6 @@ void drawRaindrops()
 }
 
 extern void show_my_feature(int, int);
-extern void show_joshua_feature(int, int);
 extern void show_my_feature_db(int, int);
 extern void show_my_feature_jc(int, int);
 
@@ -930,7 +932,7 @@ void render()
         show_my_feature(30, g.yres - 80);
     }
     if (joshua_show == 1) {
-        show_my_feature(50, g.yres - 80);
+        show_joshua_feature(80, g.yres - 80);
     }
     if (jc_show == 1) {
         show_my_feature(70, g.yres - 80);
