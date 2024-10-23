@@ -236,7 +236,7 @@ public:
 	void setTitle() {
 		//Set the window title bar.
 		XMapWindow(dpy, win);
-		XStoreName(dpy, win, "3350 - Animation Template");
+		XStoreName(dpy, win, "Roadrunner Desert Casino");
 	}
 	void setupScreenRes(const int w, const int h) {
 		g.xres = w;
@@ -1021,5 +1021,6 @@ void render()
 	ggprint8b(&r, 16, c, "D - Deflection");
 	ggprint8b(&r, 16, c, "N - Sounds");
 	ggprint8b(&r, 16, c, "P - Round umbrella");
+    ggprint8b(&r, 16, c, "G - Features (Not Set)");
 }
 
