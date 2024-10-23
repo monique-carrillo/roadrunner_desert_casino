@@ -47,18 +47,19 @@ std::string background_time() {
         return "./images/NightBG.jpg";
     }
 }*/
+#ifndef _dbenavides
+#define _dbenavides
+    int db_show = 0;
 
-int db_show = 0;
+    void show_my_feature_db(int x, int y)
+    {
+        //draw a rectangle
+        //show some text
+        Rect r;
+        r.bot = y;
+        r.left = x;
+        r.center = 0;
+        ggprint8b(&r, 16, 0x0000ff00, "Darren's Feature");
 
-void show_my_feature_db(int x, int y)
-{
-    //draw a rectangle
-    //show some text
-    Rect r;
-    r.bot = y;
-    r.left = x;
-    r.center = 0;
-    ggprint8b(&r, 16, 0x0000ff00, "Darren's Feature");
-
-}
-
+    }
+#endif
