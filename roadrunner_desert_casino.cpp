@@ -1,11 +1,11 @@
 /*
- * 3350
- * program: rainforest.cpp
- * author:  Gordon Griesel
- * date:    2013 to 2021
+ * original program:    rainforest.cpp
+ * author:              Gordon Griesel
+ * date:                2013 to 2021
  *
- * modified by: group 1
- * date: fall 2024
+ * modified by:         3350 group 1
+ * modified program:    roadrunner_desert_casino.cpp
+ * date:                fall 2024
  */
 
 #include <stdio.h>
@@ -146,7 +146,7 @@ public:
 		xres=800;
 		yres=600;
 		showBigfoot=0;
-		forest=1;
+		forest=0;
 		silhouette=1;
 		trees=1;
 		showRain=0;
@@ -291,7 +291,8 @@ int main()
 	init();
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
-	int done = 0;
+	joshua_show = 1;
+    int done = 0;
 	while (!done) {
 		while (x11.getXPending()) {
 			//XEvent e;
@@ -931,12 +932,12 @@ void render()
     if (joshua_show == 1) {
         start_game(g.xres, g.yres);
         show_joshua_feature(80, g.yres - 80);
+        temp_title_screen(g.xres / 2, g.yres - g.yres / 4);
     }
     if (jc_show == 1) {
         show_my_feature(70, g.yres - 80);
     }
 
-    glClear(GL_COLOR_BUFFER_BIT);
     //draw a quad with texture
     float wid = 120.0f;
 	glColor3f(1.0, 1.0, 1.0);
