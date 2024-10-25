@@ -927,15 +927,14 @@ void render()
         show_my_feature(10, g.yres - 80);
     }
     if (db_show == 1) {
-        show_my_feature(30, g.yres - 80);
+        show_my_feature_db(30, g.yres - 80);
     }
     if (joshua_show == 1) {
-        start_game(g.xres, g.yres);
-        show_joshua_feature(80, g.yres - 80);
-        temp_title_screen(g.xres / 2, g.yres - g.yres / 4);
+        // show temporary title screen
+        temp_title_screen(g.xres, g.yres);
     }
     if (jc_show == 1) {
-        show_my_feature(70, g.yres - 80);
+        show_my_feature_jc(70, g.yres - 80);
     }
 
     //draw a quad with texture

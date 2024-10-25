@@ -22,12 +22,24 @@ void show_joshua_feature(int x, int y)
 
 void temp_title_screen(int x, int y)
 {
-    unsigned int color = 0x00ff88cc;
+    // draw a basic rectangle
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor3ub(255, 0, 0);
+    glVertex2f(-x, -y);
+    glVertex2f(-x,  y);
+    glVertex2f( x,  y);
+    glVertex2f( x, -y);
+    glEnd();
+    glPopMatrix();
+
+    unsigned int color = 0x0000ff00;
     Rect r;
-    r.bot = y;
-    r.left = x;
+    r.bot = y - y / 4;
+    r.left = x / 2;
     r.center = 1; // set to 1 to center text
     ggprint16(&r, 28, color, "Temporary Start Screen");
+    ggprint8b(&r, 16, color, "subtitle");
 }
 
 void start_game(int x, int y)
@@ -35,11 +47,11 @@ void start_game(int x, int y)
     // draw a basic rectangle
     glPushMatrix();
     glBegin(GL_QUADS);
-        glColor3ub(255, 0, 0);
-        glVertex2f(-x, -y);
-        glVertex2f(-x,  y);
-        glVertex2f( x,  y);
-        glVertex2f( x, -y);
+    glColor3ub(255, 0, 0);
+    glVertex2f(-x, -y);
+    glVertex2f(-x,  y);
+    glVertex2f( x,  y);
+    glVertex2f( x, -y);
     glEnd();
     glPopMatrix();
 }
