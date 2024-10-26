@@ -158,6 +158,7 @@ public:
 	}
 } g;
 
+
 class Bigfoot {
 public:
 	Vec pos;
@@ -529,7 +530,7 @@ void checkMouse(XEvent *e)
 
 extern int monique_show;
 extern int db_show;
-extern int jc_show;
+//extern int jc_show;
 
 int checkKeys(XEvent *e)
 {
@@ -557,7 +558,7 @@ int checkKeys(XEvent *e)
 		case XK_g:
 			monique_show = !monique_show;
 			db_show = !db_show;
-			jc_show = !jc_show;
+		//	jc_show = !jc_show;
 			break;
         case XK_j:
 			joshua_show = !joshua_show;
@@ -913,7 +914,7 @@ void drawRaindrops()
 
 extern void show_my_feature(int, int);
 extern void show_my_feature_db(int, int);
-extern void show_my_feature_jc(int, int);
+//extern void show_my_feature_jc(int, int);
 
 void render()
 {
@@ -933,10 +934,10 @@ void render()
         // show temporary title screen
         temp_title_screen(g.xres, g.yres);
     }
-    if (jc_show == 1) {
+   /* if (jc_show == 1) {
         show_my_feature_jc(70, g.yres - 80);
     }
-
+*/
     //draw a quad with texture
     float wid = 120.0f;
 	glColor3f(1.0, 1.0, 1.0);
