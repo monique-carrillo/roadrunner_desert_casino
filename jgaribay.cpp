@@ -8,8 +8,11 @@
 #include "jgaribay.h"
 #include <GL/glx.h>
 #include <X11/Xlib.h>
+#include "images.h"
 
 int joshua_show = 0;
+
+Image jimg[1] = { "./images/desertimage.jpg" };
 
 void show_joshua_feature(int x, int y)
 {
