@@ -14,26 +14,25 @@
 //render main menu text
 //In progress - when mouse cursor is over an option,
 //change the text color for that option
-void render_main_menu()
+void render_main_menu(int thingy, int thingx)
 {
-
 	Rect r;
 	unsigned int c;
 	c = 0x00ffff44;
-	r.bot = 600 - 350;
-	r.left = 300;
+	r.bot = thingy - 350;
+	r.left = thingx - 300;
 	r.center = 400;
 	
 	
 	
 	Rect j;
-        j.bot = 600 - 400;
-        j.left = 300;
+        j.bot = thingy - 400;
+        j.left = thingx - 300;
         j.center = 400;
 
 	Rect k;
-	k.bot = 600 - 450;
-        k.left = 300;
+	k.bot = thingy - 450;
+        k.left = thingx - 300;
         k.center = 400;
 
 	ggprint40(&r, 20, c, "Blackjack");

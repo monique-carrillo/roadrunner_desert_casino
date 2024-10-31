@@ -25,6 +25,10 @@
 #include "fonts.h"
 #include "jgaribay.h"
 #include "images.h"
+#include <iostream>
+
+using namespace std;
+
 
 //defined types
 typedef double Flt;
@@ -298,6 +302,7 @@ int main()
 			x11.checkResize(&e);
 			checkMouse(&e);
 			done = checkKeys(&e);
+
 		}
 		//
 		//Below is a process to apply physics at a consistent rate.
@@ -325,6 +330,7 @@ int main()
 		}
 		//Always render every frame.
 		render();
+		render_main_menu(g.yres, g.xres);
 		x11.swapBuffers();
 	}
 	//cleanupXWindows();
@@ -522,6 +528,10 @@ void checkMouse(XEvent *e)
 		savex = e->xbutton.x;
 		savey = e->xbutton.y;
 	}
+
+
+
+
 }
 
 extern int monique_show;
