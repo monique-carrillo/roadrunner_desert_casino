@@ -1,7 +1,7 @@
 #ifndef _IMAGES_H_
 #define _IMAGES_H_
 /*
- * source: 3350 background framework
+ * source: 3350 rainforest framework
  * modified by: joshua garibay
  * purpose: images.h file to use in other cpp files
  */
@@ -17,5 +17,7 @@ public:
     ~Image();
     Image(const char *fname);
 };
+
+unsigned char *buildAlphaData(Image *img);
 
 #endif

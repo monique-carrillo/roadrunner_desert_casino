@@ -15,13 +15,9 @@
 #include <time.h>
 #include <math.h>
 #include <X11/Xlib.h>
-//#include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "log.h"
-//#include "ppm.h"
 #include "fonts.h"
 #include "jgaribay.h"
 #include "images.h"
@@ -292,7 +288,6 @@ int main()
 	init();
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
-	joshua_show = 1;
     int done = 0;
 	while (!done) {
 		while (x11.getXPending()) {
@@ -401,7 +396,10 @@ void initOpengl(void)
 	//Do this to allow fonts
 	glEnable(GL_TEXTURE_2D);
 	initialize_fonts();
-	//
+	
+    joshua_init();    
+
+    //
 	//load the images file into a ppm structure.
 	//
 	//bigfootImage     = ppm6GetImage("./images/bigfoot.ppm");
@@ -426,7 +424,8 @@ void initOpengl(void)
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
 	//-------------------------------------------------------------------------
-	//
+	
+
 	//silhouette
 	//this is similar to a sprite graphic
 	//
@@ -567,7 +566,6 @@ int checkKeys(XEvent *e)
 		//	jc_show = !jc_show;
 			break;
         case XK_j:
-			joshua_show = !joshua_show;
 		    break;
         case XK_d:
 			g.deflection ^= 1;
@@ -863,6 +861,7 @@ void checkRaindrops()
 
 void physics()
 {
+    joshua_physics();
 	if (g.showBigfoot)
 		moveBigfoot();
 	if (g.showRain)
@@ -924,21 +923,18 @@ extern void show_my_feature_db(int, int);
 
 void render()
 {
-	Rect r;
+	//Rect r;
 
     //Clear the screen
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
+    
     if (monique_show == 1) {
         show_my_feature(10, g.yres - 80);
     }
     if (db_show == 1) {
         show_my_feature_db(30, g.yres - 80);
-    }
-    if (joshua_show == 1) {
-        // show temporary title screen
-        temp_title_screen(g.xres, g.yres);
     }
    /* if (jc_show == 1) {
         show_my_feature_jc(70, g.yres - 80);
@@ -995,7 +991,9 @@ void render()
 	}
     
 	glDisable(GL_TEXTURE_2D);
-	//glColor3f(1.0f, 0.0f, 0.0f);
+    
+	
+    //glColor3f(1.0f, 0.0f, 0.0f);
 	//glBegin(GL_QUADS);
 	//	glVertex2i(10,10);
 	//	glVertex2i(10,60);
@@ -1005,7 +1003,10 @@ void render()
 	//return;
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
-	if (g.showRain)
+
+    joshua_render(g.xres, g.yres);
+    
+    if (g.showRain)
 		drawRaindrops();
 	glDisable(GL_BLEND);
 	glEnable(GL_TEXTURE_2D);
@@ -1015,11 +1016,12 @@ void render()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	//
 	//
-	unsigned int c = 0x00ffff44;
-	r.bot = g.yres - 20;
-	r.left = 10;
-	r.center = 0;
-	ggprint8b(&r, 16, c, "B - Bigfoot");
+	//unsigned int c = 0x00ffff44;
+	//r.bot = g.yres - 20;
+	//r.left = 10;
+	//r.center = 0;
+	/*
+    ggprint8b(&r, 16, c, "B - Bigfoot");
 	ggprint8b(&r, 16, c, "F - Forest");
 	ggprint8b(&r, 16, c, "S - Silhouette");
 	ggprint8b(&r, 16, c, "T - Trees");
@@ -1029,5 +1031,6 @@ void render()
 	ggprint8b(&r, 16, c, "N - Sounds");
 	ggprint8b(&r, 16, c, "P - Round umbrella");
     ggprint8b(&r, 16, c, "G - Features (Not Set)");
+    */
 }
 
