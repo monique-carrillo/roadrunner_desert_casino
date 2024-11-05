@@ -23,9 +23,6 @@
 #include "images.h"
 #include <iostream>
 
-using namespace std;
-
-
 //defined types
 typedef double Flt;
 typedef double Vec[3];
@@ -288,6 +285,10 @@ int main()
 	init();
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
+    
+    if (joshua_features)
+        joshua_main();
+
     int done = 0;
 	while (!done) {
 		while (x11.getXPending()) {
@@ -397,7 +398,7 @@ void initOpengl(void)
 	glEnable(GL_TEXTURE_2D);
 	initialize_fonts();
 	
-    joshua_init();    
+    joshua_init_opengl();    
 
     //
 	//load the images file into a ppm structure.
@@ -566,7 +567,8 @@ int checkKeys(XEvent *e)
 		//	jc_show = !jc_show;
 			break;
         case XK_j:
-		    break;
+	        joshua_features = !joshua_features;
+            break;
         case XK_d:
 			g.deflection ^= 1;
 			break;
@@ -861,7 +863,8 @@ void checkRaindrops()
 
 void physics()
 {
-    joshua_physics();
+    if (joshua_features)
+        joshua_physics();
 	if (g.showBigfoot)
 		moveBigfoot();
 	if (g.showRain)
@@ -1003,8 +1006,9 @@ void render()
 	//return;
 	glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
-
-    joshua_render(g.xres, g.yres);
+    
+    if (joshua_features)
+        joshua_render(g.xres, g.yres);
     
     if (g.showRain)
 		drawRaindrops();
@@ -1014,13 +1018,13 @@ void render()
 	if (g.showUmbrella)
 		drawUmbrella();
 	glBindTexture(GL_TEXTURE_2D, 0);
-	//
-	//
-	//unsigned int c = 0x00ffff44;
-	//r.bot = g.yres - 20;
-	//r.left = 10;
-	//r.center = 0;
-	/*
+	
+    Rect r;	
+	unsigned int c = 0x00000000;
+	r.bot = g.yres - 20;
+	r.left = 10;
+	r.center = 0;
+	
     ggprint8b(&r, 16, c, "B - Bigfoot");
 	ggprint8b(&r, 16, c, "F - Forest");
 	ggprint8b(&r, 16, c, "S - Silhouette");
@@ -1031,6 +1035,7 @@ void render()
 	ggprint8b(&r, 16, c, "N - Sounds");
 	ggprint8b(&r, 16, c, "P - Round umbrella");
     ggprint8b(&r, 16, c, "G - Features (Not Set)");
-    */
+    ggprint8b(&r, 16, c, "J - joshua features");
+    
 }
 
