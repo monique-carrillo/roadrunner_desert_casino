@@ -21,7 +21,6 @@
 #include "fonts.h"
 #include "jgaribay.h"
 #include "images.h"
-#include <iostream>
 
 //defined types
 typedef double Flt;
@@ -571,6 +570,7 @@ int checkKeys(XEvent *e)
             break;
         case XK_d:
 			g.deflection ^= 1;
+            joshua_move = !joshua_move;
 			break;
 		case XK_f:
 			g.forest ^= 1;

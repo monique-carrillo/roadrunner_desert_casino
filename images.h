@@ -6,10 +6,6 @@
  * purpose: images.h file to use in other cpp files
  */
 
-#include <string.h>
-#include <stdio.h>
-#include <unistd.h>
-
 class Image {
 public:
     int width, height;
