@@ -863,7 +863,7 @@ void checkRaindrops()
 void physics()
 {
     if (joshua_features)
-        joshua_physics();
+        joshua_physics(); // physica
 	if (g.showBigfoot)
 		moveBigfoot();
 	if (g.showRain)
