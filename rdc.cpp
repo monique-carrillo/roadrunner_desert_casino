@@ -570,7 +570,6 @@ int checkKeys(XEvent *e)
             break;
         case XK_d:
 			g.deflection ^= 1;
-            joshua_move = !joshua_move;
 			break;
 		case XK_f:
 			g.forest ^= 1;
@@ -1025,15 +1024,6 @@ void render()
 	r.left = 10;
 	r.center = 0;
 	
-    ggprint8b(&r, 16, c, "B - Bigfoot");
-	ggprint8b(&r, 16, c, "F - Forest");
-	ggprint8b(&r, 16, c, "S - Silhouette");
-	ggprint8b(&r, 16, c, "T - Trees");
-	ggprint8b(&r, 16, c, "U - Umbrella");
-	ggprint8b(&r, 16, c, "R - Rain");
-	ggprint8b(&r, 16, c, "D - Deflection");
-	ggprint8b(&r, 16, c, "N - Sounds");
-	ggprint8b(&r, 16, c, "P - Round umbrella");
     ggprint8b(&r, 16, c, "G - Features (Not Set)");
     ggprint8b(&r, 16, c, "J - joshua features");
     

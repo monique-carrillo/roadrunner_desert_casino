@@ -3,19 +3,15 @@
 
 #include "images.h"
 
-extern int joshua_features;
-extern int joshua_move;
-extern const float GRAVITY;
-
 class Texture {
     public:
-        Image *bgImage;
-        GLuint bgTexture;
+        Image *image;
+        GLuint texture;
         float xc[2];
         float yc[2];
 };
 
-class Roadrunner {
+class Roadrunner : public Texture {
     public:
         float pos[2];
         float last_pos[2];
@@ -24,7 +20,7 @@ class Roadrunner {
         Roadrunner();
 };
 
-class Platform {
+class Platform : public Texture {
     public:
         int dim[2];
         int pos[2];
@@ -34,9 +30,13 @@ class Platform {
 class JGlobal {
     public:
         Texture bg;
+        Texture rrtext;
         Roadrunner rr;
         Platform pf;
 };
+
+extern int joshua_features;
+extern const float GRAVITY;
 
 void joshua_main();
 void joshua_init_opengl();
