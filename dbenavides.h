@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
@@ -29,5 +30,5 @@ void show_my_feature_db(int x, int y);
 
 // Obtained Structure from: 
 // https://www.geeksforgeeks.org/print-system-time-c-3-different-ways/
-void background_time();
+string background_time();
 #endif
