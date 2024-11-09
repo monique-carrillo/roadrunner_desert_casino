@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <string>
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
@@ -39,7 +40,7 @@ void show_my_feature_db(int x, int y)
 
 // Obtained Structure from: 
 // https://www.geeksforgeeks.org/print-system-time-c-3-different-ways/
-void background_time() {
+string background_time() {
     time_t my_time = time(0);
     tm * ltime = localtime(&my_time);
 
@@ -49,30 +50,31 @@ void background_time() {
     if (5 <= hours) {
         if (hours < 6){
             // Dawn
-            system("eog ./images/DawnBG.jpg");
+            return "/images/DawnBG.jpg";
         }
     } else if (6 <= hours) { 
         if (hours < 12) {
             // Morning
-            system("eog ./images/MorningBG.jpg");
+            return "/images/MorningBG.jpg";
         }
     } else if (12 <= hours) {
         if (hours < 17) {
             // Afternoon
-            system("eog ./images/Afternoon.jpg");
+            return "/images/Afternoon.jpg";
         }
     } else if (17 <= hours) { 
         if (hours < 20) {
             // Evening
-            system("eog ./images/EveningBG.webp");
+            return "/images/EveningBG.webp";
         }
     } else if (20 <= hours) {
         // Night
-        system("eog ./images/NightBG.jpg");
+        return "/images/NightBG.jpg";
     } else if (hours < 5) {
         //Night
-        system("eog ./images/NightBG.jpg");
+        return "/images/NightBG.jpg";
     }
+    return "\0";
 }
 /*#ifndef _dbenavides
 #define _dbenavides
