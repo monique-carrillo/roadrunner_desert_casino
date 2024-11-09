@@ -22,6 +22,7 @@
 #include <ctime>
 #include <cstdlib>
 #include "dbenavides.h"
+#include "images.h"
 using namespace std;
 
 int db_show = 0;
@@ -40,7 +41,7 @@ void show_my_feature_db(int x, int y)
 
 // Obtained Structure from: 
 // https://www.geeksforgeeks.org/print-system-time-c-3-different-ways/
-string background_time() {
+Image background_time() {
     time_t my_time = time(0);
     tm * ltime = localtime(&my_time);
 
@@ -50,31 +51,31 @@ string background_time() {
     if (5 <= hours) {
         if (hours < 6){
             // Dawn
-            return "/images/DawnBG.jpg";
+            return "./images/DawnBG.jpg";
         }
     } else if (6 <= hours) { 
         if (hours < 12) {
             // Morning
-            return "/images/MorningBG.jpg";
+            return "./images/MorningBG.jpg";
         }
     } else if (12 <= hours) {
         if (hours < 17) {
             // Afternoon
-            return "/images/Afternoon.jpg";
+            return "./images/Afternoon.jpg";
         }
     } else if (17 <= hours) { 
         if (hours < 20) {
             // Evening
-            return "/images/EveningBG.webp";
+            return "./images/EveningBG.webp";
         }
     } else if (20 <= hours) {
         // Night
-        return "/images/NightBG.jpg";
+        return "./images/NightBG.jpg";
     } else if (hours < 5) {
         //Night
-        return "/images/NightBG.jpg";
+        return "./images/NightBG.jpg";
     }
-    return "\0";
+    return "./images/forest.png";
 }
 /*#ifndef _dbenavides
 #define _dbenavides

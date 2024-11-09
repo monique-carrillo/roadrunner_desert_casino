@@ -21,6 +21,7 @@
 #include "fonts.h"
 #include <ctime>
 #include <cstdlib>
+#include "images.h"
 using namespace std;
 
 #ifndef _dbenavides
@@ -30,5 +31,5 @@ void show_my_feature_db(int x, int y);
 
 // Obtained Structure from: 
 // https://www.geeksforgeeks.org/print-system-time-c-3-different-ways/
-string background_time();
+Image background_time();
 #endif

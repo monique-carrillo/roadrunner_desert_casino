@@ -21,7 +21,7 @@
 #include "fonts.h"
 #include "jgaribay.h"
 #include "images.h"
-
+//
 //defined types
 typedef double Flt;
 typedef double Vec[3];
@@ -111,10 +111,13 @@ Image::Image(const char *fname) {
         unlink(ppmname);
 }
 Image img[4] = {
-    "./images/bigfoot.png",
-    "./images/forest.png",
-    "./images/forestTrans.png",
-    "./images/umbrella.png" };
+   
+"./images/bigfoot.png",
+background_time(),
+"./images/forestTrans.png",
+"./images/umbrella.png"
+
+};
 
 class Global {
     public:
@@ -138,7 +141,7 @@ class Global {
         xres=800;
         yres=600;
         showBigfoot=0;
-        forest=0;
+        forest=1;
         silhouette=1;
         trees=1;
         showRain=0;
@@ -944,7 +947,7 @@ void render()
 */
     //draw a quad with texture
     float wid = 120.0f;
-    glColor3f(1.0, 1.0, 1.0);
+    //glColor3f(1.0, 1.0, 1.0);
     if (g.forest) {
         glBindTexture(GL_TEXTURE_2D, g.forestTexture);
         glBegin(GL_QUADS);
