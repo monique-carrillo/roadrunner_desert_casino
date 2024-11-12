@@ -29,10 +29,13 @@ class Platform : public Texture {
 
 class JGlobal {
     public:
+        int walkframe;
         Texture bg;
-        Texture rrtext;
+        Texture logo;
+        Texture rrsprite;
         Roadrunner rr[3];
         Platform pf;
+        JGlobal();
 };
 
 extern int joshua_features;
