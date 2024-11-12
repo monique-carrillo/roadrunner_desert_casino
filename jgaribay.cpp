@@ -12,9 +12,9 @@
 #include "jgaribay.h"
 
 Image jimg[4] = {
-    "./images/roadrunner.jpg",
+    "./images/logo.jpg",
     "./images/desert.jpg",
-    "./images/rrsprite.jpg",
+    "./images/roadrunner.jpg",
     "./images/platform.jpg"
 };
 

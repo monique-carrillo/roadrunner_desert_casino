@@ -328,7 +328,6 @@ int main()
         }
         //Always render every frame.
         render();
-        render_main_menu(g.yres, g.xres);
         x11.swapBuffers();
     }
     //cleanupXWindows();
@@ -995,6 +994,7 @@ void render()
         glDisable(GL_ALPHA_TEST);
     }
     
+    render_main_menu(g.yres, g.xres);
     glDisable(GL_TEXTURE_2D);
     
     
@@ -1008,6 +1008,7 @@ void render()
     //return;
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
+    
     
     if (joshua_features)
         joshua_render(g.xres, g.yres);
