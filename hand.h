@@ -2,7 +2,7 @@
 #define HAND_H_INCLUDED
 
 #include <iostream>
-#include "Card.h"
+#include "cards.h"
 
 class Hand
 {

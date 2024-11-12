@@ -7,7 +7,7 @@
 #ifdef __APPLE__
 #include <OpenGL/gl.h>  // Use Apple's OpenGL framework
 #else
-#include <windows.h>
+//#include <windows.h>
 #include <GL/gl.h>      // Use standard OpenGL on other systems
 #endif
 

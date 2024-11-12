@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>  // For rand() function
-#include "Card.h"
+#include "cards.h"
 
 using namespace std;
 
