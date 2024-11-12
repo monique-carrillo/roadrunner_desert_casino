@@ -36,7 +36,6 @@ void show_my_feature_db(int x, int y)
     r.left = x;
     r.center = 0;
     ggprint8b(&r, 16, 0x0000ff00, "Darren's Feature");
-
 }
 
 // Obtained Structure from: 
