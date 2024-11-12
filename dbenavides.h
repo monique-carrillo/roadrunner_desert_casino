@@ -27,6 +27,14 @@ using namespace std;
 #ifndef _dbenavides
 #define _dbenavides
 extern int db_show;
+enum Suit { HEARTS, DIAMONDS, CLUBS, SPADES };
+enum Rank { TWO = 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN,
+    JACK, QUEEN, KING, ACE };
+
+struct Card {
+    Rank rank;
+    Suit suit;
+};
 void show_my_feature_db(int x, int y);
 
 // Obtained Structure from: 
