@@ -410,13 +410,14 @@ void initOpengl(void)
     //forestTransImage = ppm6GetImage("./images/forestTrans.ppm");
     //umbrellaImage    = ppm6GetImage("./images/umbrella.ppm");
     //create opengl texture elements
-    glGenTextures(1, &g.bigfootTexture);
-    glGenTextures(1, &g.silhouetteTexture);
+       glGenTextures(1, &g.bigfootTexture);
+  //  glGenTextures(1, &g.silhouetteTexture);
     glGenTextures(1, &g.forestTexture);
-    glGenTextures(1, &g.umbrellaTexture);
+   // glGenTextures(1, &g.umbrellaTexture);
     //-------------------------------------------------------------------------
     //bigfoot
     //
+    
     int w = img[0].width;
     int h = img[0].height;
     //
@@ -426,12 +427,14 @@ void initOpengl(void)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
         GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
+	
     //-------------------------------------------------------------------------
     
 
     //silhouette
     //this is similar to a sprite graphic
     //
+    /*
     glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
     //
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -444,24 +447,28 @@ void initOpengl(void)
     free(silhouetteData);
     //glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
     //  GL_RGB, GL_UNSIGNED_BYTE, bigfootImage->data);
+    */
     //-------------------------------------------------------------------------
     //
     //umbrella
     //
+    /*
     glBindTexture(GL_TEXTURE_2D, g.umbrellaTexture);
     //
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     //
     //must build a new set of data...
-    silhouetteData = buildAlphaData(&img[3]);
+    //silhouetteData = buildAlphaData(&img[3]);
+
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
                                 GL_RGBA, GL_UNSIGNED_BYTE, silhouetteData);
-    free(silhouetteData);
+//    free(silhouetteData);
     //glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
     //  GL_RGB, GL_UNSIGNED_BYTE, bigfootImage->data);
     //-------------------------------------------------------------------------
     //
+    */
     //forest
     glBindTexture(GL_TEXTURE_2D, g.forestTexture);
     //
@@ -472,7 +479,8 @@ void initOpengl(void)
     //-------------------------------------------------------------------------
     //
     //forest transparent part
-    //
+   //
+   /*
     glBindTexture(GL_TEXTURE_2D, g.forestTransTexture);
     //
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -488,6 +496,7 @@ void initOpengl(void)
     //glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
     //GL_RGB, GL_UNSIGNED_BYTE, bigfootImage->data);
     //-------------------------------------------------------------------------
+    */
 }
 
 void initSounds()
@@ -928,7 +937,7 @@ extern void show_my_feature_db(int, int);
 
 void render()
 {
-    //Rect r;
+   // Rect r;
 
     //Clear the screen
     glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -941,13 +950,10 @@ void render()
     if (db_show == 1) {
         show_my_feature_db(30, g.yres - 80);
     }
-   /* if (jc_show == 1) {
-        show_my_feature_jc(70, g.yres - 80);
-    }
-*/
+  
     //draw a quad with texture
     float wid = 120.0f;
-    //glColor3f(1.0, 1.0, 1.0);
+    glColor3f(1.0, 1.0, 1.0);
     if (g.forest) {
         glBindTexture(GL_TEXTURE_2D, g.forestTexture);
         glBegin(GL_QUADS);
