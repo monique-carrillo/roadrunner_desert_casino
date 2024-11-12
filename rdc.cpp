@@ -123,6 +123,7 @@ class Global {
     public:
     int done;
     int xres, yres;
+    int menu = 1;
     GLuint bigfootTexture;
     GLuint silhouetteTexture;
     GLuint forestTexture;
@@ -546,7 +547,6 @@ void checkMouse(XEvent *e)
 
 extern int monique_show;
 extern int db_show;
-//extern int jc_show;
 
 int checkKeys(XEvent *e)
 {
@@ -574,7 +574,6 @@ int checkKeys(XEvent *e)
         case XK_g:
             monique_show = !monique_show;
             db_show = !db_show;
-        //  jc_show = !jc_show;
             break;
         case XK_j:
             joshua_features = !joshua_features;
@@ -612,10 +611,18 @@ int checkKeys(XEvent *e)
         case XK_Up:
             VecCopy(umbrella.pos, umbrella.lastpos);
             umbrella.pos[1] += 10.0;
+	    g.menu--;
+	    if (g.menu < 1) {
+		g.menu = 1;
+	    }
             break;
         case XK_Down:
             VecCopy(umbrella.pos, umbrella.lastpos);
             umbrella.pos[1] -= 10.0;
+	    g.menu++;
+	    if (g.menu > 4) {
+		g.menu = 4;
+	    }
             break;
         case XK_equal:
             if (++ndrops > 40)
@@ -642,6 +649,15 @@ int checkKeys(XEvent *e)
         case XK_Escape:
             return 1;
             //break;
+	case XK_Return:
+	    int press = g.menu;
+	    if (press == 4) {
+		return 1;
+	    }
+	    
+	    if (press == 3) {
+		joshua_features = !joshua_features;
+	    }
     }
     return 0;
 }
@@ -1000,7 +1016,7 @@ void render()
         glDisable(GL_ALPHA_TEST);
     }
     
-    render_main_menu(g.yres, g.xres);
+    render_main_menu(g.yres, g.xres, g.menu);
     glDisable(GL_TEXTURE_2D);
     
     
