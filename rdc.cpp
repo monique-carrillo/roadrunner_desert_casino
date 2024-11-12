@@ -123,7 +123,8 @@ class Global {
     public:
     int done;
     int xres, yres;
-    int menu = 1;
+    int menu;
+    int status;
     GLuint bigfootTexture;
     GLuint silhouetteTexture;
     GLuint forestTexture;
@@ -138,6 +139,8 @@ class Global {
     int deflection;
     Global() {
         logOpen();
+        menu = 1;
+        status = 0;
         done=0;
         xres=800;
         yres=600;
@@ -289,9 +292,6 @@ int main()
     clock_gettime(CLOCK_REALTIME, &timePause);
     clock_gettime(CLOCK_REALTIME, &timeStart);
     
-    if (joshua_features)
-        joshua_main();
-
     int done = 0;
     while (!done) {
         while (x11.getXPending()) {
@@ -576,7 +576,6 @@ int checkKeys(XEvent *e)
             db_show = !db_show;
             break;
         case XK_j:
-            joshua_features = !joshua_features;
             break;
         case XK_d:
             g.deflection ^= 1;
@@ -611,18 +610,18 @@ int checkKeys(XEvent *e)
         case XK_Up:
             VecCopy(umbrella.pos, umbrella.lastpos);
             umbrella.pos[1] += 10.0;
-	    g.menu--;
-	    if (g.menu < 1) {
-		g.menu = 1;
-	    }
+	        g.menu--;
+	        if (g.menu < 1) {
+		        g.menu = 1;
+	        }
             break;
         case XK_Down:
             VecCopy(umbrella.pos, umbrella.lastpos);
             umbrella.pos[1] -= 10.0;
-	    g.menu++;
-	    if (g.menu > 4) {
-		g.menu = 4;
-	    }
+	        g.menu++;
+	        if (g.menu > 4) {
+		        g.menu = 4;
+	        }
             break;
         case XK_equal:
             if (++ndrops > 40)
@@ -647,8 +646,8 @@ int checkKeys(XEvent *e)
             umbrella.radius = (float)umbrella.width2;
             break;
         case XK_Escape:
-            return 1;
-            //break;
+            g.status = !g.status;
+            break;
 	case XK_Return:
 	    int press = g.menu;
 	    if (press == 4) {
@@ -889,12 +888,14 @@ void checkRaindrops()
 
 void physics()
 {
-    if (joshua_features)
-        joshua_physics(g.xres, g.yres);
-    if (g.showBigfoot)
-        moveBigfoot();
-    if (g.showRain)
-        checkRaindrops();
+    if (!g.status) {
+        if (joshua_features)
+            joshua_physics(g.xres, g.yres);
+        if (g.showBigfoot)
+            moveBigfoot();
+        if (g.showRain)
+            checkRaindrops();
+    }
 }
 
 void drawUmbrella()
@@ -1033,7 +1034,7 @@ void render()
     
     
     if (joshua_features)
-        joshua_render(g.xres, g.yres);
+        joshua_render(g.xres, g.yres, g.status);
     
     if (g.showRain)
         drawRaindrops();
@@ -1043,13 +1044,4 @@ void render()
     if (g.showUmbrella)
         drawUmbrella();
     glBindTexture(GL_TEXTURE_2D, 0);
-    
-    Rect r; 
-    unsigned int c = 0x00000000;
-    r.bot = g.yres - 20;
-    r.left = 10;
-    r.center = 0;
-    
-    ggprint8b(&r, 16, c, "G - Features (Not Set)");
-    ggprint8b(&r, 16, c, "J - Roadrunner Racing Game");
 }

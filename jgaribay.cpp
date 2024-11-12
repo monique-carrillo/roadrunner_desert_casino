@@ -43,10 +43,6 @@ int joshua_features = 0;
 const float GRAVITY = -0.1;
 JGlobal jg;
 
-void joshua_main()
-{
-}
-
 void joshua_init_opengl()
 {
     glEnable(GL_BLEND);
@@ -142,7 +138,7 @@ void joshua_physics(int x, int y)
     jg.walkframe++;
 }
 
-void joshua_render(int x, int y)
+void joshua_render(int x, int y, int status)
 {
     glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_TEXTURE_2D);
@@ -150,7 +146,7 @@ void joshua_render(int x, int y)
     // BACKGROUND
     glColor3f(1.0f, 1.0f, 1.0f); // reset color
     glBindTexture(GL_TEXTURE_2D, jg.bg.texture);
-    glBegin(GL_QUADS);        
+    glBegin(GL_QUADS);
         glTexCoord2f(jg.bg.xc[0], jg.bg.yc[1]); glVertex2i(0, 0);
         glTexCoord2f(jg.bg.xc[0], jg.bg.yc[0]); glVertex2i(0, y);
         glTexCoord2f(jg.bg.xc[1], jg.bg.yc[0]); glVertex2i(x, y);
@@ -224,6 +220,26 @@ void joshua_render(int x, int y)
     
     glDisable(GL_TEXTURE_2D);
 
+    if (status) {
+        // paused
+        glBegin(GL_QUADS);
+            glColor4ub(0, 0, 0, 200);
+            glVertex2i(0, 0);
+            glVertex2i(0, y);
+            glVertex2i(x, y);
+            glVertex2i(x, 0);
+        glEnd();
+
+        glEnable(GL_TEXTURE_2D);
+
+        Rect s;
+        s.bot = y / 2;
+        s.left = x / 2;
+        s.center = 1;
+        ggprint40(&s, 32, 0x00ff0000, "PAUSED");
+        //ggprint13(&s, 32, 0x0000ff00, "Up  - Main Menu");
+        ggprint13(&s, 32, 0x0000ff00, "esc - unpause");
+    }
     /*
     // ROADRUNNER
     for (int i = 0; i < 3; i++) {

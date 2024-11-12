@@ -41,10 +41,9 @@ class JGlobal {
 extern int joshua_features;
 extern const float GRAVITY;
 
-void joshua_main();
 void joshua_init_opengl();
 void joshua_physics(int, int);
-void joshua_render(int, int);
+void joshua_render(int, int, int);
 
 //temporarily added functions from jchicas.cpp
 void render_main_menu(int, int, int); 
