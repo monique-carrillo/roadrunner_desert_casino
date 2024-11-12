@@ -2,7 +2,6 @@
 #define _JGARIBAY_H_
 
 #include "images.h"
-#include <string>
 
 class Texture {
     public:
@@ -32,21 +31,16 @@ class JGlobal {
     public:
         Texture bg;
         Texture rrtext;
-        Roadrunner rr;
+        Roadrunner rr[3];
         Platform pf;
 };
-
-
-
-
-
 
 extern int joshua_features;
 extern const float GRAVITY;
 
 void joshua_main();
 void joshua_init_opengl();
-void joshua_physics();
+void joshua_physics(int, int);
 void joshua_render(int, int);
 
 //temporarily added functions from jchicas.cpp

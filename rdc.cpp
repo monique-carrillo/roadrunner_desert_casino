@@ -866,7 +866,7 @@ void checkRaindrops()
 void physics()
 {
     if (joshua_features)
-        joshua_physics(); // physica
+        joshua_physics(g.xres, g.yres);
     if (g.showBigfoot)
         moveBigfoot();
     if (g.showRain)
@@ -947,7 +947,7 @@ void render()
 */
     //draw a quad with texture
     float wid = 120.0f;
-    //glColor3f(1.0, 1.0, 1.0);
+    glColor3f(1.0, 1.0, 1.0);
     if (g.forest) {
         glBindTexture(GL_TEXTURE_2D, g.forestTexture);
         glBegin(GL_QUADS);
@@ -1028,7 +1028,5 @@ void render()
     r.center = 0;
     
     ggprint8b(&r, 16, c, "G - Features (Not Set)");
-    ggprint8b(&r, 16, c, "J - joshua features");
-    
+    ggprint8b(&r, 16, c, "J - Roadrunner Racing Game");
 }
-

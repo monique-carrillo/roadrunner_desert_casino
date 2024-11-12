@@ -90,9 +90,13 @@ void joshua_init_opengl()
     glEnable(GL_BLEND);
 }
 
-void joshua_physics()
+void joshua_physics(int x, int y)
 {
-    if (jg.rr.pos[0] != jg.rr.last_pos[0]) {
+    jg.pf.dim[0] = x;
+    jg.pf.dim[1] = y / 3;
+
+    // temp moving background
+    if (jg.rr[0].pos[0] != jg.rr[0].last_pos[0]) {
         // moving the background
         jg.bg.xc[0] += 0.0001;
         jg.bg.xc[1] += 0.0001;
@@ -101,23 +105,24 @@ void joshua_physics()
         jg.pf.xc[1] += 0.001;
     }
 
-    jg.rr.vel[1] += GRAVITY;
-    // always saving last position
-    jg.rr.last_pos[0] = jg.rr.pos[0];
-    jg.rr.last_pos[1] = jg.rr.pos[1];
-    jg.rr.pos[0] += jg.rr.vel[0];
-    jg.rr.pos[1] += jg.rr.vel[1];
-
-    // collision detection
-    if (jg.rr.pos[1] - jg.rr.dim[1] < jg.pf.pos[1] + jg.pf.dim[1] &&
-        jg.rr.pos[1] + jg.rr.dim[1] > jg.pf.pos[1] - jg.pf.dim[1] &&
-        jg.rr.pos[0] + jg.rr.dim[0] > jg.pf.pos[0] - jg.pf.dim[0] &&
-        jg.rr.pos[0] - jg.rr.dim[0] < jg.pf.pos[0] + jg.pf.dim[0]) {
-        // collision state
-        jg.rr.pos[1] = jg.rr.last_pos[1];
-        jg.rr.vel[1] = -jg.rr.vel[1] * 0.5;
+    for (int i = 0; i < 3; i++) {
+        jg.rr[i].vel[1] += GRAVITY + (rand() % 10 - 1) * 0.01;
+        // always saving last position
+        jg.rr[i].last_pos[0] = jg.rr[i].pos[0];
+        jg.rr[i].last_pos[1] = jg.rr[i].pos[1];
+        jg.rr[i].pos[0] += jg.rr[i].vel[0];
+        jg.rr[i].pos[1] += jg.rr[i].vel[1];
+        // collision detection
+        if (jg.rr[i].pos[1] - jg.rr[i].dim[1] < jg.pf.pos[1] + jg.pf.dim[1] &&
+            jg.rr[i].pos[1] + jg.rr[i].dim[1] > jg.pf.pos[1] - jg.pf.dim[1] &&
+            jg.rr[i].pos[0] + jg.rr[i].dim[0] > jg.pf.pos[0] - jg.pf.dim[0] &&
+            jg.rr[i].pos[0] - jg.rr[i].dim[0] < jg.pf.pos[0] + jg.pf.dim[0]) {
+            // collision state
+            jg.rr[i].pos[1] = jg.rr[i].last_pos[1];
+            jg.rr[i].vel[1] = -jg.rr[i].vel[1] * 0.5;
+        }
+        jg.rr[i].vel[0] += (rand() % 10 - 1) * 0.01;
     }
-    jg.rr.pos[0]++;
 }
 
 void joshua_render(int x, int y)
@@ -158,34 +163,29 @@ void joshua_render(int x, int y)
     */
 
     Rect r;
-    unsigned int c = 0x00ffffff;
+    unsigned int c = 0x00003594;
     r.bot = 20;
     r.left = 20;
     r.center = 0;
     for (int i = 2; i >= 0; i--) {
-        ggprint8b(&r, -16, c, "Roadrunner %i speed: %f", i + 1, jg.rr.vel[0]);
+        ggprint8b(&r, -16, c, "Roadrunner %i speed: %f", i + 1,
+                jg.rr[i].vel[0]);
     }
-
-    /*
-    Rect s;
-    c = 0x00003594;
-    s.bot = y - 100;
-    s.left = x / 2;
-    s.center = 1;
-    ggprint40(&s, 16, c, "My Game Title");
-    */
-
+    ggprint8b(&r, 16, c, "Leaderboard");
+    
     glDisable(GL_TEXTURE_2D);
 
     // ROADRUNNER
-    glPushMatrix();
-    glTranslatef(jg.rr.pos[0], jg.rr.pos[1], 0.0f);
-    glBegin(GL_QUADS);
-        glColor3ub(0, 53, 148);
-        glVertex2i(-jg.rr.dim[0], -jg.rr.dim[1]);
-        glVertex2i(-jg.rr.dim[0],  jg.rr.dim[1]);
-        glVertex2i( jg.rr.dim[0],  jg.rr.dim[1]);
-        glVertex2i( jg.rr.dim[0], -jg.rr.dim[1]);
-    glEnd();
-    glPopMatrix();
+    for (int i = 0; i < 3; i++) {
+        glPushMatrix();
+        glTranslatef(jg.rr[i].pos[0], jg.rr[i].pos[1], 0.0f);
+        glBegin(GL_QUADS);
+            glColor3ub(0, 53, 148);
+            glVertex2i(-jg.rr[i].dim[0], -jg.rr[i].dim[1]);
+            glVertex2i(-jg.rr[i].dim[0],  jg.rr[i].dim[1]);
+            glVertex2i( jg.rr[i].dim[0],  jg.rr[i].dim[1]);
+            glVertex2i( jg.rr[i].dim[0], -jg.rr[i].dim[1]);
+        glEnd();
+        glPopMatrix();
+    }
 }
