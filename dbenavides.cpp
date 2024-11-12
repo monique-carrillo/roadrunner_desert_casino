@@ -48,47 +48,35 @@ Image background_time() {
     // Extract Hours
     int hours = ltime->tm_hour;
 
-    if (5 <= hours) {
-        if (hours < 6){
+    if (hours >= 5 && hours < 7) {
+        //if (hours < 7){
             // Dawn
-            return "./images/DawnBG.jpg";
-        }
-    } else if (6 <= hours) { 
-        if (hours < 12) {
+        return "./images/DawnBG.jpg";
+        //}
+    } else if (hours >= 7 && hours < 12) { 
+        //if (hours < 12) {
             // Morning
-            return "./images/MorningBG.jpg";
-        }
-    } else if (12 <= hours) {
-        if (hours < 17) {
+        return "./images/MorningBG.jpg";
+        //}
+    } else if (hours >= 12 && hours < 17) {
+        //if (hours < 17) {
             // Afternoon
-            return "./images/Afternoon.jpg";
-        }
-    } else if (17 <= hours) { 
-        if (hours < 20) {
+        return "./images/Afternoon.jpg";
+        //}
+    } else if (hours >= 17 && hours < 20) { 
+        //if (hours < 20) {
             // Evening
-            return "./images/EveningBG.webp";
-        }
-    } else if (20 <= hours) {
+        return "./images/EveningBG.webp";
+        //}
+    } else {
         // Night
-        return "./images/NightBG.jpg";
-    } else if (hours < 5) {
-        //Night
         return "./images/NightBG.jpg";
     }
     return "./images/forest.png";
 }
-/*#ifndef _dbenavides
-#define _dbenavides
-int db_show = 0;
 
-void show_my_feature_db(int x, int y)
-{
-    //draw a rectangle
-    //show some text
-    Rect r;
-    r.bot = y;
-    r.left = x;
-    r.center = 0;
-    ggprint8b(&r, 16, 0x0000ff00, "Darren's Feature");
 
-}*/
+
+
+
+
