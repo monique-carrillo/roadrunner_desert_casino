@@ -112,7 +112,6 @@ static void key(unsigned char key, int x, int y)
 */
 
 
-/*
 #include "fonts.h"
 
 int monique_show = 0;
@@ -128,4 +127,3 @@ void show_my_feature(int x, int y)
     ggprint8b(&r, 16, 0x0000ff00, "Monique's Feature");
 
 }
-*/
