@@ -49,29 +49,22 @@ Image background_time() {
     int hours = ltime->tm_hour;
 
     if (hours >= 5 && hours < 7) {
-        //if (hours < 7){
-            // Dawn
+        // Dawn
         return "./images/DawnBG.jpg";
-        //}
     } else if (hours >= 7 && hours < 12) { 
-        //if (hours < 12) {
-            // Morning
+        // Morning
         return "./images/MorningBG.jpg";
-        //}
     } else if (hours >= 12 && hours < 17) {
-        //if (hours < 17) {
-            // Afternoon
+        // Afternoon
         return "./images/Afternoon.jpg";
-        //}
     } else if (hours >= 17 && hours < 20) { 
-        //if (hours < 20) {
-            // Evening
+        // Evening
         return "./images/EveningBG.webp";
-        //}
     } else {
         // Night
         return "./images/NightBG.jpg";
     }
+    // Default if it can't pick anything up.
     return "./images/forest.png";
 }
 
