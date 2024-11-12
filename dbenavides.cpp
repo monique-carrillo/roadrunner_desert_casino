@@ -2,7 +2,7 @@
 // Date: 10/08/2024
 // Filename: dbenavides.cpp
 // Purpose: Project Feature
-// Last Edit: 10/28/2024
+// Last Edit: 11/12/2024
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -36,7 +36,6 @@ void show_my_feature_db(int x, int y)
     r.left = x;
     r.center = 0;
     ggprint8b(&r, 16, 0x0000ff00, "Darren's Feature");
-
 }
 
 // Obtained Structure from: 

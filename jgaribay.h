@@ -47,6 +47,6 @@ void joshua_physics(int, int);
 void joshua_render(int, int);
 
 //temporarily added functions from jchicas.cpp
-void render_main_menu(int, int); 
+void render_main_menu(int, int, int); 
 Image background_time();
 #endif
