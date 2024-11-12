@@ -11,6 +11,8 @@
 #include "fonts.h"
 #include "jgaribay.h"
 
+// roadrunner sprite source:
+// https://www.spriters-resource.com/arcade/roadrun/sheet/11658/
 Image jimg[4] = {
     "./images/logo.jpg",
     "./images/desert.jpg",
@@ -19,11 +21,11 @@ Image jimg[4] = {
 };
 
 Roadrunner::Roadrunner() {
-    pos[0] = 100;
-    pos[1] = 300;
+    pos[0] = 10;  // cx
+    pos[1] = 200; // cy
     vel[0] = vel[1] = 0.0f;
-    dim[0] = 10; // width
-    dim[1] = 20; // height
+    dim[0] = 30;  // width
+    dim[1] = 40;  // height
 };
 
 Platform::Platform() {
@@ -31,6 +33,10 @@ Platform::Platform() {
     dim[1] = 175;
     pos[0] = 0;
     pos[1] = 0;
+}
+
+JGlobal::JGlobal() {
+    walkframe = 0;
 }
 
 int joshua_features = 0;
@@ -46,10 +52,10 @@ void joshua_init_opengl()
     glEnable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
 
-    // ROADRUNNER
-    jg.rrtext.image = &jimg[0];
-    glGenTextures(1, &jg.rrtext.texture); // generate & bind texture ID
-    glBindTexture(GL_TEXTURE_2D, jg.rrtext.texture);
+    // LOGO
+    jg.logo.image = &jimg[0];
+    glGenTextures(1, &jg.logo.texture); // generate & bind texture ID
+    glBindTexture(GL_TEXTURE_2D, jg.logo.texture);
     // texture parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -86,6 +92,16 @@ void joshua_init_opengl()
     jg.pf.yc[0] = 0.0;
     jg.pf.yc[1] = 1.0;
 
+    // ROADRUNNER SPRITE
+    jg.rrsprite.image = &jimg[2];
+    glGenTextures(1, &jg.rrsprite.texture);
+    glBindTexture(GL_TEXTURE_2D, jg.rrsprite.texture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    unsigned char *rrdata = buildAlphaData(&jimg[2]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, jg.rrsprite.image->width,
+            jg.rrsprite.image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rrdata);
+    free(rrdata);
 
     glEnable(GL_BLEND);
 }
@@ -123,6 +139,7 @@ void joshua_physics(int x, int y)
         }
         jg.rr[i].vel[0] += (rand() % 10 - 1) * 0.01;
     }
+    jg.walkframe++;
 }
 
 void joshua_render(int x, int y)
@@ -152,8 +169,8 @@ void joshua_render(int x, int y)
     glEnd();
 
     /*
-    // ROADRUNNER IMAGE
-    glBindTexture(GL_TEXTURE_2D, textureID);
+    // LOGO
+    glBindTexture(GL_TEXTURE_2D, jg.logo.texture);
     glBegin(GL_QUADS);        
         glTexCoord2f(0.0f, 1.0f); glVertex2i(100, 100);
         glTexCoord2f(1.0f, 1.0f); glVertex2i(x - 100, 100);
@@ -161,6 +178,38 @@ void joshua_render(int x, int y)
         glTexCoord2f(0.0f, 0.0f); glVertex2i(100, y - 100);
     glEnd();
     */
+
+    // SPRITE
+    // source: walk2 framework
+    //float cx = x / 2.0;
+    //float cy = y / 2.0;
+    //float w, h;
+    //w = h = 100.0;
+    int ix = jg.walkframe % 6;
+    int iy = 0;
+    if (jg.walkframe >= 6)
+        iy = 1;
+    float fx = (float)ix / 6.0;
+    float fy = (float)iy / 2.0;
+    for (int i = 0; i < 3; i++) {
+        glPushMatrix();
+        glBindTexture(GL_TEXTURE_2D, jg.rrsprite.texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(fx + .166, fy + .5);
+            glVertex2i(jg.rr[i].pos[0] - jg.rr[i].dim[0],
+                    jg.rr[i].pos[1] - jg.rr[i].dim[1]);
+            glTexCoord2f(fx + .166, fy);
+            glVertex2i(jg.rr[i].pos[0] - jg.rr[i].dim[0],
+                    jg.rr[i].pos[1] + jg.rr[i].dim[1]);
+            glTexCoord2f(fx, fy);
+            glVertex2i(jg.rr[i].pos[0] + jg.rr[i].dim[0],
+                    jg.rr[i].pos[1] + jg.rr[i].dim[1]);
+            glTexCoord2f(fx, fy + .5);
+            glVertex2i(jg.rr[i].pos[0] + jg.rr[i].dim[0],
+                    jg.rr[i].pos[1] - jg.rr[i].dim[1]);
+        glEnd();
+        glPopMatrix();
+    }
 
     Rect r;
     unsigned int c = 0x00003594;
@@ -175,6 +224,7 @@ void joshua_render(int x, int y)
     
     glDisable(GL_TEXTURE_2D);
 
+    /*
     // ROADRUNNER
     for (int i = 0; i < 3; i++) {
         glPushMatrix();
@@ -188,4 +238,5 @@ void joshua_render(int x, int y)
         glEnd();
         glPopMatrix();
     }
+    */
 }
