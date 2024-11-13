@@ -55,7 +55,7 @@ Image background_time() {
         return "./images/MorningBG.jpg";
     } else if (hours >= 12 && hours < 17) {
         // Afternoon
-        return "./images/Afternoon.jpg";
+        return "./images/AfternoonBG.jpg";
     } else if (hours >= 17 && hours < 20) { 
         // Evening
         return "./images/EveningBG.webp";

@@ -9,21 +9,19 @@ class Texture {
         GLuint texture;
         float xc[2];
         float yc[2];
+        int pos[2];
+        int dim[2];
 };
 
 class Roadrunner : public Texture {
     public:
-        float pos[2];
         float last_pos[2];
         float vel[2];
-        int dim[2];
         Roadrunner();
 };
 
 class Platform : public Texture {
     public:
-        int dim[2];
-        int pos[2];
         Platform();
 };
 
