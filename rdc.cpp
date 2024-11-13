@@ -21,6 +21,7 @@
 #include "fonts.h"
 #include "jgaribay.h"
 #include "images.h"
+#include "mcarrillo.h"
 //
 //defined types
 typedef double Flt;
@@ -566,13 +567,14 @@ int checkKeys(XEvent *e)
     }
     switch (key) {
         case XK_b:
-            g.showBigfoot ^= 1;
+            monique_show = !monique_show;
+            /*g.showBigfoot ^= 1;
             if (g.showBigfoot) {
                 bigfoot.pos[0] = -250.0;
-            }
+            }*/
             break;
         case XK_g:
-            monique_show = !monique_show;
+            //monique_show = !monique_show;
             db_show = !db_show;
             break;
         case XK_j:
@@ -947,6 +949,7 @@ void drawRaindrops()
     glLineWidth(1);
 }
 
+extern void mcarrilloFeature();
 extern void show_my_feature(int, int);
 extern void show_my_feature_db(int, int);
 //extern void show_my_feature_jc(int, int);
@@ -960,8 +963,9 @@ void render()
     glClear(GL_COLOR_BUFFER_BIT);
 
     
-    if (monique_show == 1) {
-        show_my_feature(10, g.yres - 80);
+    if (monique_show) {
+       // show_my_feature(10, g.yres - 80);
+       mcarrilloFeature();
     }
     if (db_show == 1) {
         show_my_feature_db(30, g.yres - 80);
