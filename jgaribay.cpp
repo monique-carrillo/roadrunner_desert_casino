@@ -134,9 +134,9 @@ void joshua_physics(int x, int y)
         jg.rr[i].last_pos[0] = jg.rr[i].pos[0];
         jg.rr[i].last_pos[1] = jg.rr[i].pos[1];
         
-        if (jg.rr[i].vel[0] > avgxvel)
-            jg.rr[i].pos[0] += jg.rr[i].vel[0]; // move x pos
-        else
+        //if (jg.rr[i].vel[0] > avgxvel)
+            jg.rr[i].pos[0] += jg.rr[i].vel[0] * 1.5; // move x pos
+        //else
             jg.rr[i].pos[0] -= jg.rr[i].vel[0]; // move x pos
         
         jg.rr[i].pos[1] += jg.rr[i].vel[1]; // move y pos
@@ -197,6 +197,17 @@ void joshua_render(int x, int y, int status)
         glPushMatrix();
         glBindTexture(GL_TEXTURE_2D, jg.rrsprite.texture);
         glBegin(GL_QUADS);
+            switch (i) {
+                case 0:
+                    glColor4ub(255, 0, 0, 255);
+                    break;
+                case 1:
+                    glColor4ub(0, 255, 0, 255);
+                    break;
+                case 2:
+                    glColor4ub(0, 0, 255, 255);
+                    break;
+            }
             glTexCoord2f(fx + .166, fy + .5);
             glVertex2i(jg.rr[i].pos[0] - jg.rr[i].dim[0],
                     jg.rr[i].pos[1] - jg.rr[i].dim[1]);

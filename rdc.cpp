@@ -9,7 +9,6 @@
  */
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <time.h>
@@ -22,7 +21,7 @@
 #include "jgaribay.h"
 #include "images.h"
 #include "mcarrillo.h"
-//
+
 //defined types
 typedef double Flt;
 typedef double Vec[3];
@@ -42,7 +41,6 @@ const float timeslice = 1.0f;
 const float gravity = -0.2f;
 #define ALPHA 1
 
-//-----------------------------------------------------------------------------
 //Setup timers
 //clock_gettime(CLOCK_REALTIME, &timePause);
 const double physicsRate = 1.0 / 30.0;
@@ -59,7 +57,6 @@ double timeDiff(struct timespec *start, struct timespec *end) {
 void timeCopy(struct timespec *dest, struct timespec *source) {
     memcpy(dest, source, sizeof(struct timespec));
 }
-//-----------------------------------------------------------------------------
 
 Image::~Image() { delete [] data; }
 Image::Image(const char *fname) {
@@ -111,13 +108,12 @@ Image::Image(const char *fname) {
     if (!ppmFlag)
         unlink(ppmname);
 }
-Image img[4] = {
-   
-"./images/bigfoot.png",
-background_time(),
-"./images/forestTrans.png",
-"./images/umbrella.png"
 
+Image img[4] = {   
+    "./images/bigfoot.png",
+    background_time(),
+    "./images/forestTrans.png",
+    "./images/umbrella.png"
 };
 
 class Global {
@@ -142,22 +138,21 @@ class Global {
         logOpen();
         menu = 1;
         status = 0;
-        done=0;
-        xres=800;
-        yres=600;
-        showBigfoot=0;
-        forest=1;
-        silhouette=1;
-        trees=1;
-        showRain=0;
-        showUmbrella=0;
-        deflection=0;
+        done = 0;
+        xres = 800;
+        yres = 600;
+        showBigfoot = 0;
+        forest = 1;
+        silhouette = 1;
+        trees = 1;
+        showRain = 0;
+        showUmbrella = 0;
+        deflection = 0;
     }
     ~Global() {
         logClose();
     }
 } g;
-
 
 class Bigfoot {
 public:
@@ -185,7 +180,7 @@ int totrain=0;
 int maxrain=0;
 void deleteRain(Raindrop *node);
 void cleanupRaindrops(void);
-//
+
 #define UMBRELLA_FLAT  0
 #define UMBRELLA_ROUND 1
 class Umbrella {
@@ -339,11 +334,6 @@ int main()
 
 unsigned char *buildAlphaData(Image *img)
 {
-    //Add 4th component to an RGB stream...
-    //RGBA
-    //When you do this, OpenGL is able to use the A component to determine
-    //transparency information.
-    //It is used in this application to erase parts of a texture-map from view.
     int i;
     int a,b,c;
     unsigned char *newdata, *ptr;
@@ -357,22 +347,8 @@ unsigned char *buildAlphaData(Image *img)
         *(ptr+0) = a;
         *(ptr+1) = b;
         *(ptr+2) = c;
-        //-----------------------------------------------
-        //get largest color component...
-        //*(ptr+3) = (unsigned char)((
-        //      (int)*(ptr+0) +
-        //      (int)*(ptr+1) +
-        //      (int)*(ptr+2)) / 3);
-        //d = a;
-        //if (b >= a && b >= c) d = b;
-        //if (c >= a && c >= b) d = c;
-        //*(ptr+3) = d;
-        //-----------------------------------------------
-        //this code optimizes the commented code above.
-        //code contributed by student: Chris Smith
-        //
+        // code contributed by student: Chris Smith
         *(ptr+3) = (a|b|c);
-        //-----------------------------------------------
         ptr += 4;
         data += 3;
     }
@@ -403,35 +379,18 @@ void initOpengl(void)
     
     joshua_init_opengl();    
 
-    //
-    //load the images file into a ppm structure.
-    //
-    //bigfootImage     = ppm6GetImage("./images/bigfoot.ppm");
-    //forestImage      = ppm6GetImage("./images/forest.ppm");
-    //forestTransImage = ppm6GetImage("./images/forestTrans.ppm");
-    //umbrellaImage    = ppm6GetImage("./images/umbrella.ppm");
-    //create opengl texture elements
-       glGenTextures(1, &g.bigfootTexture);
-  //  glGenTextures(1, &g.silhouetteTexture);
+    glGenTextures(1, &g.bigfootTexture);
     glGenTextures(1, &g.forestTexture);
-   // glGenTextures(1, &g.umbrellaTexture);
-    //-------------------------------------------------------------------------
-    //bigfoot
-    //
     
+    //bigfoot
     int w = img[0].width;
     int h = img[0].height;
-    //
     glBindTexture(GL_TEXTURE_2D, g.bigfootTexture);
-    //
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
         GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
 	
-    //-------------------------------------------------------------------------
-    
-
     //silhouette
     //this is similar to a sprite graphic
     //
@@ -449,7 +408,6 @@ void initOpengl(void)
     //glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
     //  GL_RGB, GL_UNSIGNED_BYTE, bigfootImage->data);
     */
-    //-------------------------------------------------------------------------
     //
     //umbrella
     //
@@ -470,17 +428,14 @@ void initOpengl(void)
     //-------------------------------------------------------------------------
     //
     */
+    
     //forest
     glBindTexture(GL_TEXTURE_2D, g.forestTexture);
-    //
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, img[1].width, img[1].height,
                                     0, GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
-    //-------------------------------------------------------------------------
-    //
     //forest transparent part
-   //
    /*
     glBindTexture(GL_TEXTURE_2D, g.forestTransTexture);
     //
@@ -505,7 +460,8 @@ void initSounds()
 
 }
 
-void init() {
+void init()
+{
     umbrella.pos[0] = 220.0;
     umbrella.pos[1] = (double)(g.yres-200);
     VecCopy(umbrella.pos, umbrella.lastpos);
@@ -540,10 +496,6 @@ void checkMouse(XEvent *e)
         savex = e->xbutton.x;
         savey = e->xbutton.y;
     }
-
-
-
-
 }
 
 extern int monique_show;
@@ -568,16 +520,9 @@ int checkKeys(XEvent *e)
     switch (key) {
         case XK_b:
             monique_show = !monique_show;
-            /*g.showBigfoot ^= 1;
-            if (g.showBigfoot) {
-                bigfoot.pos[0] = -250.0;
-            }*/
             break;
         case XK_g:
-            //monique_show = !monique_show;
             db_show = !db_show;
-            break;
-        case XK_j:
             break;
         case XK_d:
             g.deflection ^= 1;
@@ -612,18 +557,18 @@ int checkKeys(XEvent *e)
         case XK_Up:
             VecCopy(umbrella.pos, umbrella.lastpos);
             umbrella.pos[1] += 10.0;
-	        g.menu--;
-	        if (g.menu < 1) {
-		        g.menu = 1;
-	        }
+            g.menu--;
+            if (g.menu < 1) {
+                g.menu = 1;
+            }
             break;
         case XK_Down:
             VecCopy(umbrella.pos, umbrella.lastpos);
             umbrella.pos[1] -= 10.0;
-	        g.menu++;
-	        if (g.menu > 4) {
-		        g.menu = 4;
-	        }
+            g.menu++;
+            if (g.menu > 4) {
+                g.menu = 4;
+            }
             break;
         case XK_equal:
             if (++ndrops > 40)
@@ -650,15 +595,14 @@ int checkKeys(XEvent *e)
         case XK_Escape:
             g.status = !g.status;
             break;
-	case XK_Return:
-	    int press = g.menu;
-	    if (press == 4) {
-		return 1;
-	    }
-	    
-	    if (press == 3) {
-		joshua_features = !joshua_features;
-	    }
+        case XK_Return:
+            int press = g.menu;
+            if (press == 4) {
+                return 1;
+            }
+            if (press == 3) {
+                joshua_features = !joshua_features;
+            }
     }
     return 0;
 }
@@ -695,23 +639,17 @@ void cleanupRaindrops()
 
 void deleteRain(Raindrop *node)
 {
-    //remove a node from linked list
-    //Log("deleteRain()...\n");
     if (node->prev == NULL) {
         if (node->next == NULL) {
-            //Log("only 1 item in list.\n");
             rainhead = NULL;
         } else {
-            //Log("at beginning of list.\n");
             node->next->prev = NULL;
             rainhead = node->next;
         }
     } else {
         if (node->next == NULL) {
-            //Log("at end of list.\n");
             node->prev->next = NULL;
         } else {
-            //Log("in middle of list.\n");
             node->prev->next = node->next;
             node->next->prev = node->prev;
         }
@@ -786,7 +724,7 @@ void checkRaindrops()
     if (random(100) < 50) {
         createRaindrop(ndrops);
     }
-    //
+    
     //move rain droplets
     Raindrop *node = rainhead;
     while (node) {
@@ -800,8 +738,7 @@ void checkRaindrops()
         node->vel[0] *= 0.999;
         node = node->next;
     }
-    //}
-    //
+    
     //check rain droplets
     int n=0;
     node = rainhead;
@@ -813,11 +750,8 @@ void checkRaindrops()
             if (!node->sound && play_sounds) {
                 //small chance that a sound will play
                 int r = random(50);
-                if (r==1) {
-                    //play sound here...
-
-
-                }
+                // play sound here...
+                if (r==1) { }
                 //sound plays once per raindrop
                 node->sound=1;
             }
@@ -902,7 +836,6 @@ void physics()
 
 void drawUmbrella()
 {
-    //Log("drawUmbrella()...\n");
     if (umbrella.shape == UMBRELLA_FLAT) {
         glColor4f(1.0f, 0.2f, 0.2f, 0.5f);
         glLineWidth(8);
@@ -949,22 +882,15 @@ void drawRaindrops()
     glLineWidth(1);
 }
 
-extern void mcarrilloFeature();
-extern void show_my_feature(int, int);
 extern void show_my_feature_db(int, int);
-//extern void show_my_feature_jc(int, int);
 
 void render()
 {
-   // Rect r;
-
     //Clear the screen
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-
     
     if (monique_show) {
-       // show_my_feature(10, g.yres - 80);
        mcarrilloFeature();
     }
     if (db_show == 1) {
@@ -1008,7 +934,6 @@ void render()
             }
         glEnd();
         glPopMatrix();
-        //
         if (g.trees && g.silhouette) {
             glBindTexture(GL_TEXTURE_2D, g.forestTransTexture);
             glBegin(GL_QUADS);
@@ -1024,27 +949,16 @@ void render()
     render_main_menu(g.yres, g.xres, g.menu);
     glDisable(GL_TEXTURE_2D);
     
-    
-    //glColor3f(1.0f, 0.0f, 0.0f);
-    //glBegin(GL_QUADS);
-    //  glVertex2i(10,10);
-    //  glVertex2i(10,60);
-    //  glVertex2i(60,60);
-    //  glVertex2i(60,10);
-    //glEnd();
-    //return;
     glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     
-    
     if (joshua_features)
         joshua_render(g.xres, g.yres, g.status);
-    
     if (g.showRain)
         drawRaindrops();
+
     glDisable(GL_BLEND);
     glEnable(GL_TEXTURE_2D);
-    //
     if (g.showUmbrella)
         drawUmbrella();
     glBindTexture(GL_TEXTURE_2D, 0);
