@@ -5,8 +5,6 @@ void mcarrillo_init();
 void mcarrillo_update();
 void mcarrillo_render();
 void mcarrillo_input(int key);
-void initBlackjack();
-void renderBlackjack();
 void mcarrilloFeature();
 
 #endif // MCARRILLO_H
