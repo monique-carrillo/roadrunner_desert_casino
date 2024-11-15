@@ -46,6 +46,7 @@ void mcarrillo_update() {
         }
     } else {
         if (dealerHand.getValue() < 17) {
+            std::cout << "Draw Card\n";
             dealerHand.addCard(deck.dealCard());
         } else {
             gameOver = true;
