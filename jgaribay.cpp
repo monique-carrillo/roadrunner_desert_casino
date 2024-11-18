@@ -1,13 +1,11 @@
 /*
- *    name: joshua garibay
- *    date: fall 2024
- * purpose: 3350 personal source file
+ * name: joshua garibay
+ * date: fall 2024
  */
 
 #include <GL/glx.h>
 #include <X11/Xlib.h>
 #include <cstdlib>
-#include <stdio.h>
 #include "images.h"
 #include "fonts.h"
 #include "jgaribay.h"
@@ -22,26 +20,26 @@ Image jimg[4] = {
 };
 
 Roadrunner::Roadrunner() {
-    pos[0] = 250;  // cx
-    pos[1] = 250;  // cy
+    x = 250;  // cx
+    y = 250;  // cy
     vel[0] = vel[1] = 0.0f;
-    dim[0] = 30;  // width
-    dim[1] = 40;  // height
+    w = 30;  // width
+    h = 40;  // height
 };
 
 Platform::Platform() {
-    dim[0] = 650;
-    dim[1] = 175;
-    pos[0] = 0;
-    pos[1] = 0;
+    w = 650;
+    h = 175;
+    x = 0;
+    y = 0;
 }
 
 JGlobal::JGlobal() {
     walkframe = 0;
-    logo.dim[0] = 100;
-    logo.dim[1] = 75;
-    logo.pos[0] = 0;
-    logo.pos[0] = 0;
+    logo.w = 100;
+    logo.h = 75;
+    logo.x = 0;
+    logo.y = 0;
 }
 
 int joshua_features = 0;
@@ -109,49 +107,46 @@ void joshua_init_opengl()
 
 void joshua_physics(int x, int y)
 {
-    jg.logo.pos[0] = x / 2;
-    jg.logo.pos[1] = y - (y / 4);
     
-    jg.pf.dim[0] = x;
-    jg.pf.dim[1] = y / 3;
-
-    float avgxvel = 0.0;
+    jg.bg.xc[0] += 0.01;
+    jg.bg.xc[1] += 0.01;
+    jg.pf.xc[0] += 0.01;
+    jg.pf.xc[1] += 0.01;
+   
+    float avgvel = 0;
     for (int i = 0; i < 3; i++) {
-        avgxvel += jg.rr[i].vel[0];
+        avgvel += jg.rr[i].vel[0];
     }
-    avgxvel /= 3;
+    avgvel /= 3;
     
-    // moving the background
-    jg.bg.xc[0] += avgxvel * 0.0001;
-    jg.bg.xc[1] += avgxvel * 0.0001;
-    // moving the platform
-    jg.pf.xc[0] += avgxvel * 0.001;
-    jg.pf.xc[1] += avgxvel * 0.001;
 
     for (int i = 0; i < 3; i++) {
+        //if (jg.rr[i].vel[0] != 0)
+            jg.walkframe += 1;
+
         jg.rr[i].vel[1] += GRAVITY;
-        // always saving last position
-        jg.rr[i].last_pos[0] = jg.rr[i].pos[0];
-        jg.rr[i].last_pos[1] = jg.rr[i].pos[1];
+        jg.rr[i].last_x = jg.rr[i].x;
+        jg.rr[i].last_y = jg.rr[i].y;
+        jg.rr[i].vel[0] = (double)rand() / (double)RAND_MAX;
         
-        //if (jg.rr[i].vel[0] > avgxvel)
-            jg.rr[i].pos[0] += jg.rr[i].vel[0] * 1.5; // move x pos
-        //else
-            jg.rr[i].pos[0] -= jg.rr[i].vel[0]; // move x pos
-        
-        jg.rr[i].pos[1] += jg.rr[i].vel[1]; // move y pos
+        if (jg.rr[i].vel[0] > avgvel)
+            jg.rr[i].x += jg.rr[i].vel[0]; // move x pos
+        else if (jg.rr[i].vel[0] < avgvel)
+            jg.rr[i].x -= jg.rr[i].vel[0]; // move x pos
+
+        jg.rr[i].y += jg.rr[i].vel[1]; // move y pos
+
         // collision detection
-        if (jg.rr[i].pos[1] - jg.rr[i].dim[1] < jg.pf.pos[1] + jg.pf.dim[1] &&
-            jg.rr[i].pos[1] + jg.rr[i].dim[1] > jg.pf.pos[1] - jg.pf.dim[1] &&
-            jg.rr[i].pos[0] + jg.rr[i].dim[0] > jg.pf.pos[0] - jg.pf.dim[0] &&
-            jg.rr[i].pos[0] - jg.rr[i].dim[0] < jg.pf.pos[0] + jg.pf.dim[0]) {
-            // collision state
-            jg.rr[i].pos[1] = jg.rr[i].last_pos[1];
+        if (jg.rr[i].y - jg.rr[i].h < jg.pf.y + jg.pf.h &&
+            jg.rr[i].y + jg.rr[i].h > jg.pf.y - jg.pf.h &&
+            jg.rr[i].x + jg.rr[i].w > jg.pf.x - jg.pf.w &&
+            jg.rr[i].x - jg.rr[i].w < jg.pf.x + jg.pf.w) {
+            
+            // collision happened
+            jg.rr[i].y = jg.rr[i].last_y;
             jg.rr[i].vel[1] = -jg.rr[i].vel[1] * 0.5;
         }
-        jg.rr[i].vel[0] += rand() % 2 * 0.1;
     }
-    jg.walkframe++;
 }
 
 void joshua_render(int x, int y, int status)
@@ -159,6 +154,12 @@ void joshua_render(int x, int y, int status)
     glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_TEXTURE_2D);
 
+    // POSITION STUFF
+    jg.logo.x = x / 2;
+    jg.logo.y = y - (y / 4);
+    jg.pf.w = x;
+    jg.pf.h = y / 3;
+    
     // BACKGROUND
     glColor3f(1.0f, 1.0f, 1.0f); // reset color
     glBindTexture(GL_TEXTURE_2D, jg.bg.texture);
@@ -174,10 +175,10 @@ void joshua_render(int x, int y, int status)
     glBindTexture(GL_TEXTURE_2D, jg.pf.texture);
     glBegin(GL_QUADS);        
         glTexCoord2f(jg.pf.xc[0], jg.pf.yc[1]); glVertex2i(0, 0);
-        glTexCoord2f(jg.pf.xc[0], jg.pf.yc[0]); glVertex2i(0, jg.pf.dim[1]);
-        glTexCoord2f(jg.pf.xc[1], jg.pf.yc[0]); glVertex2i(jg.pf.dim[0],
-                                                            jg.pf.dim[1]);
-        glTexCoord2f(jg.pf.xc[1], jg.pf.yc[1]); glVertex2i(jg.pf.dim[0], 0);
+        glTexCoord2f(jg.pf.xc[0], jg.pf.yc[0]); glVertex2i(0, jg.pf.h);
+        glTexCoord2f(jg.pf.xc[1], jg.pf.yc[0]); glVertex2i(jg.pf.w,
+                                                            jg.pf.h);
+        glTexCoord2f(jg.pf.xc[1], jg.pf.yc[1]); glVertex2i(jg.pf.w, 0);
     glEnd();
 
 
@@ -209,17 +210,13 @@ void joshua_render(int x, int y, int status)
                     break;
             }
             glTexCoord2f(fx + .166, fy + .5);
-            glVertex2i(jg.rr[i].pos[0] - jg.rr[i].dim[0],
-                    jg.rr[i].pos[1] - jg.rr[i].dim[1]);
+            glVertex2i(jg.rr[i].x - jg.rr[i].w, jg.rr[i].y - jg.rr[i].h);
             glTexCoord2f(fx + .166, fy);
-            glVertex2i(jg.rr[i].pos[0] - jg.rr[i].dim[0],
-                    jg.rr[i].pos[1] + jg.rr[i].dim[1]);
+            glVertex2i(jg.rr[i].x - jg.rr[i].w, jg.rr[i].y + jg.rr[i].h);
             glTexCoord2f(fx, fy);
-            glVertex2i(jg.rr[i].pos[0] + jg.rr[i].dim[0],
-                    jg.rr[i].pos[1] + jg.rr[i].dim[1]);
+            glVertex2i(jg.rr[i].x + jg.rr[i].w, jg.rr[i].y + jg.rr[i].h);
             glTexCoord2f(fx, fy + .5);
-            glVertex2i(jg.rr[i].pos[0] + jg.rr[i].dim[0],
-                    jg.rr[i].pos[1] - jg.rr[i].dim[1]);
+            glVertex2i(jg.rr[i].x + jg.rr[i].w, jg.rr[i].y - jg.rr[i].h);
         glEnd();
         glPopMatrix();
     }
@@ -231,9 +228,20 @@ void joshua_render(int x, int y, int status)
     r.center = 0;
     ggprint13(&r, 16, c, "Leaderboard");
     for (int i = 0; i < 3; i++) {
-        ggprint8b(&r, 16, c, "Roadrunner %i speed: %f", i + 1, jg.rr[i].vel[0]);
+        ggprint8b(&r, 16, c, "Roadrunner %i vel: %f", i + 1, jg.rr[i].vel[0]);
     }
-    
+    Rect t;
+    t.bot = jg.rr[0].y + jg.rr[0].h + 20;
+    t.left = jg.rr[0].x;
+    t.center = 1;
+    ggprint13(&t, 16, 0x00ff0000, "RR 1");
+    t.bot = jg.rr[1].y + jg.rr[1].h + 20;
+    t.left = jg.rr[1].x;
+    ggprint13(&t, 16, 0x0000ff00, "RR 2");
+    t.bot = jg.rr[2].y + jg.rr[2].h + 20;
+    t.left = jg.rr[2].x;
+    ggprint13(&t, 16, 0x000000ff, "RR 3");
+
     glDisable(GL_TEXTURE_2D);
 
     if (status) {
@@ -252,16 +260,16 @@ void joshua_render(int x, int y, int status)
         glColor3f(1.0f, 1.0f, 1.0f); // reset color
         glPushMatrix();
         glBindTexture(GL_TEXTURE_2D, jg.logo.texture);
-        glTranslatef(jg.logo.pos[0], jg.logo.pos[1], 0.0f);
+        glTranslatef(jg.logo.x, jg.logo.y, 0.0f);
         glBegin(GL_QUADS);        
             glTexCoord2f(0.0f, 1.0f);
-            glVertex2i(-jg.logo.dim[0], -jg.logo.dim[1]); // bottom left
+            glVertex2i(-jg.logo.w, -jg.logo.h); // bottom left
             glTexCoord2f(0.0f, 0.0f);
-            glVertex2i(-jg.logo.dim[0],  jg.logo.dim[1]); // bottom right
+            glVertex2i(-jg.logo.w,  jg.logo.h); // bottom right
             glTexCoord2f(1.0f, 0.0f);
-            glVertex2i( jg.logo.dim[0],  jg.logo.dim[1]); // top right
+            glVertex2i( jg.logo.w,  jg.logo.h); // top right
             glTexCoord2f(1.0f, 1.0f);
-            glVertex2i( jg.logo.dim[0], -jg.logo.dim[1]); // top left
+            glVertex2i( jg.logo.w, -jg.logo.h); // top left
         glEnd();
         glPopMatrix();
 
@@ -272,6 +280,7 @@ void joshua_render(int x, int y, int status)
         ggprint40(&s, 32, 0x00ffc72c, "PAUSED");
         ggprint13(&s, 32, 0x00003594, "enter  - main menu");
         ggprint13(&s, 32, 0x00003594, "esc - unpause");
+    
     }
     /*
     // ROADRUNNER BOX

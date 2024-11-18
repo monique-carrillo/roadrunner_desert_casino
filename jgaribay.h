@@ -9,13 +9,13 @@ class Texture {
         GLuint texture;
         float xc[2];
         float yc[2];
-        int pos[2];
-        int dim[2];
+        float x, y;
+        float w, h;
 };
 
 class Roadrunner : public Texture {
     public:
-        float last_pos[2];
+        float last_x, last_y;
         float vel[2];
         Roadrunner();
 };
