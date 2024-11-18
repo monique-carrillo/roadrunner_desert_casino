@@ -462,6 +462,8 @@ void initSounds()
 
 void init()
 {
+    joshua_init();
+
     umbrella.pos[0] = 220.0;
     umbrella.pos[1] = (double)(g.yres-200);
     VecCopy(umbrella.pos, umbrella.lastpos);
@@ -826,7 +828,7 @@ void physics()
 {
     if (!g.status) {
         if (joshua_features)
-            joshua_physics(g.xres, g.yres);
+            joshua_physics();
         if (g.showBigfoot)
             moveBigfoot();
         if (g.showRain)

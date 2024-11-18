@@ -6,6 +6,7 @@
 #include <GL/glx.h>
 #include <X11/Xlib.h>
 #include <cstdlib>
+#include <string.h>
 #include "images.h"
 #include "fonts.h"
 #include "jgaribay.h"
@@ -34,6 +35,23 @@ Platform::Platform() {
     y = 0;
 }
 
+Button::Button() {
+    r.width = 175;
+    r.height = 25;
+    r.left = 20;
+    r.right = r.left + r.width;;
+    r.bot = 100;
+    r.top = r.bot + r.height;
+    r.centerx = r.left + r.right / 2;
+    strcpy(text, "enter - main menu");
+    //down = 0;
+    //click = 0;
+    color[0] = 0.0f;
+    color[1] = 1.0f;
+    color[2] = 0.0f;
+    text_color = 0x00ff0000;
+}   
+
 JGlobal::JGlobal() {
     walkframe = 0;
     logo.w = 100;
@@ -45,6 +63,10 @@ JGlobal::JGlobal() {
 int joshua_features = 0;
 const float GRAVITY = -0.1;
 JGlobal jg;
+
+void joshua_init()
+{
+}
 
 void joshua_init_opengl()
 {
@@ -105,9 +127,8 @@ void joshua_init_opengl()
     glEnable(GL_BLEND);
 }
 
-void joshua_physics(int x, int y)
+void joshua_physics()
 {
-    
     jg.bg.xc[0] += 0.01;
     jg.bg.xc[1] += 0.01;
     jg.pf.xc[0] += 0.01;
@@ -160,6 +181,7 @@ void joshua_render(int x, int y, int status)
     jg.pf.w = x;
     jg.pf.h = y / 3;
     
+
     // BACKGROUND
     glColor3f(1.0f, 1.0f, 1.0f); // reset color
     glBindTexture(GL_TEXTURE_2D, jg.bg.texture);
@@ -241,6 +263,7 @@ void joshua_render(int x, int y, int status)
     t.bot = jg.rr[2].y + jg.rr[2].h + 20;
     t.left = jg.rr[2].x;
     ggprint13(&t, 16, 0x000000ff, "RR 3");
+    
 
     glDisable(GL_TEXTURE_2D);
 
@@ -253,8 +276,24 @@ void joshua_render(int x, int y, int status)
             glVertex2i(x, y);
             glVertex2i(x, 0);
         glEnd();
+    
 
         glEnable(GL_TEXTURE_2D);
+        
+        // DRAWING A BUTTON
+        for (int i = 0; i < 5; i++) {
+            glBegin(GL_QUADS);
+                glColor3fv(jg.button[i].color);
+                glVertex2i(jg.button[i].r.left,  jg.button[i].r.bot);
+                glVertex2i(jg.button[i].r.left,  jg.button[i].r.top);
+                glVertex2i(jg.button[i].r.right, jg.button[i].r.top);
+                glVertex2i(jg.button[i].r.right, jg.button[i].r.bot);
+            glEnd();
+            r.left = jg.button[i].r.left;
+            r.bot = jg.button[i].r.bot;
+            r.center = 0;
+            ggprint16(&r, 0, jg.button[i].text_color, jg.button[i].text);
+        }
 
         // LOGO
         glColor3f(1.0f, 1.0f, 1.0f); // reset color
