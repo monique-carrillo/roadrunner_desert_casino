@@ -13,7 +13,6 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
-#include "log.h"
 #include "fonts.h"
 #include <ctime>
 #include <cstdlib>
@@ -45,22 +44,22 @@ Image background_time() {
 
     if (hours >= 5 && hours < 7) {
         // Dawn
-        return "./images/DawnBG.jpg";
+        return "./images/dawn.jpg";
     } else if (hours >= 7 && hours < 12) { 
         // Morning
-        return "./images/MorningBG.jpg";
+        return "./images/morning.jpg";
     } else if (hours >= 12 && hours < 17) {
         // Afternoon
-        return "./images/AfternoonBG.jpg";
+        return "./images/afternoon.jpg";
     } else if (hours >= 17 && hours < 20) { 
         // Evening
-        return "./images/EveningBG.webp";
+        return "./images/evening.jpg";
     } else {
         // Night
-        return "./images/NightBG.jpg";
+        return "./images/night.jpg";
     }
     // Default if it can't pick anything up.
-    return "./images/forest.png";
+    return "./images/dawn.png";
 }
 
 
