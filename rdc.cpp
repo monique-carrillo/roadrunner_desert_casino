@@ -520,6 +520,9 @@ int checkKeys(XEvent *e)
         return 0;
     }
     switch (key) {
+        case XK_o:
+            jg.outline = !jg.outline;
+            break;
         case XK_b:
             monique_show = !monique_show;
             break;

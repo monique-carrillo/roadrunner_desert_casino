@@ -17,6 +17,8 @@ class Roadrunner : public Texture {
     public:
         float last_x, last_y;
         float vel[2];
+        float color[3];
+        unsigned int alt_color;
         Roadrunner();
 };
 
@@ -26,17 +28,20 @@ class Platform : public Texture {
 };
 
 // source: bship.cpp framework
-class Button {
-    public:
-        Rect r;
-        float color[3];
-        char text[32];
-        unsigned int text_color;
-        Button();
-};
+typedef struct t_button {
+    Rect r;
+    char text[32];
+    int over;
+    int down;
+    int click;
+    float color[3];
+    float dcolor[3];
+    unsigned int text_color;
+} Button;
 
 class JGlobal {
     public:
+        int outline;
         int walkframe;
         Texture bg;
         Texture logo;
@@ -49,10 +54,13 @@ class JGlobal {
 
 extern int joshua_features;
 extern const float GRAVITY;
+extern JGlobal jg;
 
 void joshua_init();
 void joshua_init_opengl();
 void joshua_physics();
+void joshua_render_pause(int, int);
+void joshua_render_rr();
 void joshua_render(int, int, int);
 
 //temporarily added functions from jchicas.cpp
