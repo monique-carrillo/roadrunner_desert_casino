@@ -89,6 +89,26 @@ void joshua_init()
     jg.button[0].dcolor[1] = jg.button[0].color[1] * 0.5f;
     jg.button[0].dcolor[2] = jg.button[0].color[2] * 0.5f;
     jg.button[0].text_color = 0x00ff00ff;
+
+    jg.button[1].r.width = 200;
+    jg.button[1].r.height = 50;
+    jg.button[1].r.left = 500;
+    jg.button[1].r.bot = 10;
+    jg.button[1].r.right = jg.button[1].r.left + jg.button[1].r.width;
+    jg.button[1].r.top = jg.button[1].r.bot + jg.button[1].r.height;
+    jg.button[1].r.centerx = (jg.button[1].r.left + jg.button[1].r.right) / 2;
+    jg.button[1].r.centery = (jg.button[1].r.bot + jg.button[1].r.top) / 2;
+    strcpy(jg.button[1].text, "Resume");
+    jg.button[1].down = 0;
+    jg.button[1].click = 0;
+    jg.button[1].color[0] = 1.0f;
+    jg.button[1].color[1] = 0.7f;
+    jg.button[1].color[2] = 0.5f;
+    jg.button[1].dcolor[0] = jg.button[1].color[0] * 0.5f;
+    jg.button[1].dcolor[1] = jg.button[1].color[1] * 0.5f;
+    jg.button[1].dcolor[2] = jg.button[1].color[2] * 0.5f;
+    jg.button[1].text_color = 0x00ff00ff;
+
 }
 
 void joshua_init_opengl()
@@ -371,7 +391,7 @@ void joshua_render(int x, int y, int status)
                 jg.rr[i].vel[0]);
     }
     ggprint13(&r, 16, c, "Controls");
-    ggprint8b(&r, 16, c, "o - toggle outline");
+    ggprint8b(&r, 16, c, "shift + o - outline");
     
     glDisable(GL_TEXTURE_2D);
 

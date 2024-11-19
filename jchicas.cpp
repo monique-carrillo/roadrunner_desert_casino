@@ -9,7 +9,6 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
-#include "log.h"
 #include "fonts.h"
 //render main menu text
 //In progress - when mouse cursor is over an option,
