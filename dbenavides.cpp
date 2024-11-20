@@ -145,7 +145,7 @@ int calculating(Hand *hand, Hand *hand2) {
 
     // Sorting Temp Hand
     for (int i=0; i<6; i++) {
-        for (int j=0; j<6; i++) {
+        for (int j=0; j<6; j++) {
             if (temphand[j] > temphand[j+1]) {
                 swap(temphand[j], temphand[j+1]);
             }
