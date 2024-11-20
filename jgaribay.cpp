@@ -11,6 +11,8 @@
 #include "fonts.h"
 #include "jgaribay.h"
 
+JGlobal jg;
+
 // roadrunner sprite source:
 // https://www.spriters-resource.com/arcade/roadrun/sheet/11658/
 Image jimg[4] = {
@@ -44,10 +46,6 @@ JGlobal::JGlobal() {
     logo.y = 0;
 }
 
-int joshua_features = 0;
-const float GRAVITY = -0.1;
-JGlobal jg;
-
 void joshua_init()
 {
     // TODO: make colors random
@@ -69,53 +67,10 @@ void joshua_init()
     jg.rr[0].alt_color = 0x00ff0000;
     jg.rr[1].alt_color = 0x0000ff00;
     jg.rr[2].alt_color = 0x000000ff;
-
-    jg.button[0].r.width = 200;
-    jg.button[0].r.height = 50;
-    jg.button[0].r.left = 10;
-    jg.button[0].r.bot = 10;
-    jg.button[0].r.right =
-        jg.button[0].r.left + jg.button[0].r.width;
-    jg.button[0].r.top = jg.button[0].r.bot + jg.button[0].r.height;
-    jg.button[0].r.centerx = (jg.button[0].r.left + jg.button[0].r.right) / 2;
-    jg.button[0].r.centery = (jg.button[0].r.bot + jg.button[0].r.top) / 2;
-    strcpy(jg.button[0].text, "Exit");
-    jg.button[0].down = 0;
-    jg.button[0].click = 0;
-    jg.button[0].color[0] = 1.0f;
-    jg.button[0].color[1] = 0.7f;
-    jg.button[0].color[2] = 0.5f;
-    jg.button[0].dcolor[0] = jg.button[0].color[0] * 0.5f;
-    jg.button[0].dcolor[1] = jg.button[0].color[1] * 0.5f;
-    jg.button[0].dcolor[2] = jg.button[0].color[2] * 0.5f;
-    jg.button[0].text_color = 0x00ff00ff;
-
-    jg.button[1].r.width = 200;
-    jg.button[1].r.height = 50;
-    jg.button[1].r.left = 500;
-    jg.button[1].r.bot = 10;
-    jg.button[1].r.right = jg.button[1].r.left + jg.button[1].r.width;
-    jg.button[1].r.top = jg.button[1].r.bot + jg.button[1].r.height;
-    jg.button[1].r.centerx = (jg.button[1].r.left + jg.button[1].r.right) / 2;
-    jg.button[1].r.centery = (jg.button[1].r.bot + jg.button[1].r.top) / 2;
-    strcpy(jg.button[1].text, "Resume");
-    jg.button[1].down = 0;
-    jg.button[1].click = 0;
-    jg.button[1].color[0] = 1.0f;
-    jg.button[1].color[1] = 0.7f;
-    jg.button[1].color[2] = 0.5f;
-    jg.button[1].dcolor[0] = jg.button[1].color[0] * 0.5f;
-    jg.button[1].dcolor[1] = jg.button[1].color[1] * 0.5f;
-    jg.button[1].dcolor[2] = jg.button[1].color[2] * 0.5f;
-    jg.button[1].text_color = 0x00ff00ff;
-
 }
 
 void joshua_init_opengl()
 {
-    glEnable(GL_BLEND);
-    glEnable(GL_TEXTURE_2D);
-
     // LOGO
     jg.logo.image = &jimg[0];
     glGenTextures(1, &jg.logo.texture); // generate & bind texture ID
@@ -166,8 +121,6 @@ void joshua_init_opengl()
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, jg.rrsprite.image->width,
             jg.rrsprite.image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rrdata);
     free(rrdata);
-
-    glEnable(GL_BLEND);
 }
 
 void joshua_physics()
@@ -213,9 +166,14 @@ void joshua_physics()
     }
 }
 
-void joshua_render_pause(int x, int y)
+void render_pause_screen(int x, int y)
 {
+    glEnable(GL_BLEND);
+    
     Rect r;
+    // positioning
+    jg.logo.x = x / 2;
+    jg.logo.y = y - (y / 4);
 
     // dim screen
     glBegin(GL_QUADS);
@@ -226,44 +184,15 @@ void joshua_render_pause(int x, int y)
         glVertex2i(x, 0);
     glEnd();
 
-    glEnable(GL_TEXTURE_2D);
+    r.bot = y / 2;
+    r.left = x / 2;
+    r.center = 1;
+    ggprint40(&r, 0, 0x00ffc72c, "PAUSED");
 
     // BUTTONS
-    for (int i = 0; i < 5; i++) {
-        if (jg.button[i].over) {
-            glColor3f(1.0f, 0.0f, 1.0f);
-            glLineWidth(2);
-            glBegin(GL_LINE_LOOP);
-                glVertex2i(jg.button[i].r.left - 2,  jg.button[i].r.bot - 2);
-                glVertex2i(jg.button[i].r.left - 2,  jg.button[i].r.top + 2);
-                glVertex2i(jg.button[i].r.right + 2, jg.button[i].r.top + 2);
-                glVertex2i(jg.button[i].r.right + 2, jg.button[i].r.bot - 2);
-                glVertex2i(jg.button[i].r.left - 2,  jg.button[i].r.bot - 2);
-            glEnd();
-            glLineWidth(1);
-        }
-        if (jg.button[i].down) {
-            glColor3fv(jg.button[i].dcolor);
-        } else {
-            glColor3fv(jg.button[i].color);
-        }
-        glBegin(GL_QUADS);
-            glVertex2i(jg.button[i].r.left,  jg.button[i].r.bot);
-            glVertex2i(jg.button[i].r.left,  jg.button[i].r.top);
-            glVertex2i(jg.button[i].r.right, jg.button[i].r.top);
-            glVertex2i(jg.button[i].r.right, jg.button[i].r.bot);
-        glEnd();
-        r.left = jg.button[i].r.centerx;
-        r.bot  = jg.button[i].r.centery-8;
-        r.center = 1;
-        if (jg.button[i].down) {
-            ggprint16(&r, 0, jg.button[i].text_color, "Pressed!");
-        } else {
-            ggprint16(&r, 0, jg.button[i].text_color, jg.button[i].text);
-        }
-    }
+    // render buttons here
 
-    // LOGO
+    // roadrunner logo
     glColor3f(1.0f, 1.0f, 1.0f); // reset color
     glPushMatrix();
     glBindTexture(GL_TEXTURE_2D, jg.logo.texture);
@@ -279,42 +208,44 @@ void joshua_render_pause(int x, int y)
         glVertex2i( jg.logo.w, -jg.logo.h); // top left
     glEnd();
     glPopMatrix();
-
-    r.bot = y / 2;
-    r.left = x / 2;
-    r.center = 1;
-    ggprint40(&r, 0, 0x00ffc72c, "PAUSED");
+    
+    glDisable(GL_BLEND);
 }
 
-void joshua_render_rr()
+void render_racing(int x, int y)
 {
     Rect r;
-  
-    // TODO: fix dark blue color
-    // box outline
-    if (jg.outline) {
-        for (int i = 0; i < 3; i++) {
-            glPushMatrix();
-            glColor3fv(jg.rr[i].color);
-            glLineWidth(6);
-            glTranslatef(jg.rr[i].x, jg.rr[i].y, 0.0f);
-            glBegin(GL_LINE_LOOP);
-                glVertex2i(-jg.rr[i].w, -jg.rr[i].h);
-                glVertex2i(-jg.rr[i].w,  jg.rr[i].h);
-                glVertex2i( jg.rr[i].w,  jg.rr[i].h);
-                glVertex2i( jg.rr[i].w, -jg.rr[i].h);
-            glEnd();
-            glPopMatrix();
-            glLineWidth(1);
-        }
-    }
 
-    // SPRITE
-    // source: walk2 framework
-    //float cx = x / 2.0;
-    //float cy = y / 2.0;
-    //float w, h;
-    //w = h = 100.0;
+    // positioning
+    jg.pf.w = x;
+    //jg.pf.h = y / 3;
+
+    // render background
+    glBindTexture(GL_TEXTURE_2D, jg.bg.texture);
+    glColor3f(1.0f, 1.0f, 1.0f); // reset color
+    glBegin(GL_QUADS);
+        glTexCoord2f(jg.bg.xc[0], jg.bg.yc[1]); glVertex2i(0, 0);
+        glTexCoord2f(jg.bg.xc[0], jg.bg.yc[0]); glVertex2i(0, y);
+        glTexCoord2f(jg.bg.xc[1], jg.bg.yc[0]); glVertex2i(x, y);
+        glTexCoord2f(jg.bg.xc[1], jg.bg.yc[1]); glVertex2i(x, 0);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    // render platform
+    glBindTexture(GL_TEXTURE_2D, jg.pf.texture);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glBegin(GL_QUADS);        
+        glTexCoord2f(jg.pf.xc[0], jg.pf.yc[1]); glVertex2i(0,       0);
+        glTexCoord2f(jg.pf.xc[0], jg.pf.yc[0]); glVertex2i(0,       jg.pf.h);
+        glTexCoord2f(jg.pf.xc[1], jg.pf.yc[0]); glVertex2i(jg.pf.w, jg.pf.h);
+        glTexCoord2f(jg.pf.xc[1], jg.pf.yc[1]); glVertex2i(jg.pf.w, 0);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+ 
+    // render roadrunners
     int ix = jg.walkframe % 6;
     int iy = 0;
     if (jg.walkframe >= 6)
@@ -322,10 +253,10 @@ void joshua_render_rr()
     float fx = (float)ix / 6.0;
     float fy = (float)iy / 2.0;
     for (int i = 0; i < 3; i++) {
-        glPushMatrix();
         glBindTexture(GL_TEXTURE_2D, jg.rrsprite.texture);
+        glColor3fv(jg.rr[i].color);
+        glPushMatrix();
         glBegin(GL_QUADS);
-            glColor3fv(jg.rr[i].color);
             glTexCoord2f(fx + .166, fy + .5);
             glVertex2i(jg.rr[i].x - jg.rr[i].w, jg.rr[i].y - jg.rr[i].h);
             glTexCoord2f(fx + .166, fy);
@@ -336,66 +267,20 @@ void joshua_render_rr()
             glVertex2i(jg.rr[i].x + jg.rr[i].w, jg.rr[i].y - jg.rr[i].h);
         glEnd();
         glPopMatrix();
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
-
-    r.center = 1;
-    for (int i = 0; i < 3; i++) {
-        r.bot = jg.rr[i].y + jg.rr[i].h + 20;
-        r.left = jg.rr[i].x;
-        ggprint13(&r, 16, jg.rr[i].alt_color, "Roadrunner %i", i + 1);
-    }
-}
-
-void joshua_render(int x, int y, int status)
-{
-    glClear(GL_COLOR_BUFFER_BIT);
-    glEnable(GL_TEXTURE_2D);
-    
-    Rect r;
-
-    // POSITION STUFF
-    jg.logo.x = x / 2;
-    jg.logo.y = y - (y / 4);
-    jg.pf.w = x;
-    //jg.pf.h = y / 3;
-
-    // BACKGROUND
-    glColor3f(1.0f, 1.0f, 1.0f); // reset color
-    glBindTexture(GL_TEXTURE_2D, jg.bg.texture);
-    glBegin(GL_QUADS);
-        glTexCoord2f(jg.bg.xc[0], jg.bg.yc[1]); glVertex2i(0, 0);
-        glTexCoord2f(jg.bg.xc[0], jg.bg.yc[0]); glVertex2i(0, y);
-        glTexCoord2f(jg.bg.xc[1], jg.bg.yc[0]); glVertex2i(x, y);
-        glTexCoord2f(jg.bg.xc[1], jg.bg.yc[1]); glVertex2i(x, 0);
-    glEnd();
-
-    // PLATFORM
-    glColor3f(1.0f, 1.0f, 1.0f);
-    glBindTexture(GL_TEXTURE_2D, jg.pf.texture);
-    glBegin(GL_QUADS);        
-        glTexCoord2f(jg.pf.xc[0], jg.pf.yc[1]); glVertex2i(0,       0);
-        glTexCoord2f(jg.pf.xc[0], jg.pf.yc[0]); glVertex2i(0,       jg.pf.h);
-        glTexCoord2f(jg.pf.xc[1], jg.pf.yc[0]); glVertex2i(jg.pf.w, jg.pf.h);
-        glTexCoord2f(jg.pf.xc[1], jg.pf.yc[1]); glVertex2i(jg.pf.w, 0);
-    glEnd();
-
-    joshua_render_rr();
-
-    unsigned int c = 0x00003594;
+ 
+    // render leaderboard
     r.bot = y - 30;
     r.left = 20;
     r.center = 0;
-    ggprint13(&r, 16, c, "Leaderboard");
+    ggprint13(&r, 16, 0x00003594, "Leaderboard");
     for (int i = 0; i < 3; i++) {
         ggprint8b(&r, 16, jg.rr[i].alt_color, "Roadrunner %i vel: %f", i + 1,
                 jg.rr[i].vel[0]);
     }
-    ggprint13(&r, 16, c, "Controls");
-    ggprint8b(&r, 16, c, "shift + o - outline");
-    
-    glDisable(GL_TEXTURE_2D);
+    ggprint13(&r, 16, 0x00003594, "Controls");
+    ggprint8b(&r, 16, 0x00003594, "o - outline");
 
-    // paused
-    if (status)
-        joshua_render_pause(x, y);
-  }
+    glDisable(GL_BLEND);
+}

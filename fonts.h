@@ -11,6 +11,7 @@ typedef struct t_rect {
 	int centerx;
 	int centery;
 } Rect;
+
 extern void initialize_fonts(void);
 extern void cleanup_fonts(void);
 extern void ggprint16(Rect *r, int advance, int cref, const char *fmt, ...);
