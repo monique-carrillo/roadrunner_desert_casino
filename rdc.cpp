@@ -336,7 +336,6 @@ void physics()
             joshua_physics();
     }
 }
-extern void show_my_feature_db(int, int);
 
 void render()
 {
@@ -358,8 +357,53 @@ void render()
     if (monique_show) {
        mcarrilloFeature();
     }
-    if (db_show == 1) {
-        show_my_feature_db(30, g.yres - 80);
+    //draw a quad with texture
+    float wid = 120.0f;
+    glColor3f(1.0, 1.0, 1.0);
+    if (g.forest) {
+        glBindTexture(GL_TEXTURE_2D, g.forestTexture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+        glEnd();
+    }
+    if (g.showBigfoot) {
+        glPushMatrix();
+        glTranslatef(bigfoot.pos[0], bigfoot.pos[1], bigfoot.pos[2]);
+        if (!g.silhouette) {
+            glBindTexture(GL_TEXTURE_2D, g.bigfootTexture);
+        } else {
+            glBindTexture(GL_TEXTURE_2D, g.silhouetteTexture);
+            glEnable(GL_ALPHA_TEST);
+            glAlphaFunc(GL_GREATER, 0.0f);
+            glColor4ub(255,255,255,255);
+        }
+        glBegin(GL_QUADS);
+            if (bigfoot.vel[0] > 0.0) {
+                glTexCoord2f(0.0f, 1.0f); glVertex2i(-wid,-wid);
+                glTexCoord2f(0.0f, 0.0f); glVertex2i(-wid, wid);
+                glTexCoord2f(1.0f, 0.0f); glVertex2i( wid, wid);
+                glTexCoord2f(1.0f, 1.0f); glVertex2i( wid,-wid);
+            } else {
+                glTexCoord2f(1.0f, 1.0f); glVertex2i(-wid,-wid);
+                glTexCoord2f(1.0f, 0.0f); glVertex2i(-wid, wid);
+                glTexCoord2f(0.0f, 0.0f); glVertex2i( wid, wid);
+                glTexCoord2f(0.0f, 1.0f); glVertex2i( wid,-wid);
+            }
+        glEnd();
+        glPopMatrix();
+        if (g.trees && g.silhouette) {
+            glBindTexture(GL_TEXTURE_2D, g.forestTransTexture);
+            glBegin(GL_QUADS);
+                glTexCoord2f(0.0f, 1.0f); glVertex2i(0, 0);
+                glTexCoord2f(0.0f, 0.0f); glVertex2i(0, g.yres);
+                glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+                glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, 0);
+            glEnd();
+        }
+        glDisable(GL_ALPHA_TEST);
     }
     
     render_main_menu(g.yres, g.xres, g.menu);
