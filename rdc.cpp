@@ -526,7 +526,6 @@ void physics()
         }
     }
 }
-extern void show_my_feature_db(int, int);
 
 void render_mm()
 {

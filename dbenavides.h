@@ -3,6 +3,7 @@
 // Filename: dbenavides.h
 // Purpose: Project Feature
 // Last Edit: 11/18/2024
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -21,14 +22,32 @@ using namespace std;
 
 #ifndef _dbenavides
 #define _dbenavides
+// Variables
 extern int db_show;
-enum Suit { HEARTS, DIAMONDS, CLUBS, SPADES };
-enum Rank { TWO = 2, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN,
-    JACK, QUEEN, KING, ACE };
+extern string hand_values[10];
 
-void show_my_feature_db(int x, int y);
+// Structures
+struct Hand {
+    int texmap;
+    int num;
+    int suit;
+    int curr_hand;
+};
+
+// Prototypes
+//void show_db(int x, int y);
+void show_db();
+void set_hand();
+void shuffling(int *deck);
+void sorting(Hand *hand);
+void dealing(Hand *hand, int *deck);
+int calculating(Hand *hand, Hand *hand2);
+bool is_straight(int *hand);
+bool is_sflush(Hand *hand, Hand *hand2);
+bool is_rflush(Hand *hand, Hand *hand2);
 
 // Obtained Structure from: 
 // https://www.geeksforgeeks.org/print-system-time-c-3-different-ways/
 Image background_time();
+
 #endif
