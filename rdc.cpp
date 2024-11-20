@@ -884,8 +884,6 @@ void drawRaindrops()
     glLineWidth(1);
 }
 
-extern void show_my_feature_db(int, int);
-
 void render()
 {
     //Clear the screen
@@ -894,9 +892,6 @@ void render()
     
     if (monique_show) {
        mcarrilloFeature();
-    }
-    if (db_show == 1) {
-        show_my_feature_db(30, g.yres - 80);
     }
   
     //draw a quad with texture
