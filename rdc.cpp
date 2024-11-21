@@ -549,9 +549,6 @@ void check_keys(XEvent *e)
     }
     (void)shift;
     switch (key) {
-        case XK_o:
-            jg.outline = !jg.outline;
-            break;
         case XK_Escape:
             if (g.gamemode == MODE_MENU)
                 g.done = 1;

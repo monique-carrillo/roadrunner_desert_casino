@@ -31,25 +31,22 @@ Roadrunner::Roadrunner() {
     h = 40;  // height
 };
 
-Platform::Platform() {
-    w = 650;
-    h = 175;
-    x = 0;
-    y = 0;
-}
-
 JGlobal::JGlobal() {
-    outline = 0;
-    walkframe = 0;
-    logo.w = 75;
-    logo.h = 50;
-    logo.x = 0;
-    logo.y = 0;
+    frame = 0;
+    pf.w = 650;
+    pf.h = 175;
+    lg.w = 75;
+    lg.h = 50;
+    lg.x = 0;
+    lg.y = 0;
 }
 
 void joshua_init(int x, int y)
 {
     int offset = 0;
+    // positioning
+    jg.pf.w = x;
+    //jg.pf.h = y / 3;
     // TODO: make colors random
     // roadrunner colors
     /*
@@ -159,56 +156,63 @@ void joshua_init(int x, int y)
 
 void joshua_init_opengl()
 {
-    // LOGO
-    jg.logo.image = &jimg[0];
-    glGenTextures(1, &jg.logo.texture); // generate & bind texture ID
-    glBindTexture(GL_TEXTURE_2D, jg.logo.texture);
-    // texture parameters
+    int w, h;
+
+    // logo
+    jg.lg.image = &jimg[0];
+    w = jg.lg.image->width;
+    h = jg.lg.image->height;
+    glGenTextures(1, &jg.lg.texture);
+    glBindTexture(GL_TEXTURE_2D, jg.lg.texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    unsigned char *imgData = buildAlphaData(&jimg[0]); // build new set of data
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, jimg[0].width, jimg[0].height, 0,
-            GL_RGBA, GL_UNSIGNED_BYTE, imgData); // load & specify texture data
-    free(imgData);
+    unsigned char *lg_img_data = buildAlphaData(&jimg[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+            lg_img_data);
+    free(lg_img_data);
 
-    // BACKGROUND
+    // background
     jg.bg.image = &jimg[1];
+    w = jg.bg.image->width;
+    h = jg.bg.image->height;
     glGenTextures(1, &jg.bg.texture);
     glBindTexture(GL_TEXTURE_2D, jg.bg.texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, jg.bg.image->width,
-            jg.bg.image->height, 0, GL_RGB, GL_UNSIGNED_BYTE,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE,
             jg.bg.image->data);
     jg.bg.xc[0] = 0.0;
     jg.bg.xc[1] = 0.25;
     jg.bg.yc[0] = 0.0;
     jg.bg.yc[1] = 1.0;
 
+    // roadrunner
+    jg.rr_texture.image = &jimg[2];
+    w = jg.rr_texture.image->width;
+    h = jg.rr_texture.image->height;
+    glGenTextures(1, &jg.rr_texture.texture);
+    glBindTexture(GL_TEXTURE_2D, jg.rr_texture.texture);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    unsigned char *roadrunner_img_data = buildAlphaData(&jimg[2]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+            roadrunner_img_data);
+    free(roadrunner_img_data);
+
     // PLATFORM
     jg.pf.image = &jimg[3];
+    w = jg.pf.image->width;
+    h = jg.pf.image->height;
     glGenTextures(1, &jg.pf.texture);
     glBindTexture(GL_TEXTURE_2D, jg.pf.texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, jg.pf.image->width,
-            jg.pf.image->height, 0, GL_RGB, GL_UNSIGNED_BYTE,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE,
             jg.pf.image->data);
     jg.pf.xc[0] = 0.0;
     jg.pf.xc[1] = 0.25;
     jg.pf.yc[0] = 0.0;
     jg.pf.yc[1] = 1.0;
-
-    // ROADRUNNER SPRITE
-    jg.rrsprite.image = &jimg[2];
-    glGenTextures(1, &jg.rrsprite.texture);
-    glBindTexture(GL_TEXTURE_2D, jg.rrsprite.texture);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    unsigned char *rrdata = buildAlphaData(&jimg[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, jg.rrsprite.image->width,
-            jg.rrsprite.image->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, rrdata);
-    free(rrdata);
 }
 
 void joshua_physics()
@@ -227,7 +231,7 @@ void joshua_physics()
 
     for (int i = 0; i < 3; i++) {
         //if (jg.rr[i].vel[0] != 0)
-        jg.walkframe += 1;
+        jg.frame += 1;
 
         jg.rr[i].vel[1] += GRAVITY;
         jg.rr[i].last_x = jg.rr[i].x;
@@ -258,8 +262,8 @@ void render_pause_screen(int x, int y)
 {
     Rect r;
     // positioning
-    jg.logo.x = x / 2;
-    jg.logo.y = y - (y / 4) + 30;
+    jg.lg.x = x / 2;
+    jg.lg.y = y - (y / 4) + 30;
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -273,20 +277,16 @@ void render_pause_screen(int x, int y)
         glVertex2i(x, 0);
     glEnd();
  
-    // roadrunner logo
-    glBindTexture(GL_TEXTURE_2D, jg.logo.texture);
+    // roadrunner lg
+    glBindTexture(GL_TEXTURE_2D, jg.lg.texture);
     glColor3f(1.0f, 1.0f, 1.0f); // reset color
     glPushMatrix();
-    glTranslatef(jg.logo.x, jg.logo.y, 0.0f);
+    glTranslatef(jg.lg.x, jg.lg.y, 0.0f);
     glBegin(GL_QUADS);        
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex2i(-jg.logo.w, -jg.logo.h); // bottom left
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex2i(-jg.logo.w,  jg.logo.h); // bottom right
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex2i( jg.logo.w,  jg.logo.h); // top right
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex2i( jg.logo.w, -jg.logo.h); // top left
+        glTexCoord2f(0.0f, 1.0f); glVertex2i(-jg.lg.w, -jg.lg.h);
+        glTexCoord2f(0.0f, 0.0f); glVertex2i(-jg.lg.w,  jg.lg.h);
+        glTexCoord2f(1.0f, 0.0f); glVertex2i( jg.lg.w,  jg.lg.h);
+        glTexCoord2f(1.0f, 1.0f); glVertex2i( jg.lg.w, -jg.lg.h);
     glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -340,11 +340,7 @@ void render_racing(int x, int y)
 {
     Rect r;
 
-    // positioning
-    jg.pf.w = x;
-    //jg.pf.h = y / 3;
-
-    // render background
+        // render background
     glBindTexture(GL_TEXTURE_2D, jg.bg.texture);
     glColor3f(1.0f, 1.0f, 1.0f); // reset color
     glBegin(GL_QUADS);
@@ -370,14 +366,14 @@ void render_racing(int x, int y)
     glEnable(GL_BLEND);
  
     // render roadrunners
-    int ix = jg.walkframe % 6;
+    int ix = jg.frame % 6;
     int iy = 0;
-    if (jg.walkframe >= 6)
+    if (jg.frame >= 6)
         iy = 1;
     float fx = (float)ix / 6.0;
     float fy = (float)iy / 2.0;
     for (int i = 0; i < 3; i++) {
-        glBindTexture(GL_TEXTURE_2D, jg.rrsprite.texture);
+        glBindTexture(GL_TEXTURE_2D, jg.rr_texture.texture);
         glColor3fv(jg.rr[i].color);
         glPushMatrix();
         glBegin(GL_QUADS);
@@ -404,7 +400,6 @@ void render_racing(int x, int y)
                 jg.rr[i].vel[0]);
     }
     ggprint13(&r, 16, 0x00003594, "Controls");
-    ggprint8b(&r, 16, 0x00003594, "o - outline");
 
     glDisable(GL_BLEND);
 }

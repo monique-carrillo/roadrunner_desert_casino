@@ -3,6 +3,8 @@
 
 #include "images.h"
 
+#define GRAVITY -0.1
+
 class Texture {
     public:
         Image *image;
@@ -22,35 +24,11 @@ class Roadrunner : public Texture {
         Roadrunner();
 };
 
-class Platform : public Texture {
-    public:
-        Platform();
-};
-
-// source: bship.cpp framework
-typedef struct t_button {
-    Rect r;
-    char text[32];
-    int over;
-    int down;
-    int click;
-    float color[3];
-    float hcolor[3];
-    float dcolor[3];
-    unsigned int text_color;
-} Button;
-
-#define GRAVITY -0.1
-
 class JGlobal {
     public:
-        int outline;
-        int walkframe;
-        Texture bg;
-        Texture logo;
-        Texture rrsprite;
+        int frame;
+        Texture lg, bg, pf, rr_texture;
         Roadrunner rr[3];
-        Platform pf;
         Button button[MAXBUTTONS];
         JGlobal();
 };

@@ -13,6 +13,19 @@ typedef struct t_rect {
 	int centery;
 } Rect;
 
+// source: bship.cpp framework
+typedef struct t_button {
+    Rect r;
+    char text[32];
+    int over;
+    int down;
+    int click;
+    float color[3];
+    float hcolor[3];
+    float dcolor[3];
+    unsigned int text_color;
+} Button;
+
 extern void initialize_fonts(void);
 extern void cleanup_fonts(void);
 extern void ggprint16(Rect *r, int advance, int cref, const char *fmt, ...);
