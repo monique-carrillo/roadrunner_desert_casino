@@ -27,7 +27,9 @@ Image::Image(const char *fname) {
         char ts[100];
         //system("convert eball.jpg eball.ppm");
         //sprintf(ts, "convert %s %s", fname, ppmname);
-        snprintf(ts, sizeof(ts), "convert %s %s", fname, ppmname);
+        //snprintf(ts, sizeof(ts), "convert %s %s", fname, ppmname);
+        // modified convert -> magick, to fix convert deprecated warning
+        snprintf(ts, sizeof(ts), "magick %s %s", fname, ppmname);
         system(ts);
     }
     //sprintf(ts, "%s", name);
