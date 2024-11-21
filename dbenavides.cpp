@@ -357,7 +357,7 @@ Image background_time() {
         return "./images/night.jpg";
     }
     // Default if it can't pick anything up.
-    return "./images/dawn.png";
+    return "./images/dawn.jpg";
 }
 
 
