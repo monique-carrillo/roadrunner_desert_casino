@@ -40,7 +40,6 @@ typedef struct t_button {
     unsigned int text_color;
 } Button;
 
-#define JG_MAXBUTTONS 8
 #define GRAVITY -0.1
 
 class JGlobal {
@@ -52,12 +51,14 @@ class JGlobal {
         Texture rrsprite;
         Roadrunner rr[3];
         Platform pf;
+        Button button[MAXBUTTONS];
         JGlobal();
 };
 
+extern int jg_nbuttons;
 extern JGlobal jg;
 
-void joshua_init();
+void joshua_init(int, int);
 void joshua_init_opengl();
 void joshua_physics();
 void render_pause_screen(int, int);

@@ -22,16 +22,6 @@
 #include "images.h"
 #include "mcarrillo.h"
 
-//defined types
-typedef double Flt;
-typedef double Vec[3];
-typedef Flt Matrix[4][4];
-
-//macros
-#define random(a) (rand()%a)
-#define MakeVector(x, y, z, v) (v)[0]=(x),(v)[1]=(y),(v)[2]=(z)
-#define ALPHA 1
-
 //Setup timers
 const double physicsRate = 1.0 / 30.0;
 const double oobillion = 1.0 / 1e9;
@@ -51,11 +41,13 @@ void timeCopy(struct timespec *dest, struct timespec *source) {
 int lbutton = 0;
 int rbutton = 0;
 
-#define MAXBUTTONS 8
 Button button[MAXBUTTONS];
 int nbuttons = 0;
 
-Image img[1] = { background_time() };
+Image img[2] = {
+    background_time(),
+    "./images/felt.jpg"
+};
 
 void init_opengl(void);
 void mouse_click(int);
@@ -75,11 +67,14 @@ enum {
 
 class Global {
     public:
+        float money;
         int xres, yres;
         int paused;
         int gamemode;
         int done;
         GLuint bgTexture;
+        Image *felt_image;
+        GLuint felt_texture;
         Global() {
             done = 0;
             gamemode = MODE_MENU;
@@ -224,7 +219,6 @@ void init_opengl(void)
     //glClear(GL_COLOR_BUFFER_BIT);
     //Do this to allow fonts
     glEnable(GL_TEXTURE_2D);
-    initialize_fonts();
     
     joshua_init_opengl();    
 
@@ -236,22 +230,33 @@ void init_opengl(void)
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, 3, img[0].width, img[0].height, 0, GL_RGB,
                  GL_UNSIGNED_BYTE, img[0].data);
-    
+
+    // felt
+    g.felt_image = &img[1];                                                      
+    glGenTextures(1, &g.felt_texture);
+    int w = g.felt_image->width;
+    int h = g.felt_image->height;
+    glBindTexture(GL_TEXTURE_2D, g.felt_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 g.felt_image->data);
+
 }
 
 void init_sounds() { }
 
 void init()
 {
-    int offset = 0;
-    joshua_init();
+    int offset = 60;
+    joshua_init(g.xres, g.yres);
 
     nbuttons=0;
     // roadrunner racing
     button[nbuttons].r.width = 200;
     button[nbuttons].r.height = 50;
     button[nbuttons].r.left = g.xres / 2 - button[nbuttons].r.width / 2;
-    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2;
+    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2 + offset;
     button[nbuttons].r.right = button[nbuttons].r.left +
                                button[nbuttons].r.width;
     button[nbuttons].r.top = button[nbuttons].r.bot +
@@ -334,6 +339,35 @@ void init()
     nbuttons++;
     offset -= 60;
 
+    // settings
+    button[nbuttons].r.width = 200;
+    button[nbuttons].r.height = 50;
+    button[nbuttons].r.left = g.xres / 2 - button[nbuttons].r.width / 2;
+    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2 + offset;
+    button[nbuttons].r.right = button[nbuttons].r.left +
+                               button[nbuttons].r.width;
+    button[nbuttons].r.top = button[nbuttons].r.bot +
+                             button[nbuttons].r.height;
+    button[nbuttons].r.centerx = (button[nbuttons].r.left +
+                                  button[nbuttons].r.right) / 2;
+    button[nbuttons].r.centery = (button[nbuttons].r.bot +
+                                  button[nbuttons].r.top) / 2;
+    strcpy(button[nbuttons].text, "Settings");
+    button[nbuttons].down = 0;
+    button[nbuttons].click = 0;
+    button[nbuttons].color[0] = 0.0f;
+    button[nbuttons].color[1] = 0.2f;
+    button[nbuttons].color[2] = 0.6f;
+    button[nbuttons].hcolor[0] = 1.0f;
+    button[nbuttons].hcolor[1] = 0.78f;
+    button[nbuttons].hcolor[2] = 0.17f;
+    button[nbuttons].dcolor[0] = button[nbuttons].color[0] * 0.5f;
+    button[nbuttons].dcolor[1] = button[nbuttons].color[1] * 0.5f;
+    button[nbuttons].dcolor[2] = button[nbuttons].color[2] * 0.5f;
+    button[nbuttons].text_color = 0x00ffc72c;
+    nbuttons++;
+    offset -= 60;
+
     // exit
     button[nbuttons].r.width = 200;
     button[nbuttons].r.height = 50;
@@ -366,33 +400,59 @@ void init()
 void mouse_click(int action)
 {
     if (action == 1) {
-        for (int i = 0; i < nbuttons; i++) {
-            if (button[i].over) {
-                button[i].down  = 1;
-                button[i].click = 1;
-                if (i == 0) {
-                    // raodrunner racing
-                    g.gamemode = MODE_RACING;
+        if (g.gamemode == MODE_MENU) {
+            for (int i = 0; i < nbuttons; i++) {
+                if (button[i].over) {
+                    button[i].down  = 1;
+                    button[i].click = 1;
+                    if (i == 0) {
+                        g.gamemode = MODE_RACING;
+                    }
+                    if (i == 1) {
+                        g.gamemode = MODE_BLACKJACK;
+                    }
+                    if (i == 2) {
+                        g.gamemode = MODE_POKER;
+                    }
+                    if (i == 3) {
+                        // settings
+                    }
+                    if (i == 4) {
+                        g.done = 1;
+
+                    }
                 }
-                if (i == 1) {
-                    // blackjack
-                    g.gamemode = MODE_BLACKJACK;
-                }
-                if (i == 2) {
-                    // poker
-                    g.gamemode = MODE_POKER;
-                }
-                if (i == 3) {
-                    // exit
-                    g.done = 1;
+            }
+        } else if (g.paused) {
+            for (int i = 0; i < jg_nbuttons; i++) {
+                if (jg.button[i].over) {
+                    jg.button[i].down  = 1;
+                    jg.button[i].click = 1;
+                    if (i == 0) {
+                        g.paused = !g.paused;
+                    }
+                    if (i == 1) {
+                        g.paused = 0;
+                        g.gamemode = MODE_MENU;
+                    }
+                    if (i == 2) {
+                        g.done = 1;
+                    }
                 }
             }
         }
     }
     if (action == 2) {
-        for (int i = 0; i < nbuttons; i++) {
-            button[i].down = 0;
-            button[i].click = 0;
+        if (g.gamemode == MODE_MENU) {
+            for (int i = 0; i < nbuttons; i++) {
+                button[i].down = 0;
+                button[i].click = 0;
+            }
+        } else if (g.paused) {
+            for (int i = 0; i < jg_nbuttons; i++) {
+                jg.button[i].down = 0;
+                jg.button[i].click = 0;
+            }
         }
     }
 }
@@ -449,6 +509,22 @@ void check_mouse(XEvent *e)
             mouse_click(1);
         if (rbutton)
             mouse_click(1);
+    } else if (g.paused) {
+        for (int i = 0; i < jg_nbuttons; i++) {
+            jg.button[i].over = 0;
+            jg.button[i].down = 0;
+            if (x >= jg.button[i].r.left &&
+                    x <= jg.button[i].r.right &&
+                    y >= jg.button[i].r.bot &&
+                    y <= jg.button[i].r.top) {
+                jg.button[i].over = 1;
+                break;
+            }
+        }
+        if (lbutton)
+            mouse_click(1);
+        if (rbutton)
+            mouse_click(1);
     }
 }
 
@@ -476,12 +552,6 @@ void check_keys(XEvent *e)
         case XK_o:
             jg.outline = !jg.outline;
             break;
-        case XK_b:
-            monique_show = !monique_show;
-            break;
-        case XK_g:
-            db_show = !db_show;
-            break;
         case XK_Escape:
             if (g.gamemode == MODE_MENU)
                 g.done = 1;
@@ -491,28 +561,17 @@ void check_keys(XEvent *e)
     }
 }
 
-Flt VecNormalize(Vec vec)
-{
-    Flt len, tlen;
-    Flt xlen = vec[0];
-    Flt ylen = vec[1];
-    Flt zlen = vec[2];
-    len = xlen*xlen + ylen*ylen + zlen*zlen;
-    if (len == 0.0) {
-        MakeVector(0.0,0.0,1.0,vec);
-        return 1.0;
-    }
-    len = sqrt(len);
-    tlen = 1.0 / len;
-    vec[0] = xlen * tlen;
-    vec[1] = ylen * tlen;
-    vec[2] = zlen * tlen;
-    return(len);
-}
 void physics()
 {
     if (g.gamemode == MODE_MENU)
         return;
+    if (g.paused) {
+        // no physics
+    } else {
+        // all physics go here
+        joshua_physics();
+    }
+    /*
     if (!g.paused) {
         if (g.gamemode == MODE_RACING) {
             // roadrunner racing physics
@@ -525,6 +584,7 @@ void physics()
             // poker physics go here
         }
     }
+    */
 }
 
 void render_mm()
@@ -544,7 +604,13 @@ void render_mm()
 
     r.left = g.xres / 2;
     r.bot  = g.yres - g.yres / 4;
-    ggprint40(&r, 0, 0x000000ff, "Main Menu");
+    r.center = 1;
+    ggprint40(&r, 50, 0x000000ff, "Roadrunner Desert");
+    ggprint40(&r, 0, 0x000000ff, "Casino");
+    r.left = 20;
+    r.bot  = 20;
+    r.center = 0;
+    ggprint40(&r, 0, 0x0000ff00, "$%.2f", g.money);
 
     for (int i = 0; i < nbuttons; i++) {
         if (button[i].over) {
@@ -555,7 +621,6 @@ void render_mm()
                 glVertex2i(button[i].r.left - 2,  button[i].r.top + 2);
                 glVertex2i(button[i].r.right + 2, button[i].r.top + 2);
                 glVertex2i(button[i].r.right + 2, button[i].r.bot - 2);
-                glVertex2i(button[i].r.left - 2,  button[i].r.bot - 2);
             glEnd();
             glLineWidth(1);
         }
@@ -596,11 +661,19 @@ void render()
         render_racing(g.xres, g.yres);
     } else if (g.gamemode == MODE_BLACKJACK) {
         // blackjack
+        glColor3f(1.0, 1.0, 1.0); // pure white
+        glBindTexture(GL_TEXTURE_2D, g.felt_texture);
+        glBegin(GL_QUADS); 
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      g.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
     } else if (g.gamemode == MODE_POKER) {
         // poker
     }
 
     if (g.paused)
         render_pause_screen(g.xres, g.yres);
-    
 }

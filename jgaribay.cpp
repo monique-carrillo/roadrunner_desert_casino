@@ -11,6 +11,7 @@
 #include "fonts.h"
 #include "jgaribay.h"
 
+int jg_nbuttons = 0;
 JGlobal jg;
 
 // roadrunner sprite source:
@@ -40,14 +41,15 @@ Platform::Platform() {
 JGlobal::JGlobal() {
     outline = 0;
     walkframe = 0;
-    logo.w = 100;
-    logo.h = 75;
+    logo.w = 75;
+    logo.h = 50;
     logo.x = 0;
     logo.y = 0;
 }
 
-void joshua_init()
+void joshua_init(int x, int y)
 {
+    int offset = 0;
     // TODO: make colors random
     // roadrunner colors
     /*
@@ -67,6 +69,92 @@ void joshua_init()
     jg.rr[0].alt_color = 0x00ff0000;
     jg.rr[1].alt_color = 0x0000ff00;
     jg.rr[2].alt_color = 0x000000ff;
+
+    jg_nbuttons=0;
+    // roadrunner racing
+    jg.button[jg_nbuttons].r.width = 200;
+    jg.button[jg_nbuttons].r.height = 50;
+    jg.button[jg_nbuttons].r.left = x / 2 - jg.button[jg_nbuttons].r.width / 2;
+    jg.button[jg_nbuttons].r.bot = y / 2 - jg.button[jg_nbuttons].r.height / 2 + offset;
+    jg.button[jg_nbuttons].r.right = jg.button[jg_nbuttons].r.left +
+                               jg.button[jg_nbuttons].r.width;
+    jg.button[jg_nbuttons].r.top = jg.button[jg_nbuttons].r.bot +
+                             jg.button[jg_nbuttons].r.height;
+    jg.button[jg_nbuttons].r.centerx = (jg.button[jg_nbuttons].r.left +
+                                  jg.button[jg_nbuttons].r.right) / 2;
+    jg.button[jg_nbuttons].r.centery = (jg.button[jg_nbuttons].r.bot +
+                                  jg.button[jg_nbuttons].r.top) / 2;
+    strcpy(jg.button[jg_nbuttons].text, "Resume");
+    jg.button[jg_nbuttons].down = 0;
+    jg.button[jg_nbuttons].click = 0;
+    jg.button[jg_nbuttons].color[0] = 0.0f;
+    jg.button[jg_nbuttons].color[1] = 0.2f;
+    jg.button[jg_nbuttons].color[2] = 0.6f;
+    jg.button[jg_nbuttons].hcolor[0] = 1.0f;
+    jg.button[jg_nbuttons].hcolor[1] = 0.78f;
+    jg.button[jg_nbuttons].hcolor[2] = 0.17f;
+    jg.button[jg_nbuttons].dcolor[0] = jg.button[jg_nbuttons].color[0] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[1] = jg.button[jg_nbuttons].color[1] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[2] = jg.button[jg_nbuttons].color[2] * 0.5f;
+    jg.button[jg_nbuttons].text_color = 0x00ffc72c;
+    jg_nbuttons++;
+    offset -= 60;
+
+    jg.button[jg_nbuttons].r.width = 200;
+    jg.button[jg_nbuttons].r.height = 50;
+    jg.button[jg_nbuttons].r.left = x / 2 - jg.button[jg_nbuttons].r.width / 2;
+    jg.button[jg_nbuttons].r.bot = y / 2 - jg.button[jg_nbuttons].r.height / 2 + offset;
+    jg.button[jg_nbuttons].r.right = jg.button[jg_nbuttons].r.left +
+                               jg.button[jg_nbuttons].r.width;
+    jg.button[jg_nbuttons].r.top = jg.button[jg_nbuttons].r.bot +
+                             jg.button[jg_nbuttons].r.height;
+    jg.button[jg_nbuttons].r.centerx = (jg.button[jg_nbuttons].r.left +
+                                  jg.button[jg_nbuttons].r.right) / 2;
+    jg.button[jg_nbuttons].r.centery = (jg.button[jg_nbuttons].r.bot +
+                                  jg.button[jg_nbuttons].r.top) / 2;
+    strcpy(jg.button[jg_nbuttons].text, "Main Menu");
+    jg.button[jg_nbuttons].down = 0;
+    jg.button[jg_nbuttons].click = 0;
+    jg.button[jg_nbuttons].color[0] = 0.0f;
+    jg.button[jg_nbuttons].color[1] = 0.2f;
+    jg.button[jg_nbuttons].color[2] = 0.6f;
+    jg.button[jg_nbuttons].hcolor[0] = 1.0f;
+    jg.button[jg_nbuttons].hcolor[1] = 0.78f;
+    jg.button[jg_nbuttons].hcolor[2] = 0.17f;
+    jg.button[jg_nbuttons].dcolor[0] = jg.button[jg_nbuttons].color[0] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[1] = jg.button[jg_nbuttons].color[1] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[2] = jg.button[jg_nbuttons].color[2] * 0.5f;
+    jg.button[jg_nbuttons].text_color = 0x00ffc72c;
+    jg_nbuttons++;
+    offset -= 60;
+
+    jg.button[jg_nbuttons].r.width = 200;
+    jg.button[jg_nbuttons].r.height = 50;
+    jg.button[jg_nbuttons].r.left = x / 2 - jg.button[jg_nbuttons].r.width / 2;
+    jg.button[jg_nbuttons].r.bot = y / 2 - jg.button[jg_nbuttons].r.height / 2 + offset;
+    jg.button[jg_nbuttons].r.right = jg.button[jg_nbuttons].r.left +
+                               jg.button[jg_nbuttons].r.width;
+    jg.button[jg_nbuttons].r.top = jg.button[jg_nbuttons].r.bot +
+                             jg.button[jg_nbuttons].r.height;
+    jg.button[jg_nbuttons].r.centerx = (jg.button[jg_nbuttons].r.left +
+                                  jg.button[jg_nbuttons].r.right) / 2;
+    jg.button[jg_nbuttons].r.centery = (jg.button[jg_nbuttons].r.bot +
+                                  jg.button[jg_nbuttons].r.top) / 2;
+    strcpy(jg.button[jg_nbuttons].text, "Quit");
+    jg.button[jg_nbuttons].down = 0;
+    jg.button[jg_nbuttons].click = 0;
+    jg.button[jg_nbuttons].color[0] = 0.0f;
+    jg.button[jg_nbuttons].color[1] = 0.2f;
+    jg.button[jg_nbuttons].color[2] = 0.6f;
+    jg.button[jg_nbuttons].hcolor[0] = 1.0f;
+    jg.button[jg_nbuttons].hcolor[1] = 0.78f;
+    jg.button[jg_nbuttons].hcolor[2] = 0.17f;
+    jg.button[jg_nbuttons].dcolor[0] = jg.button[jg_nbuttons].color[0] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[1] = jg.button[jg_nbuttons].color[1] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[2] = jg.button[jg_nbuttons].color[2] * 0.5f;
+    jg.button[jg_nbuttons].text_color = 0x00ffc72c;
+    jg_nbuttons++;
+    offset -= 60;
 }
 
 void joshua_init_opengl()
@@ -168,13 +256,14 @@ void joshua_physics()
 
 void render_pause_screen(int x, int y)
 {
-    glEnable(GL_BLEND);
-    
     Rect r;
     // positioning
     jg.logo.x = x / 2;
-    jg.logo.y = y - (y / 4);
+    jg.logo.y = y - (y / 4) + 30;
 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
+    
     // dim screen
     glBegin(GL_QUADS);
     glColor4ub(0, 0, 0, 200);
@@ -183,19 +272,11 @@ void render_pause_screen(int x, int y)
         glVertex2i(x, y);
         glVertex2i(x, 0);
     glEnd();
-
-    r.bot = y / 2;
-    r.left = x / 2;
-    r.center = 1;
-    ggprint40(&r, 0, 0x00ffc72c, "PAUSED");
-
-    // BUTTONS
-    // render buttons here
-
+ 
     // roadrunner logo
+    glBindTexture(GL_TEXTURE_2D, jg.logo.texture);
     glColor3f(1.0f, 1.0f, 1.0f); // reset color
     glPushMatrix();
-    glBindTexture(GL_TEXTURE_2D, jg.logo.texture);
     glTranslatef(jg.logo.x, jg.logo.y, 0.0f);
     glBegin(GL_QUADS);        
         glTexCoord2f(0.0f, 1.0f);
@@ -208,10 +289,53 @@ void render_pause_screen(int x, int y)
         glVertex2i( jg.logo.w, -jg.logo.h); // top left
     glEnd();
     glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glColor3f(1.0f, 1.0f, 1.0f); // reset color
     
     glDisable(GL_BLEND);
+   
+    r.bot = (y / 2) + 30;
+    r.left = x / 2;
+    r.center = 1;
+    ggprint40(&r, 0, 0x00ffc72c, "PAUSED");
+
+    // BUTTONS
+    // render buttons here
+    for (int i = 0; i < jg_nbuttons; i++) {
+        if (jg.button[i].over) {
+            glColor3fv(jg.button[i].hcolor);
+            glLineWidth(2);
+            glBegin(GL_LINE_LOOP);
+                glVertex2i(jg.button[i].r.left - 2,  jg.button[i].r.bot - 2);
+                glVertex2i(jg.button[i].r.left - 2,  jg.button[i].r.top + 2);
+                glVertex2i(jg.button[i].r.right + 2, jg.button[i].r.top + 2);
+                glVertex2i(jg.button[i].r.right + 2, jg.button[i].r.bot - 2);
+            glEnd();
+            glLineWidth(1);
+        }
+        if (jg.button[i].down) {
+            glColor3fv(jg.button[i].dcolor);
+        } else {
+            glColor3fv(jg.button[i].color);
+        }
+        glBegin(GL_QUADS);
+            glVertex2i(jg.button[i].r.left,  jg.button[i].r.bot);
+            glVertex2i(jg.button[i].r.left,  jg.button[i].r.top);
+            glVertex2i(jg.button[i].r.right, jg.button[i].r.top);
+            glVertex2i(jg.button[i].r.right, jg.button[i].r.bot);
+        glEnd();
+        r.left = jg.button[i].r.centerx;
+        r.bot  = jg.button[i].r.centery-8;
+        r.center = 1;
+        if (jg.button[i].down) {
+            ggprint16(&r, 0, jg.button[i].text_color, "Pressed!");
+        } else {
+            ggprint16(&r, 0, jg.button[i].text_color, jg.button[i].text);
+        }
+    }
 }
 
+// FIGURE UOT HOW TO RESTART PHYSICS AND NOT RETAIN VALUES
 void render_racing(int x, int y)
 {
     Rect r;
