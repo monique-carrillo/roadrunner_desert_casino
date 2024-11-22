@@ -43,7 +43,4 @@ void joshua_physics();
 void render_pause_screen();
 void render_racing();
 
-//temporarily added functions from jchicas.cpp
-void render_main_menu(int, int, int); 
-Image background_time();
 #endif

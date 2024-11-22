@@ -19,6 +19,8 @@
 #include <GL/glx.h>
 #include "fonts.h"
 #include "jgaribay.h"
+#include "dbenavides.h"
+#include "jchicas.h"
 #include "images.h"
 #include "mcarrillo.h"
 
@@ -54,7 +56,8 @@ enum {
     MODE_MENU = 0,
     MODE_RACING,
     MODE_BLACKJACK,
-    MODE_POKER
+    MODE_POKER,
+    MODE_CEELO
 };
 
 class Global {
@@ -262,7 +265,7 @@ void init_sounds() { }
 
 void init()
 {
-    int offset = 60;
+    int offset = 75;
     joshua_init();
 
     nbuttons=0;
@@ -353,6 +356,36 @@ void init()
     nbuttons++;
     offset -= 60;
 
+
+    //Cee-lo
+    button[nbuttons].r.width = 200;
+    button[nbuttons].r.height = 50;
+    button[nbuttons].r.left = g.xres / 2 - button[nbuttons].r.width / 2;
+    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2 + offset;
+    button[nbuttons].r.right = button[nbuttons].r.left +
+                               button[nbuttons].r.width;
+    button[nbuttons].r.top = button[nbuttons].r.bot +
+                             button[nbuttons].r.height;
+    button[nbuttons].r.centerx = (button[nbuttons].r.left +
+                                  button[nbuttons].r.right) / 2;
+    button[nbuttons].r.centery = (button[nbuttons].r.bot +
+                                  button[nbuttons].r.top) / 2;
+    strcpy(button[nbuttons].text, "Cee-lo");
+    button[nbuttons].down = 0;
+    button[nbuttons].click = 0;
+    button[nbuttons].color[0] = 0.0f;
+    button[nbuttons].color[1] = 0.2f;
+    button[nbuttons].color[2] = 0.6f;
+    button[nbuttons].hcolor[0] = 1.0f;
+    button[nbuttons].hcolor[1] = 0.78f;
+    button[nbuttons].hcolor[2] = 0.17f;
+    button[nbuttons].dcolor[0] = button[nbuttons].color[0] * 0.5f;
+    button[nbuttons].dcolor[1] = button[nbuttons].color[1] * 0.5f;
+    button[nbuttons].dcolor[2] = button[nbuttons].color[2] * 0.5f;
+    button[nbuttons].text_color = 0x00ffc72c;
+    nbuttons++;
+    offset -= 60;
+
     // settings
     button[nbuttons].r.width = 200;
     button[nbuttons].r.height = 50;
@@ -428,10 +461,13 @@ void mouse_click(int action)
                     if (i == 2) {
                         g.gamemode = MODE_POKER;
                     }
-                    if (i == 3) {
+		    if (i == 3) {
+			g.gamemode = MODE_CEELO;
+		    }
+                    if (i == 4) {
                         // settings
                     }
-                    if (i == 4) {
+                    if (i == 5) {
                         g.done = 1;
 
                     }
@@ -614,7 +650,7 @@ void render_mm()
     glBindTexture(GL_TEXTURE_2D, 0);
 
     r.left = g.xres / 2;
-    r.bot  = g.yres - g.yres / 4;
+    r.bot  = g.yres - g.yres / 6;
     r.center = 1;
     ggprint40(&r, 50, 0x000000ff, "Roadrunner Desert");
     ggprint40(&r, 0, 0x000000ff, "Casino");
@@ -692,6 +728,17 @@ void render()
         glBindTexture(GL_TEXTURE_2D, 0);
     } else if (g.gamemode == MODE_POKER) {
         // poker
+    } else if (g.gamemode == MODE_CEELO) {
+
+	     glColor3f(1.0, 1.0, 1.0); // pure white
+        glBindTexture(GL_TEXTURE_2D, g.felt_texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      g.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     if (g.paused)
