@@ -15,6 +15,7 @@
 
 void ceelo()
 {
+/*
 srand(time(NULL));
 int count = 0;
 int player[4][3];
@@ -23,7 +24,7 @@ int max;
 bool check;
 int test1, test2;
 int compnum[4];
-
+*/
 
 
 }
