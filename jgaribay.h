@@ -26,6 +26,7 @@ class Roadrunner : public Texture {
 
 class JGlobal {
     public:
+        int xres, yres;
         int frame;
         Texture lg, bg, pf, rr_texture;
         Roadrunner rr[3];
@@ -36,11 +37,11 @@ class JGlobal {
 extern int jg_nbuttons;
 extern JGlobal jg;
 
-void joshua_init(int, int);
+void joshua_init();
 void joshua_init_opengl();
 void joshua_physics();
-void render_pause_screen(int, int);
-void render_racing(int, int);
+void render_pause_screen();
+void render_racing();
 
 //temporarily added functions from jchicas.cpp
 void render_main_menu(int, int, int); 

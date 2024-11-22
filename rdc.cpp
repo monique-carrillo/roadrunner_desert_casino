@@ -44,19 +44,11 @@ int rbutton = 0;
 Button button[MAXBUTTONS];
 int nbuttons = 0;
 
-Image img[2] = {
+Image img[3] = {
     background_time(),
-    "./images/felt.jpg"
+    "./images/felt.jpg",
+    "./images/cards/c_A.jpg"
 };
-
-void init_opengl(void);
-void mouse_click(int);
-void check_mouse(XEvent *e);
-void check_keys(XEvent *e);
-void init();
-void physics(void);
-void render_mm(void);
-void render(void);
 
 enum {
     MODE_MENU = 0,
@@ -75,6 +67,8 @@ class Global {
         GLuint bgTexture;
         Image *felt_image;
         GLuint felt_texture;
+        Image *card_image;
+        GLuint card_texture;
         Global() {
             done = 0;
             gamemode = MODE_MENU;
@@ -83,6 +77,15 @@ class Global {
             yres = 600;
         }
 } g;
+
+void init_opengl(void);
+void mouse_click(int);
+void check_mouse(XEvent *e);
+void check_keys(XEvent *e);
+void init();
+void physics(void);
+void render_mm(void);
+void render(void);
 
 class X11_wrapper {
     private:
@@ -132,8 +135,8 @@ class X11_wrapper {
             XStoreName(dpy, win, "Roadrunner Desert Casino");
         }
         void setup_screen_res(const int w, const int h) {
-            g.xres = w;
-            g.yres = h;
+            g.xres = jg.xres = w;
+            g.yres = jg.yres = h;
         }
         void reshape_window(int width, int height) {
             // window resized
@@ -164,11 +167,10 @@ class X11_wrapper {
             XNextEvent(dpy, &e);
             return e;
         }
-        void swapBuffers() {
+        void swap_buffers() {
             glXSwapBuffers(dpy, win);
         }
 } x11;
-
 
 int main()
 {
@@ -194,7 +196,7 @@ int main()
             physicsCountdown -= physicsRate;
         }
         render();
-        x11.swapBuffers();
+        x11.swap_buffers();
     }
     cleanup_fonts();
     return 0;
@@ -232,7 +234,7 @@ void init_opengl(void)
                  GL_UNSIGNED_BYTE, img[0].data);
 
     // felt
-    g.felt_image = &img[1];                                                      
+    g.felt_image = &img[1];
     glGenTextures(1, &g.felt_texture);
     int w = g.felt_image->width;
     int h = g.felt_image->height;
@@ -242,6 +244,18 @@ void init_opengl(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE,
                  g.felt_image->data);
 
+    // card
+    g.card_image = &img[2];
+    glGenTextures(1, &g.card_texture);
+    w = g.card_image->width;
+    h = g.card_image->height;
+    glBindTexture(GL_TEXTURE_2D, g.card_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    unsigned char *card_data = buildAlphaData(&img[2]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
+            GL_UNSIGNED_BYTE, card_data);
+    free(card_data);
 }
 
 void init_sounds() { }
@@ -249,7 +263,7 @@ void init_sounds() { }
 void init()
 {
     int offset = 60;
-    joshua_init(g.xres, g.yres);
+    joshua_init();
 
     nbuttons=0;
     // roadrunner racing
@@ -544,7 +558,7 @@ void check_keys(XEvent *e)
         return;
     }
     if (key == XK_Shift_L || key == XK_Shift_R) {
-        shift=1;
+        shift = 1;
         return;
     }
     (void)shift;
@@ -655,7 +669,7 @@ void render()
         render_mm();
     } else if (g.gamemode == MODE_RACING) {
         // roadrunner racing
-        render_racing(g.xres, g.yres);
+        render_racing();
     } else if (g.gamemode == MODE_BLACKJACK) {
         // blackjack
         glColor3f(1.0, 1.0, 1.0); // pure white
@@ -667,10 +681,19 @@ void render()
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        glBindTexture(GL_TEXTURE_2D, g.card_texture);
+        glBegin(GL_QUADS); 
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  10);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(10,  200);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 200);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(100, 10);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
     } else if (g.gamemode == MODE_POKER) {
         // poker
     }
 
     if (g.paused)
-        render_pause_screen(g.xres, g.yres);
+        render_pause_screen();
 }

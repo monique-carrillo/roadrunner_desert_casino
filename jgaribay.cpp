@@ -41,11 +41,11 @@ JGlobal::JGlobal() {
     lg.y = 0;
 }
 
-void joshua_init(int x, int y)
+void joshua_init()
 {
     int offset = 0;
     // positioning
-    jg.pf.w = x;
+    jg.pf.w = jg.xres;
     //jg.pf.h = y / 3;
     // TODO: make colors random
     // roadrunner colors
@@ -71,8 +71,10 @@ void joshua_init(int x, int y)
     // roadrunner racing
     jg.button[jg_nbuttons].r.width = 200;
     jg.button[jg_nbuttons].r.height = 50;
-    jg.button[jg_nbuttons].r.left = x / 2 - jg.button[jg_nbuttons].r.width / 2;
-    jg.button[jg_nbuttons].r.bot = y / 2 - jg.button[jg_nbuttons].r.height / 2 + offset;
+    jg.button[jg_nbuttons].r.left = jg.xres / 2 -
+        jg.button[jg_nbuttons].r.width / 2;
+    jg.button[jg_nbuttons].r.bot = jg.yres / 2 -
+        jg.button[jg_nbuttons].r.height / 2 + offset;
     jg.button[jg_nbuttons].r.right = jg.button[jg_nbuttons].r.left +
                                jg.button[jg_nbuttons].r.width;
     jg.button[jg_nbuttons].r.top = jg.button[jg_nbuttons].r.bot +
@@ -99,8 +101,10 @@ void joshua_init(int x, int y)
 
     jg.button[jg_nbuttons].r.width = 200;
     jg.button[jg_nbuttons].r.height = 50;
-    jg.button[jg_nbuttons].r.left = x / 2 - jg.button[jg_nbuttons].r.width / 2;
-    jg.button[jg_nbuttons].r.bot = y / 2 - jg.button[jg_nbuttons].r.height / 2 + offset;
+    jg.button[jg_nbuttons].r.left = jg.xres / 2 -
+        jg.button[jg_nbuttons].r.width / 2;
+    jg.button[jg_nbuttons].r.bot = jg.yres / 2 -
+        jg.button[jg_nbuttons].r.height / 2 + offset;
     jg.button[jg_nbuttons].r.right = jg.button[jg_nbuttons].r.left +
                                jg.button[jg_nbuttons].r.width;
     jg.button[jg_nbuttons].r.top = jg.button[jg_nbuttons].r.bot +
@@ -127,8 +131,10 @@ void joshua_init(int x, int y)
 
     jg.button[jg_nbuttons].r.width = 200;
     jg.button[jg_nbuttons].r.height = 50;
-    jg.button[jg_nbuttons].r.left = x / 2 - jg.button[jg_nbuttons].r.width / 2;
-    jg.button[jg_nbuttons].r.bot = y / 2 - jg.button[jg_nbuttons].r.height / 2 + offset;
+    jg.button[jg_nbuttons].r.left = jg.xres / 2 -
+        jg.button[jg_nbuttons].r.width / 2;
+    jg.button[jg_nbuttons].r.bot = jg.yres / 2 -
+        jg.button[jg_nbuttons].r.height / 2 + offset;
     jg.button[jg_nbuttons].r.right = jg.button[jg_nbuttons].r.left +
                                jg.button[jg_nbuttons].r.width;
     jg.button[jg_nbuttons].r.top = jg.button[jg_nbuttons].r.bot +
@@ -258,12 +264,12 @@ void joshua_physics()
     }
 }
 
-void render_pause_screen(int x, int y)
+void render_pause_screen()
 {
     Rect r;
     // positioning
-    jg.lg.x = x / 2;
-    jg.lg.y = y - (y / 4) + 30;
+    jg.lg.x = jg.xres / 2;
+    jg.lg.y = jg.yres - (jg.yres / 4) + 30;
 
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
@@ -272,9 +278,9 @@ void render_pause_screen(int x, int y)
     glBegin(GL_QUADS);
     glColor4ub(0, 0, 0, 200);
         glVertex2i(0, 0);
-        glVertex2i(0, y);
-        glVertex2i(x, y);
-        glVertex2i(x, 0);
+        glVertex2i(0, jg.yres);
+        glVertex2i(jg.xres, jg.yres);
+        glVertex2i(jg.xres, 0);
     glEnd();
  
     // roadrunner lg
@@ -294,8 +300,8 @@ void render_pause_screen(int x, int y)
     
     glDisable(GL_BLEND);
    
-    r.bot = (y / 2) + 30;
-    r.left = x / 2;
+    r.bot = (jg.yres / 2) + 30;
+    r.left = jg.xres / 2;
     r.center = 1;
     ggprint40(&r, 0, 0x00ffc72c, "PAUSED");
 
@@ -336,18 +342,18 @@ void render_pause_screen(int x, int y)
 }
 
 // FIGURE UOT HOW TO RESTART PHYSICS AND NOT RETAIN VALUES
-void render_racing(int x, int y)
+void render_racing()
 {
     Rect r;
-
-        // render background
+    
+    // render background
     glBindTexture(GL_TEXTURE_2D, jg.bg.texture);
     glColor3f(1.0f, 1.0f, 1.0f); // reset color
     glBegin(GL_QUADS);
-        glTexCoord2f(jg.bg.xc[0], jg.bg.yc[1]); glVertex2i(0, 0);
-        glTexCoord2f(jg.bg.xc[0], jg.bg.yc[0]); glVertex2i(0, y);
-        glTexCoord2f(jg.bg.xc[1], jg.bg.yc[0]); glVertex2i(x, y);
-        glTexCoord2f(jg.bg.xc[1], jg.bg.yc[1]); glVertex2i(x, 0);
+        glTexCoord2f(jg.bg.xc[0], jg.bg.yc[1]); glVertex2i(0,       0);
+        glTexCoord2f(jg.bg.xc[0], jg.bg.yc[0]); glVertex2i(0,       jg.yres);
+        glTexCoord2f(jg.bg.xc[1], jg.bg.yc[0]); glVertex2i(jg.xres, jg.yres);
+        glTexCoord2f(jg.bg.xc[1], jg.bg.yc[1]); glVertex2i(jg.xres, 0);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
 
@@ -391,7 +397,7 @@ void render_racing(int x, int y)
     }
  
     // render leaderboard
-    r.bot = y - 30;
+    r.bot = jg.yres - 30;
     r.left = 20;
     r.center = 0;
     ggprint13(&r, 16, 0x00003594, "Leaderboard");
