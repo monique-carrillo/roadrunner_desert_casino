@@ -1,181 +1,162 @@
 // Monique Carrillo
 // 10/8/24
-// Updated: 11/08/2024
+// Updated: 11/24/2024
 
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <stdio.h>
 #include <stdlib.h>
 #include <sstream>
 #include <string>
-#include <string>
 #include <string.h>
+#include <unistd.h>
+#include <math.h>
+#include <time.h>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
-#include <cstdlib>
-#include <ctime>
+#include <GL/glu.h>
+#include <GL/gl.h>
 #include <algorithm>
 #include <random>
-#include "cards.h"
-#include "hand.h"
-#include "deck.h"
 #include "mcarrillo.h"
-#include <iostream>
 
-Deck deck;
-Hand playerHand;
-Hand dealerHand;
-bool playerTurn = true;
-bool gameOver = false;
+using namespace std;
 int monique_show = 0;
 
-void mcarrillo_init() {
-    deck.shuffle();
-    playerHand.addCard(deck.dealCard());
-    playerHand.addCard(deck.dealCard());
-    dealerHand.addCard(deck.dealCard());
-    dealerHand.addCard(deck.dealCard());
-    gameOver = false;
-    playerTurn = true;
-}
+// Card structure
+struct Card {
+    int value;  // Card value (1-11, Ace can be 1 or 11)
+    string suit;  // Card suit (e.g., Hearts, Spades, etc.)
+    string name;  // Card name (e.g., 2, King, Ace)
+};
 
-void mcarrillo_update() {
-    if (playerTurn) {
-        if (playerHand.isBust()) {
-            std::cout << "Player busts!\n";
-            gameOver = true;
-            playerTurn = false;
-        }
-    } else {
-        if (dealerHand.getValue() < 17) {
-            std::cout << "Draw Card\n";
-            dealerHand.addCard(deck.dealCard());
-        } else {
-            gameOver = true;
-            std::cout << "Dealer stands.\n";
-        }
-    }
-}
+// Deck of 52 cards
+Card deck[52];
 
-void mcarrillo_render() 
-{
-    glClear(GL_COLOR_BUFFER_BIT);
+// Initialize deck
+void initializeDeck() {
+    string suits[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
+    string names[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
+    int values[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};  // Ace initially 11
 
-    std::cout << "Player's Hand: " << playerHand.getValue() << std::endl;
-    std::cout << "Dealer's Hand: " << dealerHand.getValue() << std::endl;
-    
-    if (gameOver) {
-        if (playerHand.isBust()) {
-            std::cout << "Game Over: Player Busts!\n";
-        } else if (dealerHand.isBust() || 
-                playerHand.getValue() > dealerHand.getValue()) {
-            std::cout << "Game Over: Player Wins!\n";
-        } else {
-            std::cout << "Game Over: Dealer Wins!\n";
-        }
-    }
-
-    glFlush();
-}
-
-void mcarrillo_input(int key) 
-{
-    if (playerTurn && !gameOver) {
-        if (key == XK_h) { 
-            // Hit
-            playerHand.addCard(deck.dealCard());
-        } else if (key == XK_s) { 
-            // Stand
-            playerTurn = false;
-        }
-    }
-}
-
-void mcarrilloFeature() 
-{
-    mcarrillo_init();   
-    mcarrillo_update();  
-    mcarrillo_render();  
-}
-
-Hand::Hand() {
-}
-
-void Hand::addCard(const Card& card) 
-{
-    cards.push_back(card);
-}
-
-int Hand::getValue() const 
-{
-    int value = 0;
-    int aceCount = 0;
-    for (const Card& card : cards) {
-        int rank = card.getRank(); 
-        if (rank > 10) {
-            value += 10;  
-        } else if (rank == 1) {
-            value += 11; 
-            aceCount++;
-        } else {
-            value += rank; 
-        }
-    }
-    while (value > 21 && aceCount > 0) {
-        value -= 10;  
-        aceCount--;
-    }
-    return value;
-}
-
-bool Hand::isBust() const 
-{
-    return getValue() > 21;
-}
-
-Deck::Deck() : currentCardIndex(0) {
-    // Initialize the deck with 52 cards (standard deck with ranks/suits)
+    int index = 0;
     for (int suit = 0; suit < 4; ++suit) {
-        for (int rank = 1; rank <= 13; ++rank) {
-            cards.push_back(Card(suit, rank));
+        for (int rank = 0; rank < 13; ++rank) {
+            deck[index++] = {values[rank], suits[suit], names[rank]};
         }
     }
-    shuffle();
 }
 
-void Deck::shuffle() {
-    currentCardIndex = 0;
-    std::srand(static_cast<unsigned int>(std::time(0)));
-    std::random_shuffle(cards.begin(), cards.end());
-    currentCardIndex = 0;
-}
-
-Card Deck::dealCard() {
-    if (currentCardIndex < cards.size()) {
-        return cards[currentCardIndex++];
-    } else {
-        throw std::out_of_range("No cards left in the deck");
+// Shuffle deck
+void shuffleDeck() {
+    for (int i = 0; i < 52; ++i) {
+        int randomIndex = rand() % 52;
+        swap(deck[i], deck[randomIndex]);
     }
 }
 
-bool Deck::isEmpty() const {
-    return currentCardIndex >= cards.size();
+// Deal cards to a player
+void dealCards(Card *hand, int &handSize, int cardsToDeal, int &deckIndex) {
+    for (int i = 0; i < cardsToDeal; ++i) {
+        hand[handSize++] = deck[deckIndex++];
+    }
 }
 
-Card::Card(int suit, int rank) : suit(suit), rank(rank) {}
+// Calculate hand total
+int calculateHandValue(Card *hand, int handSize) {
+    int total = 0;
+    int aceCount = 0;
 
-int Card::getRank() const {
-    return rank;
+    for (int i = 0; i < handSize; ++i) {
+        total += hand[i].value;
+        if (hand[i].name == "Ace") {
+            ++aceCount;
+        }
+    }
+
+    // Adjust Ace value if total > 21
+    while (total > 21 && aceCount > 0) {
+        total -= 10;  // Convert Ace from 11 to 1
+        --aceCount;
+    }
+
+    return total;
 }
 
-int Card::getSuit() const {
-    return suit;
+// Display hand
+void displayHand(Card *hand, int handSize) {
+    for (int i = 0; i < handSize; ++i) {
+        cout << hand[i].name << " of " << hand[i].suit << ", ";
+    }
+    cout << endl;
 }
 
-std::string Card::toString() const {
-    std::string suits[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
-    std::string ranks[] = {"", "Ace", "2", "3", "4", "5", "6", "7", "8", "9", 
-        "10", "Jack", "Queen", "King"};
-    return ranks[rank] + " of " + suits[suit];
+void mcarrilloFeature() {
+    srand(static_cast<unsigned int>(time(0)));
+
+    // Initialize deck
+    initializeDeck();
+    shuffleDeck();
+
+    // Game variables
+    Card playerHand[10], dealerHand[10];
+    int playerHandSize = 0, dealerHandSize = 0;
+    int deckIndex = 0;
+
+    // Initial deal
+    dealCards(playerHand, playerHandSize, 2, deckIndex);
+    dealCards(dealerHand, dealerHandSize, 2, deckIndex);
+
+    // Display initial hands
+    cout << "Player's hand: ";
+    displayHand(playerHand, playerHandSize);
+    cout << "Dealer's hand: " << dealerHand[0].name << " of " << dealerHand[0].suit << " and [Hidden]" << endl;
+
+    // Player's turn
+    char choice;
+    while (true) {
+        int playerTotal = calculateHandValue(playerHand, playerHandSize);
+        cout << "Player's total: " << playerTotal << endl;
+
+        if (playerTotal > 21) {
+            cout << "Player busts! Dealer wins." << endl;
+            exit(0);
+        }
+
+        cout << "Hit (h) or Stand (s)? ";
+        cin >> choice;
+
+        if (choice == 's') break;
+
+        dealCards(playerHand, playerHandSize, 1, deckIndex);
+        cout << "Player's hand: ";
+        displayHand(playerHand, playerHandSize);
+    }
+
+    // Dealer's turn
+    cout << "\nDealer's hand: ";
+    displayHand(dealerHand, dealerHandSize);
+    while (calculateHandValue(dealerHand, dealerHandSize) < 17) {
+        dealCards(dealerHand, dealerHandSize, 1, deckIndex);
+        cout << "Dealer's hand: ";
+        displayHand(dealerHand, dealerHandSize);
+    }
+
+    // Final results
+    int playerTotal = calculateHandValue(playerHand, playerHandSize);
+    int dealerTotal = calculateHandValue(dealerHand, dealerHandSize);
+    cout << "\nPlayer's total: " << playerTotal << endl;
+    cout << "Dealer's total: " << dealerTotal << endl;
+
+    if (dealerTotal > 21 || playerTotal > dealerTotal) {
+        cout << "Player wins!" << endl;
+    } else if (dealerTotal > playerTotal) {
+        cout << "Dealer wins!" << endl;
+    } else {
+        cout << "It's a tie!" << endl;
+    }
+
 }
-
-
 
