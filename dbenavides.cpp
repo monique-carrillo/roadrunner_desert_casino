@@ -113,9 +113,9 @@ int calculating(Hand *hand, Hand *hand2) {
     cout << "I am calculating.\n";
     int temphand[7];
     int tempsuits[4] = {0};
-    // Hands: None, Pairs, 2Pair, 3oKind, Straight, Flush, FullHouse,
-    //        4oKind, StraightFlush, RoyalFlush
-    int possible_hands[10] = {1,0,0,0,0,0,0,0,0,0};
+    // Hands: None(0), Pairs(1), 2Pair(2), 3oKind(3), Straight(4), Flush(5),
+    //        FullHouse(6), 4oKind(7), StraightFlush(8), RoyalFlush(9)
+    int possible_hands[10] = {0};
 
     // Setting Temp Hand
     cout << "Setting Temp Hand\n";
@@ -159,9 +159,10 @@ int calculating(Hand *hand, Hand *hand2) {
     for (int i=0; i<6; i++) {
        if (temphand[i] == temphand[i+1]) {
            possible_hands[1]++;
+           i++;
        }
        // 2 Pairs possible_hands[2]; 
-       if (possible_hands[1] % 3 == 0) {
+       if (possible_hands[1] >= 2) {
            possible_hands[2]++;
        }
     }
@@ -193,13 +194,6 @@ int calculating(Hand *hand, Hand *hand2) {
     }
 
     // Flush possible_hands[5]
-    for (int i=0; i<7; i++) {
-        if (i < 5) {
-            tempsuits[hand[i].suit]++;
-        } else if (i >= 5) {
-            tempsuits[hand2[i-5].suit]++;
-        }
-    }
     for (int i=0; i<4; i++) {
         if (tempsuits[i] >= 5) {
             possible_hands[5]++;
