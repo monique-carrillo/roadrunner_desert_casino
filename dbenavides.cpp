@@ -63,8 +63,8 @@ void show_db()
     cout << endl;
 
     // Calculate
-    cout << hand_values[calculating(table, player)] << " ";
-    cout << endl;
+    cout << "Highest Hand: " << hand_values[calculating(table, player)] << 
+        " " << endl;
 
 }
 
