@@ -21,9 +21,89 @@
 #include <algorithm>
 #include <random>
 #include "mcarrillo.h"
+#include "images.h"
+#include "fonts.h"
 
 using namespace std;
 int monique_show = 0;
+
+class Global {
+    public:
+        float money;
+        int xres, yres;
+        int paused;
+        int gamemode;
+        int done;
+        GLuint bgTexture;
+        Image *felt_image;
+        GLuint felt_texture;
+        Image *card_image;
+        GLuint card_texture;
+        Global() {
+            //done = 0;
+            //gamemode = MODE_MENU;
+            //paused = 0;
+            xres = 800;
+            yres = 600;
+        }
+} m;
+
+Image pic[53] = {
+    "./images/felt.jpg",
+    "./images/cards/c_A.jpg",
+    "./images/cards/c_2.jpg",
+    "./images/cards/c_3.jpg",
+    "./images/cards/c_4.jpg",
+    "./images/cards/c_5.jpg",
+    "./images/cards/c_6.jpg",
+    "./images/cards/c_7.jpg",
+    "./images/cards/c_8.jpg",
+    "./images/cards/c_9.jpg",
+    "./images/cards/c_10.jpg",
+    "./images/cards/c_K.jpg",
+    "./images/cards/c_Q.jpg",
+    "./images/cards/c_J.jpg",
+    "./images/cards/d_A.jpg",
+    "./images/cards/d_2.jpg",
+    "./images/cards/d_3.jpg",
+    "./images/cards/d_4.jpg",
+    "./images/cards/d_5.jpg",
+    "./images/cards/d_6.jpg",
+    "./images/cards/d_7.jpg",
+    "./images/cards/d_8.jpg",
+    "./images/cards/d_9.jpg",
+    "./images/cards/d_10.jpg",
+    "./images/cards/d_K.jpg",
+    "./images/cards/d_Q.jpg",
+    "./images/cards/d_J.jpg",
+    "./images/cards/h_A.jpg",
+    "./images/cards/h_2.jpg",
+    "./images/cards/h_3.jpg",
+    "./images/cards/h_4.jpg",
+    "./images/cards/h_5.jpg",
+    "./images/cards/h_6.jpg",
+    "./images/cards/h_7.jpg",
+    "./images/cards/h_8.jpg",
+    "./images/cards/h_9.jpg",
+    "./images/cards/h_10.jpg",
+    "./images/cards/h_K.jpg",
+    "./images/cards/h_Q.jpg",
+    "./images/cards/h_J.jpg",
+    "./images/cards/h_A.jpg",
+    "./images/cards/s_2.jpg",
+    "./images/cards/s_3.jpg",
+    "./images/cards/s_4.jpg",
+    "./images/cards/s_5.jpg",
+    "./images/cards/s_6.jpg",
+    "./images/cards/s_7.jpg",
+    "./images/cards/s_8.jpg",
+    "./images/cards/s_9.jpg",
+    "./images/cards/s_10.jpg",
+    "./images/cards/s_K.jpg",
+    "./images/cards/s_Q.jpg",
+    "./images/cards/s_J.jpg"
+};
+
 
 // Card structure
 struct Card {
@@ -38,8 +118,10 @@ Card deck[52];
 // Initialize deck
 void initializeDeck() {
     string suits[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
-    string names[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"};
-    int values[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};  // Ace initially 11
+    string names[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", 
+                      "Queen", "King", "Ace"};
+    // Ace initially 11
+    int values[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};  
 
     int index = 0;
     for (int suit = 0; suit < 4; ++suit) {
@@ -93,9 +175,76 @@ void displayHand(Card *hand, int handSize) {
     cout << endl;
 }
 
+void mcarrillo_init(void) {
+    glViewport(0, 0, m.xres, m.yres);
+    glMatrixMode(GL_PROJECTION); glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+    glOrtho(0, m.xres, 0, m.yres, -1, 1);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_FOG);
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_BLEND);
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+    glEnable(GL_TEXTURE_2D);
+
+    // felt
+    m.felt_image = &pic[0];
+    glGenTextures(1, &m.felt_texture);
+    int w = m.felt_image->width;
+    int h = m.felt_image->height;
+    glBindTexture(GL_TEXTURE_2D, m.felt_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE,
+                 m.felt_image->data);
+
+    // card
+    m.card_image = &pic[1];
+    glGenTextures(1, &m.card_texture);
+    w = m.card_image->width;
+    h = m.card_image->height;
+    glBindTexture(GL_TEXTURE_2D, m.card_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    unsigned char *card_data = buildAlphaData(&pic[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
+            GL_UNSIGNED_BYTE, card_data);
+    free(card_data);
+
+
+}
+
+void mcarrillo_render() {
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    glColor3f(1.0, 1.0, 1.0);
+        glBindTexture(GL_TEXTURE_2D, m.felt_texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      m.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(m.xres, m.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(m.xres, 0);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glBindTexture(GL_TEXTURE_2D, m.card_texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+}
+
 void mcarrilloFeature() {
     srand(static_cast<unsigned int>(time(0)));
 
+    mcarrillo_init();
+    mcarrillo_render();
     // Initialize deck
     initializeDeck();
     shuffleDeck();
@@ -112,7 +261,8 @@ void mcarrilloFeature() {
     // Display initial hands
     cout << "Player's hand: ";
     displayHand(playerHand, playerHandSize);
-    cout << "Dealer's hand: " << dealerHand[0].name << " of " << dealerHand[0].suit << " and [Hidden]" << endl;
+    cout << "Dealer's hand: " << dealerHand[0].name << " of " 
+         << dealerHand[0].suit << " and [Hidden]" << endl;
 
     // Player's turn
     char choice;
