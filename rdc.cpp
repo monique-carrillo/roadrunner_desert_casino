@@ -744,7 +744,11 @@ void render()
             glTexCoord2f(1.0f, 0.0f); glVertex2i(120, 30);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-        show_db();
+        while (true) { 
+            show_db(); 
+            cout << "Press Enter to run again...\n"; 
+            cin.ignore(); // Wait for user to press Enter
+        }
     } else if (g.gamemode == MODE_CEELO) {
 
 	     glColor3f(1.0, 1.0, 1.0); // pure white
