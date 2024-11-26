@@ -39,8 +39,8 @@ struct Hand {
 void show_db();
 void set_hand();
 void shuffling(int *deck);
-void sorting(Hand *hand);
-void dealing(Hand *hand, int *deck);
+void sorting(Hand *hand, int size_of_hand);
+void dealing(Hand *hand, int *deck, int start, int size_of_hand);
 int calculating(Hand *hand, Hand *hand2);
 bool is_straight(int *hand);
 bool is_sflush(Hand *hand, Hand *hand2);

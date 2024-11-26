@@ -728,6 +728,23 @@ void render()
         glBindTexture(GL_TEXTURE_2D, 0);
     } else if (g.gamemode == MODE_POKER) {
         // poker
+        glColor3f(0.0, 0.0, 0.0);
+        glBindTexture(GL_TEXTURE_2D, g.felt_texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0, g.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, g.yres);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, g.card_texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(30, 30);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(30, 220);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(120, 220);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(120, 30);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        show_db();
     } else if (g.gamemode == MODE_CEELO) {
 
 	     glColor3f(1.0, 1.0, 1.0); // pure white
