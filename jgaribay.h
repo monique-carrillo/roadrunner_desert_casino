@@ -42,7 +42,6 @@ extern JGlobal jg;
 extern int rr_setup;
 extern int rr_chosen;
 
-void render_overlay();
 void joshua_init();
 void joshua_init_opengl();
 void joshua_physics();

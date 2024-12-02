@@ -228,6 +228,8 @@ void init_opengl(void)
     glEnable(GL_TEXTURE_2D);
     
     joshua_init_opengl();    
+    init_felttex();
+    init_card_textures();
 
     glGenTextures(1, &g.bgTexture);
     
@@ -269,8 +271,6 @@ void init()
 {
     int offset = 75;
     joshua_init();
-    init_felttex();
-    init_card_textures();
 
     nbuttons=0;
     // roadrunner racing
@@ -713,8 +713,6 @@ void render()
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
-    render_overlay();
-
     // render main menu
     if (g.gamemode == MODE_MENU) {
         // menu
@@ -735,8 +733,7 @@ void render()
         //init_card_textures();
         show_db();
     } else if (g.gamemode == MODE_CEELO) {
-
-	     glColor3f(1.0, 1.0, 1.0); // pure white
+	    glColor3f(1.0, 1.0, 1.0); // pure white
         glBindTexture(GL_TEXTURE_2D, g.felt_texture);
         glBegin(GL_QUADS);
             glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
@@ -745,25 +742,17 @@ void render()
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-
-	int win = 0;
-
+        int win = 0;
         render_word();
-
         if (g.gamecheck == true) {
-        money = money - 100;
-        win = ceelo(g.xres, g.yres);
-        render_win(win);
-        g.gamecheck = false;
+            money = money - 100;
+            win = ceelo(g.xres, g.yres);
+            render_win(win);
+            g.gamecheck = false;
         }
-
         if (win == 1) {
-                money = money + 500;
+            money = money + 500;
         }
-
-
-
-
     }
 
     if (g.paused)
