@@ -4,6 +4,7 @@
 #include "images.h"
 
 #define GRAVITY -0.1
+typedef double Flt;
 
 class Texture {
     public:
@@ -26,9 +27,10 @@ class Roadrunner : public Texture {
 
 class JGlobal {
     public:
+        Flt camera[2];
         int xres, yres;
         int frame;
-        Texture lg, bg, pf, rr_texture;
+        Texture lg, bg, pf, rr_texture, pause;
         Roadrunner rr[3];
         Button button[MAXBUTTONS];
         JGlobal();

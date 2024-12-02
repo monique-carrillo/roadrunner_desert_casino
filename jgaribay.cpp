@@ -32,6 +32,7 @@ Roadrunner::Roadrunner() {
 };
 
 JGlobal::JGlobal() {
+    camera[0] = camera[1] = 0.0f;
     frame = 0;
     pf.w = 650;
     pf.h = 175;
@@ -172,10 +173,10 @@ void joshua_init_opengl()
     glBindTexture(GL_TEXTURE_2D, jg.lg.texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    unsigned char *lg_img_data = buildAlphaData(&jimg[0]);
+    unsigned char *lg_jimg_data = buildAlphaData(&jimg[0]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-            lg_img_data);
-    free(lg_img_data);
+            lg_jimg_data);
+    free(lg_jimg_data);
 
     // background
     jg.bg.image = &jimg[1];
@@ -200,10 +201,10 @@ void joshua_init_opengl()
     glBindTexture(GL_TEXTURE_2D, jg.rr_texture.texture);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-    unsigned char *roadrunner_img_data = buildAlphaData(&jimg[2]);
+    unsigned char *roadrunner_jimg_data = buildAlphaData(&jimg[2]);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-            roadrunner_img_data);
-    free(roadrunner_img_data);
+            roadrunner_jimg_data);
+    free(roadrunner_jimg_data);
 
     // PLATFORM
     jg.pf.image = &jimg[3];
@@ -223,8 +224,44 @@ void joshua_init_opengl()
 
 void joshua_physics()
 {
-    jg.bg.xc[0] += 0.01;
-    jg.bg.xc[1] += 0.01;
+    /*
+    for (int i = 0; i < 3; i++) {
+        jg.rr[i].vel[1] += GRAVITY;
+        if (jg.rr[i].vel[0] > 0) {
+            jg.rr[i].vel[0] -= 0.005;
+            if (jg.rr[i].vel[0] < 0)
+                    jg.rr[i].vel[0] = 0.0;
+        }
+        if (jg.rr[i].last_x != jg.rr[i].x || jg.rr[i].last_y != jg.rr[i].y) {
+            // moving
+            jg.rr[i].last_x = jg.rr[i].x;
+            jg.rr[i].last_y = jg.rr[i].y;
+            // change frame
+            jg.frame += 1;
+            // move background
+            jg.bg.xc[0] += 0.005;
+            jg.bg.xc[1] += 0.005;
+            jg.pf.xc[0] += 0.01;
+            jg.pf.xc[1] += 0.01;
+        }
+
+        jg.rr[i].x += jg.rr[i].vel[0]; // move x pos
+        jg.rr[i].y += jg.rr[i].vel[1]; // move y pos
+        
+        // collision detection
+        if (jg.rr[i].y - jg.rr[i].h < jg.pf.y + jg.pf.h &&
+            jg.rr[i].y + jg.rr[i].h > jg.pf.y - jg.pf.h &&
+            jg.rr[i].x + jg.rr[i].w > jg.pf.x - jg.pf.w &&
+            jg.rr[i].x - jg.rr[i].w < jg.pf.x + jg.pf.w) {
+            
+            // collision happened
+            jg.rr[i].y = jg.rr[i].last_y;
+            jg.rr[i].vel[1] = -jg.rr[i].vel[1] * 0.5;
+        }
+    }
+    */
+    jg.bg.xc[0] += 0.005;
+    jg.bg.xc[1] += 0.005;
     jg.pf.xc[0] += 0.01;
     jg.pf.xc[1] += 0.01;
    
@@ -270,7 +307,7 @@ void render_pause_screen()
     // positioning
     jg.lg.x = jg.xres / 2;
     jg.lg.y = jg.yres - (jg.yres / 4) + 30;
-
+    
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     
@@ -405,7 +442,6 @@ void render_racing()
         ggprint8b(&r, 16, jg.rr[i].alt_color, "Roadrunner %i vel: %f", i + 1,
                 jg.rr[i].vel[0]);
     }
-    ggprint13(&r, 16, 0x00003594, "Controls");
 
     glDisable(GL_BLEND);
 }

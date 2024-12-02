@@ -87,7 +87,7 @@ void check_mouse(XEvent *e);
 void check_keys(XEvent *e);
 void init();
 void physics(void);
-void render_mm(void);
+void render_main_menu(void);
 void render(void);
 
 class X11_wrapper {
@@ -634,7 +634,7 @@ void physics()
     */
 }
 
-void render_mm()
+void render_main_menu()
 {
     Rect r;
 
@@ -702,12 +702,13 @@ void render()
     // render main menu
     if (g.gamemode == MODE_MENU) {
         // menu
-        render_mm();
+        render_main_menu();
     } else if (g.gamemode == MODE_RACING) {
         // roadrunner racing
         render_racing();
     } else if (g.gamemode == MODE_BLACKJACK) {
         // blackjack
+        // felt background
         glColor3f(1.0, 1.0, 1.0); // pure white
         glBindTexture(GL_TEXTURE_2D, g.felt_texture);
         glBegin(GL_QUADS); 
@@ -718,12 +719,13 @@ void render()
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
 
+        // render an example card
         glBindTexture(GL_TEXTURE_2D, g.card_texture);
         glBegin(GL_QUADS); 
             glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  10);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(10,  200);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 200);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(100, 10);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(10,  350);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(200, 350);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(200, 10);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
     } else if (g.gamemode == MODE_POKER) {
