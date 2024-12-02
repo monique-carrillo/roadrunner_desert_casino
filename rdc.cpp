@@ -708,28 +708,10 @@ void render()
         render_racing();
     } else if (g.gamemode == MODE_BLACKJACK) {
         // blackjack
-        // felt background
-        glColor3f(1.0, 1.0, 1.0); // pure white
-        glBindTexture(GL_TEXTURE_2D, g.felt_texture);
-        glBegin(GL_QUADS); 
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      g.yres);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
-        glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-        // render an example card
-        glBindTexture(GL_TEXTURE_2D, g.card_texture);
-        glBegin(GL_QUADS); 
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  10);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(10,  350);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(200, 350);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(200, 10);
-        glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
+        mcarrilloFeature();
     } else if (g.gamemode == MODE_POKER) {
         // poker
+        show_db();
     } else if (g.gamemode == MODE_CEELO) {
 
 	     glColor3f(1.0, 1.0, 1.0); // pure white

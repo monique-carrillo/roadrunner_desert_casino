@@ -18,8 +18,10 @@
 #include <cstdlib>
 #include "dbenavides.h"
 #include "images.h"
+#include "jgaribay.h"
 using namespace std;
 
+GLuint felt_texture;
 int db_show = 0;
 string hand_values[10] = {"None","Pair","Two Pair","Three of a Kind",
                           "Straight","Flush","Full House", 
@@ -27,6 +29,38 @@ string hand_values[10] = {"None","Pair","Two Pair","Three of a Kind",
 
 void show_db()
 {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    
+    glViewport(0, 0, 800, 600);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, felt_texture);
+    glColor3f(1.0, 1.0, 1.0);
+
+    
+    glBegin(GL_QUADS); 
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f); 
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f); 
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f); 
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f); 
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    glDisable(GL_TEXTURE_2D);
+
+    Rect r;
+    r.bot = 290;
+    r.left = 20;
+    r.center = 0;
+    glColor3f(1.0, 1.0, 1.0);
+
+    ggprint16(&r, 16, 0x00ffffff, "Poker Game");
+
     srand(time(NULL));
     int deck[52];
 
@@ -37,45 +71,41 @@ void show_db()
     // Shuffle
     shuffling(deck);
     for (int i=0; i<52; i++) {
-        cout << deck[i] << " ";
-        cout << endl;
+        ggprint16(&r, 16, 0x00ffffff, "%d", deck[i]);
     }
-    cout << endl;
+
+    ggprint16(&r, 16, 0x00ffffff, "Money: ");
 
     Hand table[5];
     Hand player[2];
 
     // Dealing
-    dealing(table, deck);
-    dealing(player, deck);
-    cout << endl;
+    dealing(table, deck, 0, 5);
+    dealing(player, deck, 5, 2);
+    //cout << endl;
 
     // Sort
-    sorting(table);
-    sorting(player);
+    sorting(table, 5);
+    sorting(player, 2);
     for (int i=0; i<5; i++) {
-        cout << table[i].num << " ";
-        cout << endl;
+        //cout << table[i].num << " ";
+        ggprint16(&r, 16, 0x00ffffff, "%d", table[i].num);
     }
     for (int i=0; i<2; i++) {
-        cout << player[i].num << " ";
-        cout << endl;
+        //cout << player[i].num << " ";
+        ggprint16(&r, 16, 0x00ffffff, "%d", player[i].num);
     }
 
     // Calculate
-    cout << hand_values[calculating(table, player)] << " ";
-    cout << endl;
-
-    //draw a rectangle
-    //show some text
-    //Rect r;
-    //r.bot = y;
-    //r.left = x;
-    //r.center = 0;
-    //ggprint8b(&r, 16, 0x0000ff00, "Darren's Feature");
+    string highhand = hand_values[calculating(table, player)];
+    //cout<< "Highest Hand: " << hand_values[calculating(table, player)] << 
+    //    " " << endl;
+    ggprint16(&r, 16, 0x00ffffff, "Highest Hand Value: %d", highhand);
+    glDisable(GL_BLEND);
 }
 
 void shuffling(int *deck) {
+    //cout << "I am shuffling\n";
     int n = rand() % 1000 + 1000;
     for (int i=0; i<n; i++) {
         int a = rand() % 52;
@@ -84,66 +114,72 @@ void shuffling(int *deck) {
     }
 }
 
-void sorting(Hand *hand) {
+void sorting(Hand *hand, int size_of_hand) {
+    //cout << "I am sorting.\n";
     // Info found at:
     // https://www.w3schools.com/cpp/cpp_arrays_size.asp
-    if ((sizeof(hand)) == 5) {
+    if (size_of_hand == 5) {
         for (int i=0; i<4; i++) {
-            for (int j=0; i<4; i++) {
+            for (int j=0; j<4-i; j++) {
                 if (hand[j].num > hand[j+1].num) {
-                    swap(hand[j].num, hand[j+1].num);
+                    swap(hand[j], hand[j+1]);
                 }
             }
         }
-    } else if ((sizeof(hand)) == 2) {
+    } else if (size_of_hand == 2) {
         for (int i=0; i<1; i++) {
             if (hand[i+1].num < hand[i].num) {
-                swap(hand[i].num, hand[i+1].num);
+                swap(hand[i], hand[i+1]);
             }
         }
     }
 }
 
-void dealing(Hand *hand, int *deck) {
-    if ((sizeof(hand)) == 1) {
-        for (int i=0; i<5; i++) {
-            hand[i].texmap = deck[i];
-            hand[i].num = deck[i] % 13;
-            hand[i].suit = deck[i] % 4;
-        }
-    } else if ((sizeof(hand)) == 2) {
-        for (int i=5; i<7; i++) {
-            hand[i].texmap = deck[i];
-            hand[i].num = deck[i] % 13;
-            hand[i].suit = deck[i] % 4;
-        }
+void dealing(Hand *hand, int *deck, int start, int size_of_hand) {
+    //cout << "I am dealing.\n";
+    for (int i=0; i<size_of_hand; i++) {
+        hand[i].texmap = deck[start + i];
+        hand[i].num = (deck[start + i] - 1) % 13 + 1;
+        hand[i].suit = (deck[start + i] - 1) / 13;
+        //cout<<"Dealt card:"<<hand[i].num<<" of suit "<<hand[i].suit<<endl;
     }
 }
 
 int calculating(Hand *hand, Hand *hand2) {
+    //cout << "I am calculating.\n";
     int temphand[7];
     int tempsuits[4] = {0};
-    // Hands: None, Pairs, 2Pair, 3oKind, Straight, Flush, FullHouse,
-    //        4oKind, StraightFlush, RoyalFlush
-    int possible_hands[10] = {1,0,0,0,0,0,0,0,0,0};
+    // Hands: None(0), Pairs(1), 2Pair(2), 3oKind(3), Straight(4), Flush(5),
+    //        FullHouse(6), 4oKind(7), StraightFlush(8), RoyalFlush(9)
+    int possible_hands[10] = {0};
 
     // Setting Temp Hand
+    //cout << "Setting Temp Hand\n";
     for (int i=0; i<5; i++) {
         temphand[i] = hand[i].num;
+        //cout << temphand[i] << " ";
     }
+    //cout << endl;
     for (int i=0; i<2; i++) {
         temphand[i+5] = hand2[i].num;
+        //cout << temphand[i+5] << " ";
     }
+    //cout << endl;
 
     // Suit counting
+    //cout << "Suit counting\n";
     for (int i=0; i<5; i++) {
         tempsuits[hand[i].suit]++;
     }
     for (int i=0; i<2; i++) {
         tempsuits[hand2[i].suit]++;
     }
+    for (int i=0; i<4; i++) {
+        //cout<<"Suits count for suit "<<i<<": "<<tempsuits[i]<<endl;
+    }
 
     // Sorting Temp Hand
+    //cout << "Sorting Temp Hand\n";
     for (int i=0; i<6; i++) {
         for (int j=0; j<6; j++) {
             if (temphand[j] > temphand[j+1]) {
@@ -155,12 +191,14 @@ int calculating(Hand *hand, Hand *hand2) {
     // Finding out value of best hand
     
     // Pairs possible_hands[1];
+    //cout << "Finally Calculating Best Hand.\n";
     for (int i=0; i<6; i++) {
        if (temphand[i] == temphand[i+1]) {
            possible_hands[1]++;
+           i++;
        }
        // 2 Pairs possible_hands[2]; 
-       if (possible_hands[1] % 3 == 0) {
+       if (possible_hands[1] >= 2) {
            possible_hands[2]++;
        }
     }
@@ -192,13 +230,6 @@ int calculating(Hand *hand, Hand *hand2) {
     }
 
     // Flush possible_hands[5]
-    for (int i=0; i<7; i++) {
-        if (i < 5) {
-            tempsuits[hand[i].suit]++;
-        } else if (i >= 5) {
-            tempsuits[hand2[i-5].suit]++;
-        }
-    }
     for (int i=0; i<4; i++) {
         if (tempsuits[i] >= 5) {
             possible_hands[5]++;
@@ -226,6 +257,7 @@ int calculating(Hand *hand, Hand *hand2) {
 }
 
 bool is_straight(int *hand) {
+    //cout << "I am testing for straight.\n";
     // Will check for Straight
     // Low Ace
     for (int i=0; i<3; i++) {
@@ -243,6 +275,7 @@ bool is_straight(int *hand) {
 }
 
 bool is_sflush(Hand *hand, Hand *hand2) {
+    //cout << "I am testing for straight flush.\n";
     // Will check for Straight Flush
     int suits[4] = {0};
 
@@ -279,6 +312,7 @@ bool is_sflush(Hand *hand, Hand *hand2) {
 }
 
 bool is_rflush(Hand *hand, Hand *hand2) {
+    //cout << "I am testing for royal flush.\n";
     // Will check for Royal Flush
     int suits[4] = {0};
 
@@ -359,6 +393,30 @@ Image background_time() {
     // Default if it can't pick anything up.
     return "./images/dawn.jpg";
 }
+
+void init_felttex() {
+    int w, h;
+    Image img = "./images/felt.jpg";
+    w = img.width;
+    h = img.height;
+
+    glGenTextures(1, &felt_texture);
+    glBindTexture(GL_TEXTURE_2D, felt_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, 
+                 GL_UNSIGNED_BYTE, img.data);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+
+
+
+
+
+
 
 
 
