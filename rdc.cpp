@@ -66,6 +66,8 @@ class Global {
         int xres, yres;
         int paused;
         int gamemode;
+	bool gamecheck = false;
+        int check2 = 0;
         int done;
         GLuint bgTexture;
         Image *felt_image;
@@ -575,6 +577,10 @@ void check_keys(XEvent *e)
             else
                 g.paused = !g.paused;
             break;
+
+	 case XK_space:
+                g.gamecheck = true;
+            break;
     }
 }
 
@@ -696,6 +702,25 @@ void render()
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
+
+	int win = 0;
+
+        render_word();
+
+        if (g.gamecheck == true) {
+        money = money - 100;
+        win = ceelo(g.xres, g.yres);
+        render_win(win);
+        g.gamecheck = false;
+        }
+
+        if (win == 1) {
+                money = money + 500;
+        }
+
+
+
+
     }
 
     if (g.paused)
