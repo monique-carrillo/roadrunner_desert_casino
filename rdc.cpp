@@ -267,6 +267,8 @@ void init()
 {
     int offset = 75;
     joshua_init();
+    init_felttex();
+    init_card_textures();
 
     nbuttons=0;
     // roadrunner racing
@@ -680,8 +682,8 @@ void render()
         mcarrilloFeature();
     } else if (g.gamemode == MODE_POKER) {
         // poker
-        init_felttex();
-        init_card_textures();
+        //init_felttex();
+        //init_card_textures();
         show_db();
     } else if (g.gamemode == MODE_CEELO) {
 
