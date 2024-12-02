@@ -78,14 +78,14 @@ void init_card_textures() {
         card_textures[i] = load_texture(card_filenames[i]);
         if (card_textures[i] == 0) {
             printf("Failed to load texture: %s\n", card_filenames[i]);
+        } else {
+            printf("Successfully loaded texture for card %d\n", i);
         }
     }
 }
 
 void show_db()
 {
-    init_felttex();
-    init_card_textures();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     
@@ -119,10 +119,10 @@ void show_db()
             continue; 
         } 
         glBegin(GL_QUADS); 
-            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.5f); 
-            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.5f); 
-            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.5f); 
-            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.5f); 
+            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f); 
+            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f); 
+            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f); 
+            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f); 
         glEnd(); 
         xOffset += 0.25f; 
     } 
@@ -176,7 +176,7 @@ void show_db()
     string highhand = hand_values[calculating(table, player)];
     //cout<< "Highest Hand: " << hand_values[calculating(table, player)] << 
     //    " " << endl;
-    ggprint16(&r, 16, 0x00ffffff, "Highest Hand Value: %d", highhand);
+    ggprint16(&r, 16, 0x00ffffff, "Highest Hand Value: %s", highhand);
     glDisable(GL_BLEND);
 }
 

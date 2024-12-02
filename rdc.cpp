@@ -711,6 +711,8 @@ void render()
         mcarrilloFeature();
     } else if (g.gamemode == MODE_POKER) {
         // poker
+        init_felttex();
+        init_card_textures();
         show_db();
     } else if (g.gamemode == MODE_CEELO) {
 
