@@ -18,8 +18,10 @@
 #include <cstdlib>
 #include "dbenavides.h"
 #include "images.h"
+#include "jgaribay.h"
 using namespace std;
 
+GLuint felt_texture;
 int db_show = 0;
 string hand_values[10] = {"None","Pair","Two Pair","Three of a Kind",
                           "Straight","Flush","Full House", 
@@ -27,6 +29,38 @@ string hand_values[10] = {"None","Pair","Two Pair","Three of a Kind",
 
 void show_db()
 {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    
+    glViewport(0, 0, 800, 600);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
+
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, felt_texture);
+    glColor3f(1.0, 1.0, 1.0);
+
+    
+    glBegin(GL_QUADS); 
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f); 
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f); 
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f); 
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f); 
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    glDisable(GL_TEXTURE_2D);
+
+    Rect r;
+    r.bot = 290;
+    r.left = 20;
+    r.center = 0;
+    glColor3f(1.0, 1.0, 1.0);
+
+    ggprint16(&r, 16, 0x00ffffff, "Poker Game");
+
     srand(time(NULL));
     int deck[52];
 
@@ -37,10 +71,10 @@ void show_db()
     // Shuffle
     shuffling(deck);
     for (int i=0; i<52; i++) {
-        cout << deck[i] << " ";
-        cout << endl;
+        ggprint16(&r, 16, 0x00ffffff, "%d", deck[i]);
     }
-    cout << endl;
+
+    ggprint16(&r, 16, 0x00ffffff, "Money: ");
 
     Hand table[5];
     Hand player[2];
@@ -48,28 +82,30 @@ void show_db()
     // Dealing
     dealing(table, deck, 0, 5);
     dealing(player, deck, 5, 2);
-    cout << endl;
+    //cout << endl;
 
     // Sort
     sorting(table, 5);
     sorting(player, 2);
     for (int i=0; i<5; i++) {
-        cout << table[i].num << " ";
+        //cout << table[i].num << " ";
+        ggprint16(&r, 16, 0x00ffffff, "%d", table[i].num);
     }
-    cout << endl;
     for (int i=0; i<2; i++) {
-        cout << player[i].num << " ";
+        //cout << player[i].num << " ";
+        ggprint16(&r, 16, 0x00ffffff, "%d", player[i].num);
     }
-    cout << endl;
 
     // Calculate
-    cout << "Highest Hand: " << hand_values[calculating(table, player)] << 
-        " " << endl;
-
+    string highhand = hand_values[calculating(table, player)];
+    //cout<< "Highest Hand: " << hand_values[calculating(table, player)] << 
+    //    " " << endl;
+    ggprint16(&r, 16, 0x00ffffff, "Highest Hand Value: %d", highhand);
+    glDisable(GL_BLEND);
 }
 
 void shuffling(int *deck) {
-    cout << "I am shuffling\n";
+    //cout << "I am shuffling\n";
     int n = rand() % 1000 + 1000;
     for (int i=0; i<n; i++) {
         int a = rand() % 52;
@@ -79,7 +115,7 @@ void shuffling(int *deck) {
 }
 
 void sorting(Hand *hand, int size_of_hand) {
-    cout << "I am sorting.\n";
+    //cout << "I am sorting.\n";
     // Info found at:
     // https://www.w3schools.com/cpp/cpp_arrays_size.asp
     if (size_of_hand == 5) {
@@ -100,17 +136,17 @@ void sorting(Hand *hand, int size_of_hand) {
 }
 
 void dealing(Hand *hand, int *deck, int start, int size_of_hand) {
-    cout << "I am dealing.\n";
+    //cout << "I am dealing.\n";
     for (int i=0; i<size_of_hand; i++) {
         hand[i].texmap = deck[start + i];
         hand[i].num = (deck[start + i] - 1) % 13 + 1;
         hand[i].suit = (deck[start + i] - 1) / 13;
-        cout<<"Dealt card: "<<hand[i].num<<" of suit "<<hand[i].suit<<endl;
+        //cout<<"Dealt card:"<<hand[i].num<<" of suit "<<hand[i].suit<<endl;
     }
 }
 
 int calculating(Hand *hand, Hand *hand2) {
-    cout << "I am calculating.\n";
+    //cout << "I am calculating.\n";
     int temphand[7];
     int tempsuits[4] = {0};
     // Hands: None(0), Pairs(1), 2Pair(2), 3oKind(3), Straight(4), Flush(5),
@@ -118,20 +154,20 @@ int calculating(Hand *hand, Hand *hand2) {
     int possible_hands[10] = {0};
 
     // Setting Temp Hand
-    cout << "Setting Temp Hand\n";
+    //cout << "Setting Temp Hand\n";
     for (int i=0; i<5; i++) {
         temphand[i] = hand[i].num;
-        cout << temphand[i] << " ";
+        //cout << temphand[i] << " ";
     }
-    cout << endl;
+    //cout << endl;
     for (int i=0; i<2; i++) {
         temphand[i+5] = hand2[i].num;
-        cout << temphand[i+5] << " ";
+        //cout << temphand[i+5] << " ";
     }
-    cout << endl;
+    //cout << endl;
 
     // Suit counting
-    cout << "Suit counting\n";
+    //cout << "Suit counting\n";
     for (int i=0; i<5; i++) {
         tempsuits[hand[i].suit]++;
     }
@@ -139,11 +175,11 @@ int calculating(Hand *hand, Hand *hand2) {
         tempsuits[hand2[i].suit]++;
     }
     for (int i=0; i<4; i++) {
-        cout<<"Suits count for suit "<<i<<": "<<tempsuits[i]<<endl;
+        //cout<<"Suits count for suit "<<i<<": "<<tempsuits[i]<<endl;
     }
 
     // Sorting Temp Hand
-    cout << "Sorting Temp Hand\n";
+    //cout << "Sorting Temp Hand\n";
     for (int i=0; i<6; i++) {
         for (int j=0; j<6; j++) {
             if (temphand[j] > temphand[j+1]) {
@@ -155,7 +191,7 @@ int calculating(Hand *hand, Hand *hand2) {
     // Finding out value of best hand
     
     // Pairs possible_hands[1];
-    cout << "Finally Calculating Best Hand.\n";
+    //cout << "Finally Calculating Best Hand.\n";
     for (int i=0; i<6; i++) {
        if (temphand[i] == temphand[i+1]) {
            possible_hands[1]++;
@@ -221,7 +257,7 @@ int calculating(Hand *hand, Hand *hand2) {
 }
 
 bool is_straight(int *hand) {
-    cout << "I am testing for straight.\n";
+    //cout << "I am testing for straight.\n";
     // Will check for Straight
     // Low Ace
     for (int i=0; i<3; i++) {
@@ -239,7 +275,7 @@ bool is_straight(int *hand) {
 }
 
 bool is_sflush(Hand *hand, Hand *hand2) {
-    cout << "I am testing for straight flush.\n";
+    //cout << "I am testing for straight flush.\n";
     // Will check for Straight Flush
     int suits[4] = {0};
 
@@ -276,7 +312,7 @@ bool is_sflush(Hand *hand, Hand *hand2) {
 }
 
 bool is_rflush(Hand *hand, Hand *hand2) {
-    cout << "I am testing for royal flush.\n";
+    //cout << "I am testing for royal flush.\n";
     // Will check for Royal Flush
     int suits[4] = {0};
 
@@ -357,6 +393,30 @@ Image background_time() {
     // Default if it can't pick anything up.
     return "./images/dawn.jpg";
 }
+
+void init_felttex() {
+    int w, h;
+    Image img = "./images/felt.jpg";
+    w = img.width;
+    h = img.height;
+
+    glGenTextures(1, &felt_texture);
+    glBindTexture(GL_TEXTURE_2D, felt_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, 
+                 GL_UNSIGNED_BYTE, img.data);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+
+
+
+
+
+
+
 
 
 
