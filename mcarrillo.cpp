@@ -920,8 +920,8 @@ void mcarrillo_render()
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
         
-        for (int i = 0; i < 52; i++) {
-            glBindTexture(GL_TEXTURE_2D, m.card_img[i]);
+        //for (int i = 0; i < 52; i++) {
+            glBindTexture(GL_TEXTURE_2D, m.card_img[0]);
             glBegin(GL_QUADS);
                 glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
                 glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
@@ -929,13 +929,27 @@ void mcarrillo_render()
                 glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
             glEnd();
             glBindTexture(GL_TEXTURE_2D, 0);
-        }
+        //}
+            glBindTexture(GL_TEXTURE_2D, m.card_img[1]);
+            glBegin(GL_QUADS);
+                glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
+                glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
+                glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
+                glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
+            glEnd();
+            glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void mcarrilloFeature() 
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
+
+    glViewport(0, 0, 800, 600);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    glMatrixMode(GL_MODELVIEW);
     
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m.felt_texture);
