@@ -47,6 +47,7 @@ bool is_straight(int *hand);
 bool is_sflush(Hand *hand, Hand *hand2);
 bool is_rflush(Hand *hand, Hand *hand2);
 void init_felttex();
+void init_card_textures();
 
 // Obtained Structure from: 
 // https://www.geeksforgeeks.org/print-system-time-c-3-different-ways/
