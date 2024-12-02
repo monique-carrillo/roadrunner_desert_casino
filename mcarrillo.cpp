@@ -280,7 +280,7 @@ void mcarrilloFeature()
 
         if (playerTotal > 21) {
             cout << "Player busts! Dealer wins." << endl;
-            exit(0);
+            break;
         }
 
         cout << "Hit (h) or Stand (s)? ";
