@@ -39,11 +39,15 @@ class JGlobal {
 
 extern int jg_nbuttons;
 extern JGlobal jg;
+extern int rr_setup;
+extern int rr_chosen;
 
+void render_overlay();
 void joshua_init();
 void joshua_init_opengl();
 void joshua_physics();
 void render_pause_screen();
 void render_racing();
+void render_setup();
 
 #endif

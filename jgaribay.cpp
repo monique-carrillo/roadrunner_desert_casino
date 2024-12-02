@@ -43,6 +43,9 @@ JGlobal::JGlobal() {
     lg.y = 0;
 }
 
+int rr_setup = 0;
+int rr_chosen = 0;
+
 void joshua_init()
 {
     int offset = 0;
@@ -146,6 +149,97 @@ void joshua_init()
     jg.button[jg_nbuttons].r.centery = (jg.button[jg_nbuttons].r.bot +
                                   jg.button[jg_nbuttons].r.top) / 2;
     strcpy(jg.button[jg_nbuttons].text, "Quit");
+    jg.button[jg_nbuttons].down = 0;
+    jg.button[jg_nbuttons].click = 0;
+    jg.button[jg_nbuttons].color[0] = 0.0f;
+    jg.button[jg_nbuttons].color[1] = 0.2f;
+    jg.button[jg_nbuttons].color[2] = 0.6f;
+    jg.button[jg_nbuttons].hcolor[0] = 1.0f;
+    jg.button[jg_nbuttons].hcolor[1] = 0.78f;
+    jg.button[jg_nbuttons].hcolor[2] = 0.17f;
+    jg.button[jg_nbuttons].dcolor[0] = jg.button[jg_nbuttons].color[0] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[1] = jg.button[jg_nbuttons].color[1] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[2] = jg.button[jg_nbuttons].color[2] * 0.5f;
+    jg.button[jg_nbuttons].text_color = 0x00ffc72c;
+    jg_nbuttons++;
+    offset -= 60;
+    
+    offset = 0;
+    jg.button[jg_nbuttons].r.width = 200;
+    jg.button[jg_nbuttons].r.height = 50;
+    jg.button[jg_nbuttons].r.left = jg.xres / 2 -
+        jg.button[jg_nbuttons].r.width / 2;
+    jg.button[jg_nbuttons].r.bot = jg.yres / 2 -
+        jg.button[jg_nbuttons].r.height / 2 + offset;
+    jg.button[jg_nbuttons].r.right = jg.button[jg_nbuttons].r.left +
+                               jg.button[jg_nbuttons].r.width;
+    jg.button[jg_nbuttons].r.top = jg.button[jg_nbuttons].r.bot +
+                             jg.button[jg_nbuttons].r.height;
+    jg.button[jg_nbuttons].r.centerx = (jg.button[jg_nbuttons].r.left +
+                                  jg.button[jg_nbuttons].r.right) / 2;
+    jg.button[jg_nbuttons].r.centery = (jg.button[jg_nbuttons].r.bot +
+                                  jg.button[jg_nbuttons].r.top) / 2;
+    strcpy(jg.button[jg_nbuttons].text, "Red");
+    jg.button[jg_nbuttons].down = 0;
+    jg.button[jg_nbuttons].click = 0;
+    jg.button[jg_nbuttons].color[0] = 0.0f;
+    jg.button[jg_nbuttons].color[1] = 0.2f;
+    jg.button[jg_nbuttons].color[2] = 0.6f;
+    jg.button[jg_nbuttons].hcolor[0] = 1.0f;
+    jg.button[jg_nbuttons].hcolor[1] = 0.78f;
+    jg.button[jg_nbuttons].hcolor[2] = 0.17f;
+    jg.button[jg_nbuttons].dcolor[0] = jg.button[jg_nbuttons].color[0] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[1] = jg.button[jg_nbuttons].color[1] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[2] = jg.button[jg_nbuttons].color[2] * 0.5f;
+    jg.button[jg_nbuttons].text_color = 0x00ffc72c;
+    jg_nbuttons++;
+    offset -= 60;
+    
+    jg.button[jg_nbuttons].r.width = 200;
+    jg.button[jg_nbuttons].r.height = 50;
+    jg.button[jg_nbuttons].r.left = jg.xres / 2 -
+        jg.button[jg_nbuttons].r.width / 2;
+    jg.button[jg_nbuttons].r.bot = jg.yres / 2 -
+        jg.button[jg_nbuttons].r.height / 2 + offset;
+    jg.button[jg_nbuttons].r.right = jg.button[jg_nbuttons].r.left +
+                               jg.button[jg_nbuttons].r.width;
+    jg.button[jg_nbuttons].r.top = jg.button[jg_nbuttons].r.bot +
+                             jg.button[jg_nbuttons].r.height;
+    jg.button[jg_nbuttons].r.centerx = (jg.button[jg_nbuttons].r.left +
+                                  jg.button[jg_nbuttons].r.right) / 2;
+    jg.button[jg_nbuttons].r.centery = (jg.button[jg_nbuttons].r.bot +
+                                  jg.button[jg_nbuttons].r.top) / 2;
+    strcpy(jg.button[jg_nbuttons].text, "Green");
+    jg.button[jg_nbuttons].down = 0;
+    jg.button[jg_nbuttons].click = 0;
+    jg.button[jg_nbuttons].color[0] = 0.0f;
+    jg.button[jg_nbuttons].color[1] = 0.2f;
+    jg.button[jg_nbuttons].color[2] = 0.6f;
+    jg.button[jg_nbuttons].hcolor[0] = 1.0f;
+    jg.button[jg_nbuttons].hcolor[1] = 0.78f;
+    jg.button[jg_nbuttons].hcolor[2] = 0.17f;
+    jg.button[jg_nbuttons].dcolor[0] = jg.button[jg_nbuttons].color[0] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[1] = jg.button[jg_nbuttons].color[1] * 0.5f;
+    jg.button[jg_nbuttons].dcolor[2] = jg.button[jg_nbuttons].color[2] * 0.5f;
+    jg.button[jg_nbuttons].text_color = 0x00ffc72c;
+    jg_nbuttons++;
+    offset -= 60;
+    
+    jg.button[jg_nbuttons].r.width = 200;
+    jg.button[jg_nbuttons].r.height = 50;
+    jg.button[jg_nbuttons].r.left = jg.xres / 2 -
+        jg.button[jg_nbuttons].r.width / 2;
+    jg.button[jg_nbuttons].r.bot = jg.yres / 2 -
+        jg.button[jg_nbuttons].r.height / 2 + offset;
+    jg.button[jg_nbuttons].r.right = jg.button[jg_nbuttons].r.left +
+                               jg.button[jg_nbuttons].r.width;
+    jg.button[jg_nbuttons].r.top = jg.button[jg_nbuttons].r.bot +
+                             jg.button[jg_nbuttons].r.height;
+    jg.button[jg_nbuttons].r.centerx = (jg.button[jg_nbuttons].r.left +
+                                  jg.button[jg_nbuttons].r.right) / 2;
+    jg.button[jg_nbuttons].r.centery = (jg.button[jg_nbuttons].r.bot +
+                                  jg.button[jg_nbuttons].r.top) / 2;
+    strcpy(jg.button[jg_nbuttons].text, "Blue");
     jg.button[jg_nbuttons].down = 0;
     jg.button[jg_nbuttons].click = 0;
     jg.button[jg_nbuttons].color[0] = 0.0f;
@@ -277,8 +371,13 @@ void joshua_physics()
 
     for (int i = 0; i < 3; i++) {
         if (jg.rr[i].x > jg.xres) {
-            jg.win = 1;
-            money += 100;
+            if (rr_chosen == i) {
+                jg.win = 1;
+                money += 100;
+            } else {
+                jg.win = 2;
+                money -= 50;
+            }
         }
     
         //if (jg.rr[i].vel[0] != 0)
@@ -305,6 +404,59 @@ void joshua_physics()
             // collision happened
             jg.rr[i].y = jg.rr[i].last_y;
             jg.rr[i].vel[1] = -jg.rr[i].vel[1] * 0.5;
+        }
+    }
+}
+
+void render_setup()
+{
+    Rect r;
+    // BUTTONS
+    // render buttons here
+    
+    glBegin(GL_QUADS);
+    glColor3f(0.3f, 0.3f, 0.7f);
+        glVertex2i(0, 0);
+        glVertex2i(0, jg.yres);
+        glVertex2i(jg.xres, jg.yres);
+        glVertex2i(jg.xres, 0);
+    glEnd();
+        
+    r.left = jg.xres / 2;
+    r.bot = jg.yres - (jg.yres / 4);
+    r.center = 1;
+    ggprint40(&r, 0, jg.button[0].text_color, "Choose a roadrunner!");
+    
+    for (int i = 3; i < jg_nbuttons; i++) {
+        if (jg.button[i].over) {
+            glColor3fv(jg.button[i].hcolor);
+            glLineWidth(2);
+            glBegin(GL_LINE_LOOP);
+                glVertex2i(jg.button[i].r.left - 2,  jg.button[i].r.bot - 2);
+                glVertex2i(jg.button[i].r.left - 2,  jg.button[i].r.top + 2);
+                glVertex2i(jg.button[i].r.right + 2, jg.button[i].r.top + 2);
+                glVertex2i(jg.button[i].r.right + 2, jg.button[i].r.bot - 2);
+            glEnd();
+            glLineWidth(1);
+        }
+        if (jg.button[i].down) {
+            glColor3fv(jg.button[i].dcolor);
+        } else {
+            glColor3fv(jg.button[i].color);
+        }
+        glBegin(GL_QUADS);
+            glVertex2i(jg.button[i].r.left,  jg.button[i].r.bot);
+            glVertex2i(jg.button[i].r.left,  jg.button[i].r.top);
+            glVertex2i(jg.button[i].r.right, jg.button[i].r.top);
+            glVertex2i(jg.button[i].r.right, jg.button[i].r.bot);
+        glEnd();
+        r.left = jg.button[i].r.centerx;
+        r.bot  = jg.button[i].r.centery-8;
+        r.center = 1;
+        if (jg.button[i].down) {
+            ggprint16(&r, 0, jg.button[i].text_color, "Pressed!");
+        } else {
+            ggprint16(&r, 0, jg.button[i].text_color, jg.button[i].text);
         }
     }
 }
@@ -352,7 +504,7 @@ void render_pause_screen()
 
     // BUTTONS
     // render buttons here
-    for (int i = 0; i < jg_nbuttons; i++) {
+    for (int i = 0; i < 3; i++) {
         if (jg.button[i].over) {
             glColor3fv(jg.button[i].hcolor);
             glLineWidth(2);
@@ -385,6 +537,7 @@ void render_pause_screen()
         }
     }
 }
+
 // FIGURE UOT HOW TO RESTART PHYSICS AND NOT RETAIN VALUES
 void render_racing()
 {
@@ -450,7 +603,7 @@ void render_racing()
                 jg.rr[i].vel[0]);
     }
 
-    if (jg.win) {
+    if (jg.win == 1) {
         glBegin(GL_QUADS);
         glColor4ub(0, 0, 0, 200);
             glVertex2i(0, 0);
@@ -462,7 +615,22 @@ void render_racing()
         r.bot = jg.yres / 2;
         r.left = jg.xres / 2;
         r.center = 1;
-        ggprint40(&r, 0, 0x0000ff00, "YOU WIN");
+        ggprint40(&r, 50, 0x0000ff00, "YOU WIN :)");
+        ggprint40(&r, 0, 0x0000ff00, "+$100");
+    } else if (jg.win == 2) {
+        glBegin(GL_QUADS);
+        glColor4ub(0, 0, 0, 200);
+            glVertex2i(0, 0);
+            glVertex2i(0, jg.yres);
+            glVertex2i(jg.xres, jg.yres);
+            glVertex2i(jg.xres, 0);
+        glEnd();
+        
+        r.bot = jg.yres / 2;
+        r.left = jg.xres / 2;
+        r.center = 1;
+        ggprint40(&r, 50, 0x00ff0000, "YOU LOST :(");
+        ggprint40(&r, 0, 0x00ff0000, "-$50");
     }
     
     glDisable(GL_BLEND);

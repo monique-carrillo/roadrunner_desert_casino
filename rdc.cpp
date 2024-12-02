@@ -432,9 +432,9 @@ void mouse_click(int action)
                     if (i == 2) {
                         g.gamemode = MODE_POKER;
                     }
-		    if (i == 3) {
-			g.gamemode = MODE_CEELO;
-		    }
+                    if (i == 3) {
+                        g.gamemode = MODE_CEELO;
+                    }
                     if (i == 4) {
                         g.done = 1;
 
@@ -442,7 +442,7 @@ void mouse_click(int action)
                 }
             }
         } else if (g.paused) {
-            for (int i = 0; i < jg_nbuttons; i++) {
+            for (int i = 0; i < 3; i++) {
                 if (jg.button[i].over) {
                     jg.button[i].down  = 1;
                     jg.button[i].click = 1;
@@ -458,6 +458,25 @@ void mouse_click(int action)
                     }
                 }
             }
+        } else if (g.gamemode == MODE_RACING) {
+            for (int i = 3; i < jg_nbuttons; i++) {
+                if (jg.button[i].over) {
+                    jg.button[i].down  = 1;
+                    jg.button[i].click = 1;
+                    if (i == 3) {
+                        rr_chosen = 0;
+                        rr_setup = 1;
+                    }
+                    if (i == 4) {
+                        rr_chosen = 1;
+                        rr_setup = 1;
+                    }
+                    if (i == 5) {
+                        rr_chosen = 2;
+                        rr_setup = 1;
+                    }
+                }
+            }
         }
     }
     if (action == 2) {
@@ -467,7 +486,12 @@ void mouse_click(int action)
                 button[i].click = 0;
             }
         } else if (g.paused) {
-            for (int i = 0; i < jg_nbuttons; i++) {
+            for (int i = 0; i < 3; i++) {
+                jg.button[i].down = 0;
+                jg.button[i].click = 0;
+            }
+        } else if (g.gamemode == MODE_RACING) {
+            for (int i = 3; i < jg_nbuttons; i++) {                       
                 jg.button[i].down = 0;
                 jg.button[i].click = 0;
             }
@@ -528,13 +552,30 @@ void check_mouse(XEvent *e)
         if (rbutton)
             mouse_click(1);
     } else if (g.paused) {
-        for (int i = 0; i < jg_nbuttons; i++) {
+        for (int i = 0; i < 3; i++) {
             jg.button[i].over = 0;
             jg.button[i].down = 0;
             if (x >= jg.button[i].r.left &&
                     x <= jg.button[i].r.right &&
                     y >= jg.button[i].r.bot &&
                     y <= jg.button[i].r.top) {
+                jg.button[i].over = 1;
+                break;
+            }
+        }
+        if (lbutton)
+            mouse_click(1);
+        if (rbutton)
+            mouse_click(1);
+    } else if (g.gamemode == MODE_RACING) {
+        // mouse over buttons?
+        for (int i = 3; i < jg_nbuttons; i++) {
+            jg.button[i].over = 0;
+            jg.button[i].down = 0;
+            if (x >= jg.button[i].r.left &&
+                x <= jg.button[i].r.right &&
+                y >= jg.button[i].r.bot &&
+                y <= jg.button[i].r.top) {
                 jg.button[i].over = 1;
                 break;
             }
@@ -622,10 +663,6 @@ void render_main_menu()
     r.center = 1;
     ggprint40(&r, 50, 0x000000ff, "Roadrunner Desert");
     ggprint40(&r, 0, 0x000000ff, "Casino");
-    r.left = 20;
-    r.bot  = 20;
-    r.center = 0;
-    ggprint40(&r, 0, 0x0000ff00, "$%.2f", money);
 
     for (int i = 0; i < nbuttons; i++) {
         if (button[i].over) {
@@ -663,17 +700,23 @@ void render_main_menu()
 
 void render()
 {
+    Rect r;
     // clear screen
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     
+    render_overlay();
+
     // render main menu
     if (g.gamemode == MODE_MENU) {
         // menu
         render_main_menu();
     } else if (g.gamemode == MODE_RACING) {
         // roadrunner racing
-        render_racing();
+        if (!rr_setup)
+            render_setup();
+        else
+            render_racing();
     } else if (g.gamemode == MODE_BLACKJACK) {
         // blackjack
         mcarrillo_render();
@@ -698,4 +741,10 @@ void render()
 
     if (g.paused)
         render_pause_screen();
+
+    r.left = 20;
+    r.bot  = 20;
+    r.center = 0;
+    ggprint40(&r, 0, (money < 0) ? 0x00ff0000 : 0x0000ff00,
+            "$%.2f", money);
 }
