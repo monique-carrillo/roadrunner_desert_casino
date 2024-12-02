@@ -27,8 +27,65 @@ string hand_values[10] = {"None","Pair","Two Pair","Three of a Kind",
                           "Straight","Flush","Full House", 
                           "Four of a Kind","Straight Flush","Royal Flush"};
 
+GLuint card_textures[52];
+const char* card_filenames[52] = { 
+    "./images/cards/c_2.jpg", "./images/cards/c_3.jpg", 
+    "./images/cards/c_4.jpg", "./images/cards/c_5.jpg", 
+    "./images/cards/c_6.jpg", "./images/cards/c_7.jpg", 
+    "./images/cards/c_8.jpg", "./images/cards/c_9.jpg", 
+    "./images/cards/c_10.jpg", "./images/cards/c_J.jpg", 
+    "./images/cards/c_Q.jpg", "./images/cards/c_K.jpg", 
+    "./images/cards/c_A.jpg", "./images/cards/d_2.jpg", 
+    "./images/cards/d_3.jpg", "./images/cards/d_4.jpg", 
+    "./images/cards/d_5.jpg", "./images/cards/d_6.jpg", 
+    "./images/cards/d_7.jpg", "./images/cards/d_8.jpg", 
+    "./images/cards/d_9.jpg", "./images/cards/d_10.jpg", 
+    "./images/cards/d_J.jpg", "./images/cards/d_Q.jpg", 
+    "./images/cards/d_K.jpg", "./images/cards/d_A.jpg", 
+    "./images/cards/h_2.jpg", "./images/cards/h_3.jpg", 
+    "./images/cards/h_4.jpg", "./images/cards/h_5.jpg", 
+    "./images/cards/h_6.jpg", "./images/cards/h_7.jpg", 
+    "./images/cards/h_8.jpg", "./images/cards/h_9.jpg", 
+    "./images/cards/h_10.jpg", "./images/cards/h_J.jpg", 
+    "./images/cards/h_Q.jpg", "./images/cards/h_K.jpg", 
+    "./images/cards/h_A.jpg", "./images/cards/s_2.jpg", 
+    "./images/cards/s_3.jpg", "./images/cards/s_4.jpg", 
+    "./images/cards/s_5.jpg", "./images/cards/s_6.jpg", 
+    "./images/cards/s_7.jpg", "./images/cards/s_8.jpg", 
+    "./images/cards/s_9.jpg", "./images/cards/s_10.jpg", 
+    "./images/cards/s_J.jpg", "./images/cards/s_Q.jpg", 
+    "./images/cards/s_K.jpg", "./images/cards/s_A.jpg" };
+
+GLuint load_texture(const char *filename) {
+    Image img(filename);
+    if (img.data == NULL) {
+        printf("Failed to load texture: %s\n", filename);
+        return 0;
+    }
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0,
+            GL_RGB, GL_UNSIGNED_BYTE, img.data);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    return texture;
+}
+
+void init_card_textures() {
+    for (int i = 0; i < 52; ++i) {
+        card_textures[i] = load_texture(card_filenames[i]);
+        if (card_textures[i] == 0) {
+            printf("Failed to load texture: %s\n", card_filenames[i]);
+        }
+    }
+}
+
 void show_db()
 {
+    init_felttex();
+    init_card_textures();
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
     
@@ -51,6 +108,25 @@ void show_db()
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
+    glDisable(GL_TEXTURE_2D);
+
+    // Render cards (for example, first 7 cards) 
+    float xOffset = -0.8f; 
+    for (int i = 0; i < 7; ++i) { 
+        glBindTexture(GL_TEXTURE_2D, card_textures[i]); 
+        if (card_textures[i] == 0) { 
+            printf("Failed to bind texture for card %d\n", i); 
+            continue; 
+        } 
+        glBegin(GL_QUADS); 
+            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.5f); 
+            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.5f); 
+            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.5f); 
+            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.5f); 
+        glEnd(); 
+        xOffset += 0.25f; 
+    } 
+    glBindTexture(GL_TEXTURE_2D, 0); 
     glDisable(GL_TEXTURE_2D);
 
     Rect r;
@@ -397,6 +473,10 @@ Image background_time() {
 void init_felttex() {
     int w, h;
     Image img = "./images/felt.jpg";
+    if (img.data == NULL) {
+        printf("Failed to load felt texture\n");
+        return;
+    }
     w = img.width;
     h = img.height;
 
@@ -404,7 +484,6 @@ void init_felttex() {
     glBindTexture(GL_TEXTURE_2D, felt_texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, 
                  GL_UNSIGNED_BYTE, img.data);
     glBindTexture(GL_TEXTURE_2D, 0);
