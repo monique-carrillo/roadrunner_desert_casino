@@ -23,6 +23,7 @@
 #include "mcarrillo.h"
 #include "images.h"
 #include "fonts.h"
+#include "jgaribay.h"
 
 using namespace std;
 int monique_show = 0;
@@ -39,6 +40,7 @@ class Global {
         GLuint felt_texture;
         Image *card_image;
         GLuint card_texture;
+        GLuint card_img[52];
         Global() {
             //done = 0;
             //gamemode = MODE_MENU;
@@ -48,8 +50,12 @@ class Global {
         }
 } m;
 
-Image pic[53] = {
+Image pic[2] = {
     "./images/felt.jpg",
+    "./images/cards/c_A.jpg"
+};
+
+Image card[52] = {
     "./images/cards/c_A.jpg",
     "./images/cards/c_2.jpg",
     "./images/cards/c_3.jpg",
@@ -205,7 +211,7 @@ void mcarrillo_init(void)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE,
                  m.felt_image->data);
 
-    // card
+    // card - Ace of Clubs 
     m.card_image = &pic[1];
     glGenTextures(1, &m.card_texture);
     w = m.card_image->width;
@@ -218,11 +224,36 @@ void mcarrillo_init(void)
             GL_UNSIGNED_BYTE, card_data);
     free(card_data);
 
+    m.card_image = &card[0];
+    glGenTextures(1, &m.card_img[0]);
+    w = m.card_image->width;
+    h = m.card_image->height;
+    glBindTexture(GL_TEXTURE_2D, m.card_img[0]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    unsigned char *card_data1 = buildAlphaData(&card[0]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
+            GL_UNSIGNED_BYTE, card_data1);
+    free(card_data1);
+
+    m.card_image = &card[1];
+    glGenTextures(1, &m.card_img[1]);
+    w = m.card_image->width;
+    h = m.card_image->height;
+    glBindTexture(GL_TEXTURE_2D, m.card_img[1]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    unsigned char *card_data2 = buildAlphaData(&card[1]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
+            GL_UNSIGNED_BYTE, card_data2);
+    free(card_data2);
+
 
 }
 
 void mcarrillo_render() 
 {
+    mcarrillo_init();
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -245,14 +276,66 @@ void mcarrillo_render()
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
 
+        glBindTexture(GL_TEXTURE_2D, m.card_img[0]);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        glBindTexture(GL_TEXTURE_2D, m.card_img[1]);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+
 }
 
 void mcarrilloFeature() 
 {
-    srand(static_cast<unsigned int>(time(0)));
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glLoadIdentity();
+    
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, m.felt_texture);
+    glColor3f(1.0, 1.0, 1.0);
 
-    mcarrillo_init();
-    mcarrillo_render();
+    glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+    float xOffset = -0.95f;
+    for (int i = 0; i < 2; ++i) {
+        glBindTexture(GL_TEXTURE_2D, m.card_img[i]);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
+            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
+            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
+            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
+        glEnd();
+        xOffset += 0.25f;
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    Rect r;
+    r.bot = 290;
+    r.left = 20;
+    r.center = 0;
+    glColor3f(1.0, 1.0, 1.0);
+
+    ggprint16(&r, 16, 0x00ffffff, "BlackJack");
+
+    srand(static_cast<unsigned int>(time(0)));
 
     initializeDeck();
     shuffleDeck();
