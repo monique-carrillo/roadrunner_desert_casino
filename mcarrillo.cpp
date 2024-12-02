@@ -116,7 +116,8 @@ struct Card {
 Card deck[52];
 
 // Initialize deck
-void initializeDeck() {
+void initializeDeck() 
+{
     string suits[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
     string names[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", 
                       "Queen", "King", "Ace"};
@@ -132,7 +133,8 @@ void initializeDeck() {
 }
 
 // Shuffle deck
-void shuffleDeck() {
+void shuffleDeck() 
+{
     for (int i = 0; i < 52; ++i) {
         int randomIndex = rand() % 52;
         swap(deck[i], deck[randomIndex]);
@@ -140,14 +142,16 @@ void shuffleDeck() {
 }
 
 // Deal cards to a player
-void dealCards(Card *hand, int &handSize, int cardsToDeal, int &deckIndex) {
+void dealCards(Card *hand, int &handSize, int cardsToDeal, int &deckIndex) 
+{
     for (int i = 0; i < cardsToDeal; ++i) {
         hand[handSize++] = deck[deckIndex++];
     }
 }
 
 // Calculate hand total
-int calculateHandValue(Card *hand, int handSize) {
+int calculateHandValue(Card *hand, int handSize) 
+{
     int total = 0;
     int aceCount = 0;
 
@@ -168,14 +172,16 @@ int calculateHandValue(Card *hand, int handSize) {
 }
 
 // Display hand
-void displayHand(Card *hand, int handSize) {
+void displayHand(Card *hand, int handSize) 
+{
     for (int i = 0; i < handSize; ++i) {
         cout << hand[i].name << " of " << hand[i].suit << ", ";
     }
     cout << endl;
 }
 
-void mcarrillo_init(void) {
+void mcarrillo_init(void) 
+{
     glViewport(0, 0, m.xres, m.yres);
     glMatrixMode(GL_PROJECTION); glLoadIdentity();
     glMatrixMode(GL_MODELVIEW); glLoadIdentity();
@@ -215,7 +221,8 @@ void mcarrillo_init(void) {
 
 }
 
-void mcarrillo_render() {
+void mcarrillo_render() 
+{
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -240,12 +247,13 @@ void mcarrillo_render() {
 
 }
 
-void mcarrilloFeature() {
+void mcarrilloFeature() 
+{
     srand(static_cast<unsigned int>(time(0)));
 
     mcarrillo_init();
     mcarrillo_render();
-    // Initialize deck
+
     initializeDeck();
     shuffleDeck();
 
