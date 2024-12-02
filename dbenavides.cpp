@@ -176,7 +176,7 @@ void show_db()
     string highhand = hand_values[calculating(table, player)];
     //cout<< "Highest Hand: " << hand_values[calculating(table, player)] << 
     //    " " << endl;
-    ggprint16(&r, 16, 0x00ffffff, "Highest Hand Value: %s", highhand);
+    //ggprint16(&r, 16, 0x00ffffff, "Highest Hand Value: %s", highhand);
     glDisable(GL_BLEND);
 }
 

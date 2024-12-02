@@ -30,6 +30,7 @@ class JGlobal {
         Flt camera[2];
         int xres, yres;
         int frame;
+        int win;
         Texture lg, bg, pf, rr_texture, pause;
         Roadrunner rr[3];
         Button button[MAXBUTTONS];

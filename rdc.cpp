@@ -45,6 +45,7 @@ int rbutton = 0;
 
 Button button[MAXBUTTONS];
 int nbuttons = 0;
+float money = 0.0;
 
 Image img[3] = {
     background_time(),
@@ -62,7 +63,6 @@ enum {
 
 class Global {
     public:
-        float money;
         int xres, yres;
         int paused;
         int gamemode;
@@ -386,35 +386,6 @@ void init()
     nbuttons++;
     offset -= 60;
 
-    // settings
-    button[nbuttons].r.width = 200;
-    button[nbuttons].r.height = 50;
-    button[nbuttons].r.left = g.xres / 2 - button[nbuttons].r.width / 2;
-    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2 + offset;
-    button[nbuttons].r.right = button[nbuttons].r.left +
-                               button[nbuttons].r.width;
-    button[nbuttons].r.top = button[nbuttons].r.bot +
-                             button[nbuttons].r.height;
-    button[nbuttons].r.centerx = (button[nbuttons].r.left +
-                                  button[nbuttons].r.right) / 2;
-    button[nbuttons].r.centery = (button[nbuttons].r.bot +
-                                  button[nbuttons].r.top) / 2;
-    strcpy(button[nbuttons].text, "Settings");
-    button[nbuttons].down = 0;
-    button[nbuttons].click = 0;
-    button[nbuttons].color[0] = 0.0f;
-    button[nbuttons].color[1] = 0.2f;
-    button[nbuttons].color[2] = 0.6f;
-    button[nbuttons].hcolor[0] = 1.0f;
-    button[nbuttons].hcolor[1] = 0.78f;
-    button[nbuttons].hcolor[2] = 0.17f;
-    button[nbuttons].dcolor[0] = button[nbuttons].color[0] * 0.5f;
-    button[nbuttons].dcolor[1] = button[nbuttons].color[1] * 0.5f;
-    button[nbuttons].dcolor[2] = button[nbuttons].color[2] * 0.5f;
-    button[nbuttons].text_color = 0x00ffc72c;
-    nbuttons++;
-    offset -= 60;
-
     // exit
     button[nbuttons].r.width = 200;
     button[nbuttons].r.height = 50;
@@ -465,9 +436,6 @@ void mouse_click(int action)
 			g.gamemode = MODE_CEELO;
 		    }
                     if (i == 4) {
-                        // settings
-                    }
-                    if (i == 5) {
                         g.done = 1;
 
                     }
@@ -657,7 +625,7 @@ void render_main_menu()
     r.left = 20;
     r.bot  = 20;
     r.center = 0;
-    ggprint40(&r, 0, 0x0000ff00, "$%.2f", g.money);
+    ggprint40(&r, 0, 0x0000ff00, "$%.2f", money);
 
     for (int i = 0; i < nbuttons; i++) {
         if (button[i].over) {

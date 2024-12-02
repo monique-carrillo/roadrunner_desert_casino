@@ -32,6 +32,7 @@ Roadrunner::Roadrunner() {
 };
 
 JGlobal::JGlobal() {
+    jg.win = 0;
     camera[0] = camera[1] = 0.0f;
     frame = 0;
     pf.w = 650;
@@ -260,6 +261,8 @@ void joshua_physics()
         }
     }
     */
+    if (jg.win)
+        return;
     jg.bg.xc[0] += 0.005;
     jg.bg.xc[1] += 0.005;
     jg.pf.xc[0] += 0.01;
@@ -273,6 +276,11 @@ void joshua_physics()
     
 
     for (int i = 0; i < 3; i++) {
+        if (jg.rr[i].x > jg.xres) {
+            jg.win = 1;
+            money += 100;
+        }
+    
         //if (jg.rr[i].vel[0] != 0)
         jg.frame += 1;
 
@@ -282,7 +290,7 @@ void joshua_physics()
         jg.rr[i].vel[0] = (double)rand() / (double)RAND_MAX;
         
         if (jg.rr[i].vel[0] > avgvel)
-            jg.rr[i].x += jg.rr[i].vel[0]; // move x pos
+            jg.rr[i].x += jg.rr[i].vel[0] * 2; // move x pos
         else if (jg.rr[i].vel[0] < avgvel)
             jg.rr[i].x -= jg.rr[i].vel[0]; // move x pos
 
@@ -377,12 +385,11 @@ void render_pause_screen()
         }
     }
 }
-
 // FIGURE UOT HOW TO RESTART PHYSICS AND NOT RETAIN VALUES
 void render_racing()
 {
     Rect r;
-    
+
     // render background
     glBindTexture(GL_TEXTURE_2D, jg.bg.texture);
     glColor3f(1.0f, 1.0f, 1.0f); // reset color
@@ -443,5 +450,20 @@ void render_racing()
                 jg.rr[i].vel[0]);
     }
 
+    if (jg.win) {
+        glBegin(GL_QUADS);
+        glColor4ub(0, 0, 0, 200);
+            glVertex2i(0, 0);
+            glVertex2i(0, jg.yres);
+            glVertex2i(jg.xres, jg.yres);
+            glVertex2i(jg.xres, 0);
+        glEnd();
+        
+        r.bot = jg.yres / 2;
+        r.left = jg.xres / 2;
+        r.center = 1;
+        ggprint40(&r, 0, 0x0000ff00, "YOU WIN");
+    }
+    
     glDisable(GL_BLEND);
 }
