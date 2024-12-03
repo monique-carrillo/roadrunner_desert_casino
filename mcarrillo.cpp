@@ -123,7 +123,7 @@ void initializeDeck()
 {
     string suits[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
     string names[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", 
-                      "Queen", "King", "Ace"};
+        "Queen", "King", "Ace"};
     // Ace initially 11
     int values[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};  
 
@@ -202,7 +202,7 @@ void mcarrillo_init(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE,
-                 m.felt_image->data);
+            m.felt_image->data);
 
     // card - Ace of Clubs for starter 
     m.card_image = &pic[1];
@@ -902,42 +902,34 @@ void mcarrillo_render()
     glClear(GL_COLOR_BUFFER_BIT);
 
     glColor3f(1.0, 1.0, 1.0);
-        glBindTexture(GL_TEXTURE_2D, m.felt_texture);
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      m.yres);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(m.xres, m.yres);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(m.xres, 0);
-        glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, m.felt_texture);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
+    glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      m.yres);
+    glTexCoord2f(1.0f, 1.0f); glVertex2i(m.xres, m.yres);
+    glTexCoord2f(1.0f, 0.0f); glVertex2i(m.xres, 0);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-        glBindTexture(GL_TEXTURE_2D, m.card_texture);
+    glBindTexture(GL_TEXTURE_2D, m.card_texture);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
+    glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
+    glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
+    glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    for (int i = 0; i < 52; i++) {
+        glBindTexture(GL_TEXTURE_2D, m.card_img[0]);
         glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
+        glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
+        glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
+        glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
+        glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-        
-        //for (int i = 0; i < 52; i++) {
-            glBindTexture(GL_TEXTURE_2D, m.card_img[0]);
-            glBegin(GL_QUADS);
-                glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
-                glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
-                glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
-                glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
-            glEnd();
-            glBindTexture(GL_TEXTURE_2D, 0);
-        //}
-            glBindTexture(GL_TEXTURE_2D, m.card_img[1]);
-            glBegin(GL_QUADS);
-                glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
-                glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
-                glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
-                glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
-            glEnd();
-            glBindTexture(GL_TEXTURE_2D, 0);
+    }
 }
 
 void mcarrilloFeature() 
@@ -950,28 +942,28 @@ void mcarrilloFeature()
     glLoadIdentity();
     glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
-    
+
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m.felt_texture);
     glColor3f(1.0, 1.0, 1.0);
 
     glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
 
 
     float xOffset = -0.95f;
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 7; ++i) {
         glBindTexture(GL_TEXTURE_2D, m.card_img[i]);
         glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
-            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
-            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
-            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
         glEnd();
         xOffset += 0.25f;
     }
@@ -998,21 +990,23 @@ void mcarrilloFeature()
     // Initial deal
     dealCards(playerHand, playerHandSize, 2, deckIndex);
     dealCards(dealerHand, dealerHandSize, 2, deckIndex);
-
+/*
     // Display initial hands
     cout << "Player's hand: ";
     displayHand(playerHand, playerHandSize);
     cout << "Dealer's hand: " << dealerHand[0].name << " of " 
-         << dealerHand[0].suit << " and [Hidden]" << endl;
+        << dealerHand[0].suit << " and [Hidden]" << endl;
 
     // Player's turn
     char choice;
+    bool playerBusted = false; // Flag to check if the player busts
     while (true) {
         int playerTotal = calculateHandValue(playerHand, playerHandSize);
         cout << "Player's total: " << playerTotal << endl;
 
         if (playerTotal > 21) {
             cout << "Player busts! Dealer wins." << endl;
+            playerBusted = true; // Set the flag
             break;
         }
 
@@ -1027,27 +1021,33 @@ void mcarrilloFeature()
     }
 
     // Dealer's turn
-    cout << "\nDealer's hand: ";
-    displayHand(dealerHand, dealerHandSize);
-    while (calculateHandValue(dealerHand, dealerHandSize) < 17) {
-        dealCards(dealerHand, dealerHandSize, 1, deckIndex);
-        cout << "Dealer's hand: ";
+    if (!playerBusted) { 
+        cout << "\nDealer's hand: ";
         displayHand(dealerHand, dealerHandSize);
+        while (calculateHandValue(dealerHand, dealerHandSize) < 17) {
+            dealCards(dealerHand, dealerHandSize, 1, deckIndex);
+            cout << "Dealer's hand: ";
+            displayHand(dealerHand, dealerHandSize);
+        }
     }
 
     // Final results
-    int playerTotal = calculateHandValue(playerHand, playerHandSize);
-    int dealerTotal = calculateHandValue(dealerHand, dealerHandSize);
-    cout << "\nPlayer's total: " << playerTotal << endl;
-    cout << "Dealer's total: " << dealerTotal << endl;
+    if (!playerBusted) { 
+        int playerTotal = calculateHandValue(playerHand, playerHandSize);
+        int dealerTotal = calculateHandValue(dealerHand, dealerHandSize);
+        cout << "\nPlayer's total: " << playerTotal << endl;
+        cout << "Dealer's total: " << dealerTotal << endl;
 
-    if (dealerTotal > 21 || playerTotal > dealerTotal) {
-        cout << "Player wins!" << endl;
-    } else if (dealerTotal > playerTotal) {
-        cout << "Dealer wins!" << endl;
-    } else {
-        cout << "It's a tie!" << endl;
-    }
+        if (playerBusted) {
+            cout << "Dealer wins!" << endl;
+        } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
+            cout << "Player wins!" << endl;
+        } else if (dealerTotal > playerTotal) {
+            cout << "Dealer wins!" << endl;
+        } else {
+            cout << "It's a tie!" << endl;
+        }
 
+    }*/
 }
 
