@@ -957,8 +957,21 @@ void mcarrilloFeature()
 
 
     float xOffset = -0.95f;
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 2; ++i) {
         glBindTexture(GL_TEXTURE_2D, m.card_img[i]);
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
+        glEnd();
+        xOffset += 0.25f;
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    xOffset = -0.01f;
+    for (int i = 0; i < 2; ++i) {
+        glBindTexture(GL_TEXTURE_2D, m.card_img[i+2]);
         glBegin(GL_QUADS);
         glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
         glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
