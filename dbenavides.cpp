@@ -113,22 +113,22 @@ void show_db()
     //glDisable(GL_TEXTURE_2D);
 
     // Render cards (for example, first 7 cards) 
-    float xOffset = -0.8f; 
-    for (int i = 0; i < 7; ++i) { 
-        glBindTexture(GL_TEXTURE_2D, card_textures[i]); 
-        if (card_textures[i] == 0) { 
-            printf("Failed to bind texture for card %d\n", i); 
-            continue; 
-        }
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
-            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
-            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
-            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
-        glEnd();
-        xOffset += 0.25f;
-    }
-    glBindTexture(GL_TEXTURE_2D, 0); 
+    //float xOffset = -0.8f; 
+    //for (int i = 0; i < 7; ++i) { 
+    //    glBindTexture(GL_TEXTURE_2D, card_textures[i]); 
+    //    if (card_textures[i] == 0) { 
+    //        printf("Failed to bind texture for card %d\n", i); 
+    //        continue; 
+    //    }
+    //    glBegin(GL_QUADS);
+    //        glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
+    //        glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
+    //        glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
+    //        glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
+    //    glEnd();
+    //    xOffset += 0.25f;
+    //}
+    //glBindTexture(GL_TEXTURE_2D, 0); 
     //glDisable(GL_TEXTURE_2D);
 
     Rect r;
@@ -178,6 +178,40 @@ void show_db()
     string highhand = hand_values[calculating(table, player)];
     //cout<< "Highest Hand: " << hand_values[calculating(table, player)] << 
     //    " " << endl;
+    // Render cards
+    float xOffset = -0.8f;
+    for (int i = 0; i < 7; ++i) {
+        if (i < 5) {
+            glBindTexture(GL_TEXTURE_2D, card_textures[table[i].texmap]);
+            if (card_textures[i] == 0) {
+                printf("Failed to bind texture for card %d\n", i);
+                continue;
+            }
+            glBegin(GL_QUADS);
+                glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
+                glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
+                glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
+                glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
+            glEnd();
+            xOffset += 0.25f;
+        } else {
+            glBindTexture(GL_TEXTURE_2D, card_textures[player[i - 5].texmap]);
+            if (card_textures[i] == 0) {
+                printf("Failed to bind texture for card %d\n", i);
+                continue;
+            }
+            glBegin(GL_QUADS);
+                glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
+                glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
+                glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
+                glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
+            glEnd();
+            xOffset += 0.25f;
+        }
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
+    //glDisable(GL_TEXTURE_2D);
+
     ggprint16(&r, 16, 0x00000000, "Highest Hand Value: %s", 
             highhand.c_str());
     //glDisable(GL_BLEND);
