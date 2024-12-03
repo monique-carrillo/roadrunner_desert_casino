@@ -140,7 +140,7 @@ void initializeDeck()
     int index = 0;
     for (int suit = 0; suit < 4; ++suit) {
         for (int rank = 0; rank < 13; ++rank) {
-            //deck[index++] = {values[rank], suits[suit], names[rank]};
+            deck[index++] = {values[rank], suits[suit], names[rank]};
         }
     }
 }
