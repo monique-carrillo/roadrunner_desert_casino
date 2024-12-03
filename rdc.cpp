@@ -231,7 +231,7 @@ void init_opengl(void)
     
     joshua_init_opengl();    
     init_felttex();
-    init_card_textures();
+    //init_card_textures();
 
     glGenTextures(1, &g.bgTexture);
     
@@ -624,6 +624,16 @@ void check_keys(XEvent *e)
      case XK_space:
                 g.gamecheck = true;
             break;
+     case XK_p:
+                p_pressed++;
+                if (g.gamemode == MODE_POKER) {
+                    show_db(g.xres, g.yres);
+                    money += money_prize;
+
+                } else {
+                    break;
+                }
+            break;
     }
 }
 
@@ -734,9 +744,16 @@ void render()
         mcarrilloFeature();
     } else if (g.gamemode == MODE_POKER) {
         // poker
-        //init_felttex();
-        //init_card_textures();
-        show_db();
+        glColor3f(1.0, 1.0, 1.0);
+        glBindTexture(GL_TEXTURE_2D, g.felt_texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0, g.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        render_poker(g.xres, g.yres);
     } else if (g.gamemode == MODE_CEELO) {
         glColor3f(1.0, 1.0, 1.0); // pure white
         glBindTexture(GL_TEXTURE_2D, g.felt_texture);

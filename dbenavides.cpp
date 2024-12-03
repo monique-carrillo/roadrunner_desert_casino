@@ -2,7 +2,7 @@
 // Date: 10/08/2024
 // Filename: dbenavides.cpp
 // Purpose: Project Feature
-// Last Edit: 11/18/2024
+// Last Edit: 12/02/2024
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,6 +26,10 @@ int db_show = 0;
 string hand_values[10] = {"None","Pair","Two Pair","Three of a Kind",
                           "Straight","Flush","Full House", 
                           "Four of a Kind","Straight Flush","Royal Flush"};
+
+string tabled[5];
+string playered[2];
+string last_value = "None";
 
 GLuint card_textures[52];
 const char* card_filenames[52] = { 
@@ -56,6 +60,67 @@ const char* card_filenames[52] = {
     "./images/cards/s_J.jpg", "./images/cards/s_Q.jpg", 
     "./images/cards/s_K.jpg", "./images/cards/s_A.jpg" };
 
+int p_pressed = 0;
+float money_prize = 0.00;
+
+string conversion(int card_position) {
+    switch (card_position) {
+        case 1: return "Ace of Clubs";
+        case 2: return "2 of Clubs";
+        case 3: return "3 of Clubs";
+        case 4: return "4 of Clubs";
+        case 5: return "5 of Clubs";
+        case 6: return "6 of Clubs";
+        case 7: return "7 of Clubs";
+        case 8: return "8 of Clubs";
+        case 9: return "9 of Clubs";
+        case 10: return "10 of Clubs";
+        case 11: return "J of Clubs";
+        case 12: return "Q of Clubs";
+        case 13: return "K of Clubs";
+        case 14: return "Ace of Diamonds";
+        case 15: return "2 of Diamonds";
+        case 16: return "3 of Diamonds";
+        case 17: return "4 of Diamonds";
+        case 18: return "5 of Diamonds";
+        case 19: return "6 of Diamonds";
+        case 20: return "7 of Diamonds";
+        case 21: return "8 of Diamonds";
+        case 22: return "9 of Diamonds";
+        case 23: return "10 of Diamonds";
+        case 24: return "J of Diamonds";
+        case 25: return "Q of Diamonds";
+        case 26: return "K of Diamonds";
+        case 27: return "Ace of Hearts";
+        case 28: return "2 of Hearts";
+        case 29: return "3 of Hearts";
+        case 30: return "4 of Hearts";
+        case 31: return "5 of Hearts";
+        case 32: return "6 of Hearts";
+        case 33: return "7 of Hearts";
+        case 34: return "8 of Hearts";
+        case 35: return "9 of Hearts";
+        case 36: return "10 of Hearts";
+        case 37: return "J of Hearts";
+        case 38: return "Q of Hearts";
+        case 39: return "K of Hearts";
+        case 40: return "Ace of Spades";
+        case 41: return "2 of Spades";
+        case 42: return "3 of Spades";
+        case 43: return "4 of Spades";
+        case 44: return "5 of Spades";
+        case 45: return "6 of Spades";
+        case 46: return "7 of Spades";
+        case 47: return "8 of Spades";
+        case 48: return "9 of Spades";
+        case 49: return "10 of Spades";
+        case 50: return "J of Spades";
+        case 51: return "Q of Spades";
+        case 52: return "K of Spades";
+        default: return "Unknown Card";
+    }
+}
+
 GLuint load_texture(const char *filename) {
     Image img(filename);
     if (img.data == NULL) {
@@ -65,8 +130,8 @@ GLuint load_texture(const char *filename) {
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0,
             GL_RGB, GL_UNSIGNED_BYTE, img.data);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -84,59 +149,41 @@ void init_card_textures() {
     }
 }
 
-void show_db()
+void render_poker(int xres, int yres) {
+    Rect r, r2, r3, r4;
+    // Instructions
+    r.left = xres / 2;
+    r.bot = yres - (yres / 4);
+    r.center = 1;
+    ggprint40(&r, 0, 0x00000000, "Press 'p' to play a game!");
+
+    if (p_pressed) {
+        // Table
+        r2.left = xres / 2;
+        r2.bot = yres - (yres / 2);
+        r2.center = 1;
+        for (int i = 0; i < 5; i++) {
+            ggprint16(&r, 0, 0x00000000, tabled[i].c_str());
+        }
+
+        // Player
+        r3.left = xres / 2;
+        r3.bot = yres - ((3 * yres) / 4);
+        r3.center = 1;
+        for (int i = 0; i < 2; i++) {
+            ggprint16(&r, 0, 0x00000000, playered[i].c_str());
+        }
+
+        // Value
+        r4.left = xres / 2;
+        r4.bot = yres;
+        r4.center = 1;
+        ggprint16(&r, 0, 0x00000000, last_value.c_str());
+    }
+}
+
+void show_db(int xres, int yres)
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-    
-    glViewport(0, 0, 800, 600);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-    glMatrixMode(GL_MODELVIEW);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, felt_texture);
-    glColor3f(1.0, 1.0, 1.0);
-
-    
-    glBegin(GL_QUADS); 
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f); 
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f); 
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f); 
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f); 
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    
-    glDisable(GL_TEXTURE_2D);
-
-    // Render cards (for example, first 7 cards) 
-    float xOffset = -0.8f; 
-    for (int i = 0; i < 7; ++i) { 
-        glBindTexture(GL_TEXTURE_2D, card_textures[i]); 
-        if (card_textures[i] == 0) { 
-            printf("Failed to bind texture for card %d\n", i); 
-            continue; 
-        } 
-        glBegin(GL_QUADS); 
-            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f); 
-            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f); 
-            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f); 
-            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f); 
-        glEnd(); 
-        xOffset += 0.25f; 
-    } 
-    glBindTexture(GL_TEXTURE_2D, 0); 
-    glDisable(GL_TEXTURE_2D);
-
-    Rect r;
-    r.bot = 290;
-    r.left = 20;
-    r.center = 0;
-    glColor3f(1.0, 1.0, 1.0);
-
-    ggprint16(&r, 16, 0x00ffffff, "Poker Game");
-
     srand(time(NULL));
     int deck[52];
 
@@ -146,11 +193,11 @@ void show_db()
 
     // Shuffle
     shuffling(deck);
-    for (int i=0; i<52; i++) {
-        ggprint16(&r, 16, 0x00ffffff, "%d", deck[i]);
-    }
+    //for (int i=0; i<52; i++) {
+    //    ggprint16(&r, 16, 0x00ffffff, "%d", deck[i]);
+    //}
 
-    ggprint16(&r, 16, 0x00ffffff, "Money: ");
+    //ggprint16(&r, 16, 0x00ffffff, "Money: ");
 
     Hand table[5];
     Hand player[2];
@@ -158,26 +205,50 @@ void show_db()
     // Dealing
     dealing(table, deck, 0, 5);
     dealing(player, deck, 5, 2);
-    //cout << endl;
 
     // Sort
     sorting(table, 5);
     sorting(player, 2);
     for (int i=0; i<5; i++) {
+        printf("%d ", table[i].num);
+        tabled[i] = conversion(table[i].num);
         //cout << table[i].num << " ";
-        ggprint16(&r, 16, 0x00ffffff, "%d", table[i].num);
+        //ggprint16(&r, 16, 0x00ffffff, "%d ", table[i].num);
     }
     for (int i=0; i<2; i++) {
+        printf("%d ", player[i].num);
+        playered[i] = conversion(player[i].num);
         //cout << player[i].num << " ";
-        ggprint16(&r, 16, 0x00ffffff, "%d", player[i].num);
+        //ggprint16(&r, 16, 0x00ffffff, "%d ", player[i].num);
     }
 
     // Calculate
-    string highhand = hand_values[calculating(table, player)];
-    //cout<< "Highest Hand: " << hand_values[calculating(table, player)] << 
-    //    " " << endl;
-    //ggprint16(&r, 16, 0x00ffffff, "Highest Hand Value: %s", highhand);
-    glDisable(GL_BLEND);
+    printf("Highest Hand: %s \n", 
+            hand_values[calculating(table, player)].c_str());
+    last_value = hand_values[calculating(table, player)];
+    if (last_value == "None") {
+        money_prize = -1.00;
+    } else if (last_value == "Pair") {
+        money_prize = 1.00;
+    } else if (last_value == "Two Pair") {
+        money_prize = 2.00;
+    } else if (last_value == "Three of a Kind") {
+        money_prize = 3.00;
+    } else if (last_value == "Straight") {
+        money_prize = 4.00;
+    } else if (last_value == "Flush") {
+        money_prize = 5.00;
+    } else if (last_value == "Full House") {
+        money_prize = 6.00;
+    } else if (last_value == "Four of a Kind") {
+        money_prize = 7.00;
+    } else if (last_value == "Straight Flush") {
+        money_prize = 8.00;
+    } else if (last_value == "Royal Flush") {
+        money_prize = 10.00;
+    }
+    //ggprint16(&r, 0, 0x00000000, "%s\n", 
+    //        hand_values[calculating(table, player)].c_str());
 }
 
 void shuffling(int *deck) {
