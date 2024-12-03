@@ -27,8 +27,8 @@ string hand_values[10] = {"None","Pair","Two Pair","Three of a Kind",
                           "Straight","Flush","Full House", 
                           "Four of a Kind","Straight Flush","Royal Flush"};
 
-string tabled[5];
-string playered[2];
+string tabled[5] = {"None","None","None","None","None"};
+string playered[2] = {"None", "None"};
 string last_value = "None";
 
 GLuint card_textures[52];
@@ -150,39 +150,37 @@ void init_card_textures() {
 }
 
 void render_poker(int xres, int yres) {
-    Rect r, r2, r3, r4;
+    Rect r;
     // Instructions
     r.left = xres / 2;
     r.bot = yres - (yres / 4);
     r.center = 1;
-    ggprint40(&r, 0, 0x00000000, "Press 'p' to play a game!");
+    ggprint40(&r, 15, 0x00000000, "Press 'p' to play a game!");
 
-    if (p_pressed) {
-        // Table
-        r2.left = xres / 2;
-        r2.bot = yres - (yres / 2);
-        r2.center = 1;
-        for (int i = 0; i < 5; i++) {
-            ggprint16(&r, 0, 0x00000000, tabled[i].c_str());
-        }
-
-        // Player
-        r3.left = xres / 2;
-        r3.bot = yres - ((3 * yres) / 4);
-        r3.center = 1;
-        for (int i = 0; i < 2; i++) {
-            ggprint16(&r, 0, 0x00000000, playered[i].c_str());
-        }
-
-        // Value
-        r4.left = xres / 2;
-        r4.bot = yres;
-        r4.center = 1;
-        ggprint16(&r, 0, 0x00000000, last_value.c_str());
+    // Table
+    r.left = xres / 2;
+    r.bot = yres - (yres / 2);
+    r.center = 1;
+    for (int i = 0; i < 5; i++) {
+        ggprint16(&r, 20, 0x00000000, tabled[i].c_str());
     }
+
+    // Player
+    r.left = xres / 2;
+    r.bot = yres - ((3 * yres) / 4);
+    r.center = 1;
+    for (int i = 0; i < 2; i++) {
+        ggprint16(&r, 20, 0x00000000, playered[i].c_str());
+    }
+
+    // Value
+    r.left = xres / 2;
+    r.bot = 50;
+    r.center = 1;
+    ggprint16(&r, 0, 0x00000000, last_value.c_str());
 }
 
-void show_db(int xres, int yres)
+void show_db()
 {
     srand(time(NULL));
     int deck[52];
@@ -211,13 +209,13 @@ void show_db(int xres, int yres)
     sorting(player, 2);
     for (int i=0; i<5; i++) {
         printf("%d ", table[i].num);
-        tabled[i] = conversion(table[i].num);
+        tabled[i] = conversion(table[i].texmap);
         //cout << table[i].num << " ";
         //ggprint16(&r, 16, 0x00ffffff, "%d ", table[i].num);
     }
     for (int i=0; i<2; i++) {
         printf("%d ", player[i].num);
-        playered[i] = conversion(player[i].num);
+        playered[i] = conversion(player[i].texmap);
         //cout << player[i].num << " ";
         //ggprint16(&r, 16, 0x00ffffff, "%d ", player[i].num);
     }
@@ -227,25 +225,25 @@ void show_db(int xres, int yres)
             hand_values[calculating(table, player)].c_str());
     last_value = hand_values[calculating(table, player)];
     if (last_value == "None") {
-        money_prize = -1.00;
+        money_prize = -10.00;
     } else if (last_value == "Pair") {
-        money_prize = 1.00;
-    } else if (last_value == "Two Pair") {
-        money_prize = 2.00;
-    } else if (last_value == "Three of a Kind") {
-        money_prize = 3.00;
-    } else if (last_value == "Straight") {
-        money_prize = 4.00;
-    } else if (last_value == "Flush") {
         money_prize = 5.00;
-    } else if (last_value == "Full House") {
-        money_prize = 6.00;
-    } else if (last_value == "Four of a Kind") {
-        money_prize = 7.00;
-    } else if (last_value == "Straight Flush") {
-        money_prize = 8.00;
-    } else if (last_value == "Royal Flush") {
+    } else if (last_value == "Two Pair") {
+        money_prize = 5.00;
+    } else if (last_value == "Three of a Kind") {
+        money_prize = 5.00;
+    } else if (last_value == "Straight") {
         money_prize = 10.00;
+    } else if (last_value == "Flush") {
+        money_prize = 10.00;
+    } else if (last_value == "Full House") {
+        money_prize = 10.00;
+    } else if (last_value == "Four of a Kind") {
+        money_prize = 25.00;
+    } else if (last_value == "Straight Flush") {
+        money_prize = 40.00;
+    } else if (last_value == "Royal Flush") {
+        money_prize = 50.00;
     }
     //ggprint16(&r, 0, 0x00000000, "%s\n", 
     //        hand_values[calculating(table, player)].c_str());

@@ -39,7 +39,7 @@ struct Hand {
 
 // Prototypes
 //void show_db(int x, int y);
-void show_db(int xres, int yres);
+void show_db();
 void set_hand();
 void shuffling(int *deck);
 void sorting(Hand *hand, int size_of_hand);

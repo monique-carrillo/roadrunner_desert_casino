@@ -625,7 +625,7 @@ void check_keys(XEvent *e)
      case XK_p:
                 p_pressed++;
                 if (g.gamemode == MODE_POKER) {
-                    show_db(g.xres, g.yres);
+                    show_db();
                     money += money_prize;
 
                 } else {
