@@ -20,6 +20,9 @@ int player[4][3];
 int winplayer;
 void render_num();
 void render_win(int num);
+void render_squares();
+
+
 
 int ding() {
 
@@ -62,12 +65,16 @@ void render_word() {
 	   four.left = 20;
 	   four.center = 0;
 	   
+	 ggprint40(&one, 16, 0x00FFFFFF, "Player one(you):");
 
-	ggprint40(&one, 16, 0x00FFFFFF, "Player one(you):");
-	ggprint40(&two, 16, 0x00FFFFFF, "Player two:");
+	 ggprint40(&two, 16, 0x00FFFFFF, "Player two:");
+
 	ggprint40(&three, 16, 0x00FFFFFF, "Player three:");
+
+
 	ggprint40(&four, 16, 0x00FFFFFF, "Player four:");
 
+	render_squares();
 	render_num();
 	render_win(winplayer);
 
@@ -110,8 +117,8 @@ int ceelo(int num1, int num2) {
 
 	srand(time(NULL));
 	int count = 0;
-	int winplayer;
-	int max;
+	int winplayer = 0;
+	int max = 0;
 	bool Wincheck = false;
 	int test1, test2, test3;
 	int compnum[4];
@@ -166,7 +173,7 @@ int ceelo(int num1, int num2) {
 
 	if (Wincheck == false) {
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i <= 3; i++) {
 			if (max < compnum[i]) {
 				max = compnum[i];
 				winplayer = i + 1;
@@ -177,7 +184,7 @@ int ceelo(int num1, int num2) {
 
 	}
 
-	//cout << "The winner is " << winplayer << endl;
+	cout << "The winner is " << winplayer << endl;
 	return winplayer;
 }
 
@@ -197,22 +204,22 @@ void render_num() {
 
 	for (int i = 0; i < 3; i++) {
 		if(player[0][i] == 1) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "1");
+			ggprint40(&num[i], 16, 0x00000000, "1");
 		}
 		if(player[0][i] == 2) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "2");
+			ggprint40(&num[i], 16, 0x00000000, "2");
 		}
 		if(player[0][i] == 3) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "3");
+			ggprint40(&num[i], 16, 0x00000000, "3");
 		}
 		if(player[0][i] == 4) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "4");
+			ggprint40(&num[i], 16, 0x00000000, "4");
 		}
 		if(player[0][i] == 5) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "5");
+			ggprint40(&num[i], 16, 0x00000000, "5");
 		}
 		if(player[0][i] == 6) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "6");
+			ggprint40(&num[i], 16, 0x00000000, "6");
 		}
 
 	}
@@ -232,22 +239,22 @@ void render_num() {
 
 	for (int i = 3; i < 6; i++) {
 		if(player[1][count] == 1) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "1");
+			ggprint40(&num[i], 16, 0x00000000, "1");
 		}
 		if(player[1][count] == 2) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "2");
+			ggprint40(&num[i], 16, 0x00000000, "2");
 		}
 		if(player[1][count] == 3) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "3");
+			ggprint40(&num[i], 16, 0x00000000, "3");
 		}
 		if(player[1][count] == 4) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "4");
+			ggprint40(&num[i], 16, 0x00000000, "4");
 		}
 		if(player[1][count] == 5) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "5");
+			ggprint40(&num[i], 16, 0x00000000, "5");
 		}
 		if(player[1][count] == 6) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "6");
+			ggprint40(&num[i], 16, 0x00000000, "6");
 		}
 		count++;
 	}
@@ -267,22 +274,22 @@ void render_num() {
 
 	for (int i = 6; i < 9; i++) {
 		if(player[2][count] == 1) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "1");
+			ggprint40(&num[i], 16, 0x00000000, "1");
 		}
 		if(player[2][count] == 2) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "2");
+			ggprint40(&num[i], 16, 0x00000000, "2");
 		}
 		if(player[2][count] == 3) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "3");
+			ggprint40(&num[i], 16, 0x00000000, "3");
 		}
 		if(player[2][count] == 4) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "4");
+			ggprint40(&num[i], 16, 0x00000000, "4");
 		}
 		if(player[2][count] == 5) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "5");
+			ggprint40(&num[i], 16, 0x00000000, "5");
 		}
 		if(player[2][count] == 6) {
-			ggprint40(&num[i], 16, 0x00FFFFFF, "6");
+			ggprint40(&num[i], 16, 0x00000000, "6");
 		}
 		count++;
 	}
@@ -303,25 +310,25 @@ void render_num() {
 
 	   for (int i = 9; i < 12; i++) {
 	   if(player[3][count] == 1) {
-	   ggprint40(&num[i], 16, 0x00FFFFFF, "1");
+	   ggprint40(&num[i], 16, 0x00000000, "1");
 	   }
 	   if(player[3][count] == 2) {
-	   ggprint40(&num[i], 16, 0x00FFFFFF, "2");
+	   ggprint40(&num[i], 16, 0x00000000, "2");
 	   }
 	   if(player[3][count] == 3) {
-	   ggprint40(&num[i], 16, 0x00FFFFFF, "3");
+	   ggprint40(&num[i], 16, 0x00000000, "3");
 	   }
 	   if(player[3][count] == 4) {
-	   ggprint40(&num[i], 16, 0x00FFFFFF, "4");
+	   ggprint40(&num[i], 16, 0x00000000, "4");
 	   }
 	   if(player[3][count] == 5) {
-	   ggprint40(&num[i], 16, 0x00FFFFFF, "5");
+	   ggprint40(&num[i], 16, 0x00000000, "5");
 	   }
 	   if(player[3][count] == 6) {
-	   ggprint40(&num[i], 16, 0x00FFFFFF, "6");
+	   ggprint40(&num[i], 16, 0x00000000, "6");
 	   }
 	   if(player[3][count] == 0) {
-	   ggprint40(&num[i], 16, 0x00FFFFFF, "0");
+	   ggprint40(&num[i], 16, 0x00000000, "0");
 	   }
 	   count++;
 	   }
@@ -331,6 +338,152 @@ void render_num() {
 
 }
 
+
+
+void render_squares() {
+        glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.77f, yres / 2.43f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+        glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.77f, yres / 1.6f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+	glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.77f, yres / 5.0f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+        glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.38f, yres / 1.6f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+
+        glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.122f, yres / 1.6f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+
+
+	 glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.13f, yres / 5.0f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+
+        glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.40f, yres / 5.0f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+
+	glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.40f, yres / 2.43f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+
+	glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.13f, yres / 2.43f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+	glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.13f, yres / 1.2f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+
+	glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.40f, yres / 1.2f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+
+	glPushMatrix();
+        glColor3ub(255, 255, 255);
+        glTranslatef(xres / 1.77f, yres / 1.2f, 0.0f);
+        glBegin(GL_QUADS);
+        glVertex2f(-30, -30);
+        glVertex2f(-30,  30);
+        glVertex2f( 30,  30);
+        glVertex2f( 30, -30);
+        glEnd();
+        glPopMatrix();
+
+
+
+}
 
 
 

@@ -765,16 +765,32 @@ void render()
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
+
+
+	Rect r, s;
+
+        r.bot = g.yres - 30;
+        r.left = 20;
+        r.center = 0;
+        ggprint13(&r, 16, 0x00FFFFFF, "Cee-lo");
+
+        s.bot = g.yres - 50;
+        s.left = 20;
+        s.center = 0;
+        ggprint13(&s, 16, 0x00FFFFFF, "press space to roll");
+
+
+
         int win = 0;
         render_word();
         if (g.gamecheck == true) {
-            money = money - 100;
+            money = money - 10;
             win = ceelo(g.xres, g.yres);
             render_win(win);
             g.gamecheck = false;
         }
         if (win == 1) {
-            money = money + 500;
+            money = money + 100;
         }
     }
 
