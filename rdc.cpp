@@ -622,6 +622,9 @@ void check_keys(XEvent *e)
 	 case XK_space:
                 g.gamecheck = true;
             break;
+     case XK_p:
+                show_db();
+            break;
     }
 }
 
@@ -738,7 +741,7 @@ void render()
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-        show_db();
+        //show_db();
     } else if (g.gamemode == MODE_CEELO) {
 	    glColor3f(1.0, 1.0, 1.0); // pure white
         glBindTexture(GL_TEXTURE_2D, g.felt_texture);
