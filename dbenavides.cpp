@@ -28,42 +28,47 @@ string hand_values[10] = {"None","Pair","Two Pair","Three of a Kind",
                           "Four of a Kind","Straight Flush","Royal Flush"};
 
 string tabled[5] = {"None","None","None","None","None"};
+GLuint tables[5];
+int mesa[5] = {0, 0, 0, 0 , 0};
 string playered[2] = {"None", "None"};
+GLuint players[2];
+int jugador[2] = {0, 0};
 string last_value = "None";
 
 GLuint card_textures[52];
-const char* card_filenames[52] = { 
-    "./images/cards/c_2.jpg", "./images/cards/c_3.jpg", 
-    "./images/cards/c_4.jpg", "./images/cards/c_5.jpg", 
-    "./images/cards/c_6.jpg", "./images/cards/c_7.jpg", 
-    "./images/cards/c_8.jpg", "./images/cards/c_9.jpg", 
-    "./images/cards/c_10.jpg", "./images/cards/c_J.jpg", 
-    "./images/cards/c_Q.jpg", "./images/cards/c_K.jpg", 
-    "./images/cards/c_A.jpg", "./images/cards/d_2.jpg", 
-    "./images/cards/d_3.jpg", "./images/cards/d_4.jpg", 
-    "./images/cards/d_5.jpg", "./images/cards/d_6.jpg", 
-    "./images/cards/d_7.jpg", "./images/cards/d_8.jpg", 
-    "./images/cards/d_9.jpg", "./images/cards/d_10.jpg", 
-    "./images/cards/d_J.jpg", "./images/cards/d_Q.jpg", 
-    "./images/cards/d_K.jpg", "./images/cards/d_A.jpg", 
-    "./images/cards/h_2.jpg", "./images/cards/h_3.jpg", 
-    "./images/cards/h_4.jpg", "./images/cards/h_5.jpg", 
-    "./images/cards/h_6.jpg", "./images/cards/h_7.jpg", 
-    "./images/cards/h_8.jpg", "./images/cards/h_9.jpg", 
-    "./images/cards/h_10.jpg", "./images/cards/h_J.jpg", 
-    "./images/cards/h_Q.jpg", "./images/cards/h_K.jpg", 
-    "./images/cards/h_A.jpg", "./images/cards/s_2.jpg", 
-    "./images/cards/s_3.jpg", "./images/cards/s_4.jpg", 
-    "./images/cards/s_5.jpg", "./images/cards/s_6.jpg", 
-    "./images/cards/s_7.jpg", "./images/cards/s_8.jpg", 
-    "./images/cards/s_9.jpg", "./images/cards/s_10.jpg", 
-    "./images/cards/s_J.jpg", "./images/cards/s_Q.jpg", 
-    "./images/cards/s_K.jpg", "./images/cards/s_A.jpg" };
+Image card_filenames[52] = { 
+    "./images/cards/c_A.jpg", "./images/cards/c_2.jpg", 
+    "./images/cards/c_3.jpg", "./images/cards/c_4.jpg", 
+    "./images/cards/c_5.jpg", "./images/cards/c_6.jpg", 
+    "./images/cards/c_7.jpg", "./images/cards/c_8.jpg", 
+    "./images/cards/c_9.jpg", "./images/cards/c_10.jpg", 
+    "./images/cards/c_J.jpg", "./images/cards/c_Q.jpg", 
+    "./images/cards/c_K.jpg", "./images/cards/d_A.jpg", 
+    "./images/cards/d_2.jpg", "./images/cards/d_3.jpg", 
+    "./images/cards/d_4.jpg", "./images/cards/d_5.jpg", 
+    "./images/cards/d_6.jpg", "./images/cards/d_7.jpg", 
+    "./images/cards/d_8.jpg", "./images/cards/d_9.jpg", 
+    "./images/cards/d_10.jpg", "./images/cards/d_J.jpg", 
+    "./images/cards/d_Q.jpg", "./images/cards/d_K.jpg", 
+    "./images/cards/h_A.jpg", "./images/cards/h_2.jpg", 
+    "./images/cards/h_3.jpg", "./images/cards/h_4.jpg", 
+    "./images/cards/h_5.jpg", "./images/cards/h_6.jpg", 
+    "./images/cards/h_7.jpg", "./images/cards/h_8.jpg", 
+    "./images/cards/h_9.jpg", "./images/cards/h_10.jpg", 
+    "./images/cards/h_J.jpg", "./images/cards/h_Q.jpg", 
+    "./images/cards/h_K.jpg", "./images/cards/s_A.jpg", 
+    "./images/cards/s_2.jpg", "./images/cards/s_3.jpg", 
+    "./images/cards/s_4.jpg", "./images/cards/s_5.jpg", 
+    "./images/cards/s_6.jpg", "./images/cards/s_7.jpg", 
+    "./images/cards/s_8.jpg", "./images/cards/s_9.jpg", 
+    "./images/cards/s_10.jpg", "./images/cards/s_J.jpg", 
+    "./images/cards/s_Q.jpg", "./images/cards/s_K.jpg" };
 
 int p_pressed = 0;
 float money_prize = 0.00;
 
-string conversion(int card_position) {
+string conversion(int card_position) 
+{
     switch (card_position) {
         case 1: return "Ace of Clubs";
         case 2: return "2 of Clubs";
@@ -121,7 +126,7 @@ string conversion(int card_position) {
     }
 }
 
-GLuint load_texture(const char *filename) {
+/*GLuint load_texture(const char *filename) {
     Image img(filename);
     if (img.data == NULL) {
         printf("Failed to load texture: %s\n", filename);
@@ -148,8 +153,24 @@ void init_card_textures() {
         }
     }
 }
+*/
+void render_da_cards(GLuint deck, int i) 
+{
+    Image *card_image = &card_filenames[i];
+    glGenTextures(1, &deck);
+    int w = card_image->width;
+    int h = card_image->height;
+    glBindTexture(GL_TEXTURE_2D, deck);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    unsigned char *card_data = buildAlphaData(&card_filenames[i]);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
+                GL_UNSIGNED_BYTE, card_data);
+    free(card_data);
+}
 
-void render_poker(int xres, int yres) {
+void render_poker(int xres, int yres) 
+{
     Rect r;
     // Instructions
     r.left = xres / 2;
@@ -163,6 +184,7 @@ void render_poker(int xres, int yres) {
     r.center = 1;
     for (int i = 0; i < 5; i++) {
         ggprint16(&r, 20, 0x00000000, tabled[i].c_str());
+        render_da_cards(tables[i], mesa[i]);
     }
 
     // Player
@@ -171,6 +193,7 @@ void render_poker(int xres, int yres) {
     r.center = 1;
     for (int i = 0; i < 2; i++) {
         ggprint16(&r, 20, 0x00000000, playered[i].c_str());
+        render_da_cards(players[i], jugador[i]);
     }
 
     // Value
@@ -210,12 +233,14 @@ void show_db()
     for (int i=0; i<5; i++) {
         printf("%d ", table[i].num);
         tabled[i] = conversion(table[i].texmap);
+        mesa[i] = table[i].texmap - 1;
         //cout << table[i].num << " ";
         //ggprint16(&r, 16, 0x00ffffff, "%d ", table[i].num);
     }
     for (int i=0; i<2; i++) {
         printf("%d ", player[i].num);
         playered[i] = conversion(player[i].texmap);
+        jugador[i] = player[i].texmap - 1;
         //cout << player[i].num << " ";
         //ggprint16(&r, 16, 0x00ffffff, "%d ", player[i].num);
     }
