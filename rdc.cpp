@@ -623,7 +623,14 @@ void check_keys(XEvent *e)
                 g.gamecheck = true;
             break;
      case XK_p:
-                show_db();
+                p_pressed++;
+                if (g.gamemode == MODE_POKER) {
+                    show_db(g.xres, g.yres);
+                    money += money_prize;
+
+                } else {
+                    break;
+                }
             break;
     }
 }
@@ -741,7 +748,7 @@ void render()
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-        //show_db();
+        render_poker(g.xres, g.yres);
     } else if (g.gamemode == MODE_CEELO) {
 	    glColor3f(1.0, 1.0, 1.0); // pure white
         glBindTexture(GL_TEXTURE_2D, g.felt_texture);

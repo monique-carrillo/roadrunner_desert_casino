@@ -2,7 +2,7 @@
 // Date: 10/08/2024
 // Filename: dbenavides.h
 // Purpose: Project Feature
-// Last Edit: 11/18/2024
+// Last Edit: 12/02/2024
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
@@ -26,6 +26,8 @@ using namespace std;
 // Variables
 extern int db_show;
 extern string hand_values[10];
+extern float money_prize;
+extern int p_pressed;
 
 // Structures
 struct Hand {
@@ -37,7 +39,7 @@ struct Hand {
 
 // Prototypes
 //void show_db(int x, int y);
-void show_db();
+void show_db(int xres, int yres);
 void set_hand();
 void shuffling(int *deck);
 void sorting(Hand *hand, int size_of_hand);
@@ -48,6 +50,7 @@ bool is_sflush(Hand *hand, Hand *hand2);
 bool is_rflush(Hand *hand, Hand *hand2);
 void init_felttex();
 void init_card_textures();
+void render_poker(int xres, int yres);
 
 // Obtained Structure from: 
 // https://www.geeksforgeeks.org/print-system-time-c-3-different-ways/
