@@ -65,8 +65,8 @@ GLuint load_texture(const char *filename) {
     GLuint texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0,
             GL_RGB, GL_UNSIGNED_BYTE, img.data);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -86,19 +86,21 @@ void init_card_textures() {
 
 void show_db()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     glLoadIdentity();
     
+    // Init
     glViewport(0, 0, 800, 600);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+    glOrtho(-1, 1, -1, 1, -1, 1);
     glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
 
+    // Felt Background
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, felt_texture);
     glColor3f(1.0, 1.0, 1.0);
-
     
     glBegin(GL_QUADS); 
         glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f); 
@@ -108,7 +110,7 @@ void show_db()
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
     
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
 
     // Render cards (for example, first 7 cards) 
     float xOffset = -0.8f; 
@@ -117,17 +119,17 @@ void show_db()
         if (card_textures[i] == 0) { 
             printf("Failed to bind texture for card %d\n", i); 
             continue; 
-        } 
-        glBegin(GL_QUADS); 
-            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f); 
-            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f); 
-            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f); 
-            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f); 
-        glEnd(); 
-        xOffset += 0.25f; 
-    } 
+        }
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
+            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
+            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
+            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
+        glEnd();
+        xOffset += 0.25f;
+    }
     glBindTexture(GL_TEXTURE_2D, 0); 
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
 
     Rect r;
     r.bot = 290;
@@ -135,7 +137,7 @@ void show_db()
     r.center = 0;
     glColor3f(1.0, 1.0, 1.0);
 
-    ggprint16(&r, 16, 0x00ffffff, "Poker Game");
+    //ggprint16(&r, 16, 0x00ffffff, "Poker Game");
 
     srand(time(NULL));
     int deck[52];
@@ -146,11 +148,11 @@ void show_db()
 
     // Shuffle
     shuffling(deck);
-    for (int i=0; i<52; i++) {
-        ggprint16(&r, 16, 0x00ffffff, "%d", deck[i]);
-    }
+    //for (int i=0; i<52; i++) {
+    //    ggprint16(&r, 16, 0x00ffffff, "%d", deck[i]);
+    //}
 
-    ggprint16(&r, 16, 0x00ffffff, "Money: ");
+    //ggprint16(&r, 16, 0x00ffffff, "Money: ");
 
     Hand table[5];
     Hand player[2];
@@ -163,21 +165,22 @@ void show_db()
     // Sort
     sorting(table, 5);
     sorting(player, 2);
-    for (int i=0; i<5; i++) {
+    //for (int i=0; i<5; i++) {
         //cout << table[i].num << " ";
-        ggprint16(&r, 16, 0x00ffffff, "%d", table[i].num);
-    }
-    for (int i=0; i<2; i++) {
+    //    ggprint16(&r, 16, 0x00ffffff, "%d", table[i].num);
+    //}
+    //for (int i=0; i<2; i++) {
         //cout << player[i].num << " ";
-        ggprint16(&r, 16, 0x00ffffff, "%d", player[i].num);
-    }
+    //    ggprint16(&r, 16, 0x00ffffff, "%d", player[i].num);
+    //}
 
     // Calculate
     string highhand = hand_values[calculating(table, player)];
     //cout<< "Highest Hand: " << hand_values[calculating(table, player)] << 
     //    " " << endl;
-    //ggprint16(&r, 16, 0x00ffffff, "Highest Hand Value: %s", highhand);
-    glDisable(GL_BLEND);
+    ggprint16(&r, 16, 0x00000000, "Highest Hand Value: %s", 
+            highhand.c_str());
+    //glDisable(GL_BLEND);
 }
 
 void shuffling(int *deck) {
