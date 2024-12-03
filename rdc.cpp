@@ -229,7 +229,7 @@ void init_opengl(void)
     
     joshua_init_opengl();    
     init_felttex();
-    init_card_textures();
+    //init_card_textures();
 
     glGenTextures(1, &g.bgTexture);
     
@@ -729,8 +729,15 @@ void render()
         mcarrilloFeature();
     } else if (g.gamemode == MODE_POKER) {
         // poker
-        //init_felttex();
-        //init_card_textures();
+        glColor3f(1.0, 1.0, 1.0);
+        glBindTexture(GL_TEXTURE_2D, g.felt_texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0, 0);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0, g.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
         show_db();
     } else if (g.gamemode == MODE_CEELO) {
 	    glColor3f(1.0, 1.0, 1.0); // pure white
