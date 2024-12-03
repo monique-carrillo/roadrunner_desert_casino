@@ -35,6 +35,7 @@ class Global {
         int paused;
         int gamemode;
         int done;
+        int win;
         GLuint bgTexture;
         Image *felt_image;
         GLuint felt_texture;
@@ -42,9 +43,10 @@ class Global {
         GLuint card_texture;
         GLuint card_img[52];
         Global() {
-            //done = 0;
+            done = 0;
             //gamemode = MODE_MENU;
-            //paused = 0;
+            paused = 0;
+            win = 0;
             xres = 800;
             yres = 600;
         }
@@ -1003,7 +1005,7 @@ void mcarrilloFeature()
     // Initial deal
     dealCards(playerHand, playerHandSize, 2, deckIndex);
     dealCards(dealerHand, dealerHandSize, 2, deckIndex);
-/*
+
     // Display initial hands
     cout << "Player's hand: ";
     displayHand(playerHand, playerHandSize);
@@ -1012,14 +1014,15 @@ void mcarrilloFeature()
 
     // Player's turn
     char choice;
-    bool playerBusted = false; // Flag to check if the player busts
+    bool playerBusted = false; 
     while (true) {
         int playerTotal = calculateHandValue(playerHand, playerHandSize);
         cout << "Player's total: " << playerTotal << endl;
 
         if (playerTotal > 21) {
             cout << "Player busts! Dealer wins." << endl;
-            playerBusted = true; // Set the flag
+            playerBusted = true;
+            m.win = 2;
             break;
         }
 
@@ -1055,12 +1058,50 @@ void mcarrilloFeature()
             cout << "Dealer wins!" << endl;
         } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
             cout << "Player wins!" << endl;
+            m.win = 1;
         } else if (dealerTotal > playerTotal) {
             cout << "Dealer wins!" << endl;
+            m.win = 2;
         } else {
             cout << "It's a tie!" << endl;
         }
 
-    }*/
+    }
+    
+    //m.xres = 250;
+    //m.yres = 250;
+    if (m.win == 1) {
+        glBegin(GL_QUADS);
+        glColor4ub(0, 0, 0, 200);
+            glVertex2i(0, 0);
+            glVertex2i(0, m.yres);
+            glVertex2i(m.xres, m.yres);
+            glVertex2i(m.xres, 0);
+        glEnd();
+
+        r.bot = m.yres / 2;
+        r.left = m.xres / 2;
+        r.center = 1;
+        ggprint40(&r, 50, 0x0000ff00, "YOU WIN :)");
+        ggprint40(&r, 0, 0x0000ff00, "+$100");
+    } else if (m.win == 2) {
+        glBegin(GL_QUADS);
+        glColor4ub(0, 0, 0, 200);
+            glVertex2i(0, 0);
+            glVertex2i(0, m.yres);
+            glVertex2i(m.xres, m.yres);
+            glVertex2i(m.xres, 0);
+        glEnd();
+
+        r.bot = m.yres / 2;
+        r.left = m.xres / 2;
+        r.center = 1;
+        ggprint40(&r, 50, 0x00ff0000, "YOU LOST :(");
+        ggprint40(&r, 0, 0x00ff0000, "-$50");
+    }
+
+    //glDisable(GL_BLEND);
+    
+
 }
 
