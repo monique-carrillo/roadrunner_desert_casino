@@ -2,7 +2,7 @@
 #define _FONTS_H_
 
 extern float money;
-#define MAXBUTTONS 8
+#define MAXBUTTONS 16
 typedef struct t_rect {
 	int left;
 	int top;

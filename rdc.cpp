@@ -44,7 +44,7 @@ int lbutton = 0;
 int rbutton = 0;
 
 Button button[MAXBUTTONS];
-int nbuttons = 0;
+int nbuttons = 6;
 float money = 0.0;
 
 Image img[3] = {
@@ -58,7 +58,8 @@ enum {
     MODE_RACING,
     MODE_BLACKJACK,
     MODE_POKER,
-    MODE_CEELO
+    MODE_CEELO,
+    MODE_SHOP
 };
 
 class Global {
@@ -66,7 +67,7 @@ class Global {
         int xres, yres;
         int paused;
         int gamemode;
-	bool gamecheck = false;
+    bool gamecheck = false;
         int check2 = 0;
         int done;
         GLuint bgTexture;
@@ -179,6 +180,7 @@ class X11_wrapper {
 
 int main()
 {
+    srand(time(NULL));
     init_opengl();
     initialize_fonts();
     init();
@@ -272,151 +274,45 @@ void init()
     int offset = 75;
     joshua_init();
 
-    nbuttons=0;
-    // roadrunner racing
-    button[nbuttons].r.width = 200;
-    button[nbuttons].r.height = 50;
-    button[nbuttons].r.left = g.xres / 2 - button[nbuttons].r.width / 2;
-    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2 + offset;
-    button[nbuttons].r.right = button[nbuttons].r.left +
-                               button[nbuttons].r.width;
-    button[nbuttons].r.top = button[nbuttons].r.bot +
-                             button[nbuttons].r.height;
-    button[nbuttons].r.centerx = (button[nbuttons].r.left +
-                                  button[nbuttons].r.right) / 2;
-    button[nbuttons].r.centery = (button[nbuttons].r.bot +
-                                  button[nbuttons].r.top) / 2;
-    strcpy(button[nbuttons].text, "Roadrunner Racing");
-    button[nbuttons].down = 0;
-    button[nbuttons].click = 0;
-    button[nbuttons].color[0] = 0.0f;
-    button[nbuttons].color[1] = 0.2f;
-    button[nbuttons].color[2] = 0.6f;
-    button[nbuttons].hcolor[0] = 1.0f;
-    button[nbuttons].hcolor[1] = 0.78f;
-    button[nbuttons].hcolor[2] = 0.17f;
-    button[nbuttons].dcolor[0] = button[nbuttons].color[0] * 0.5f;
-    button[nbuttons].dcolor[1] = button[nbuttons].color[1] * 0.5f;
-    button[nbuttons].dcolor[2] = button[nbuttons].color[2] * 0.5f;
-    button[nbuttons].text_color = 0x00ffc72c;
-    nbuttons++;
-    offset -= 60;
-    
-    // blackjack
-    button[nbuttons].r.width = 200;
-    button[nbuttons].r.height = 50;
-    button[nbuttons].r.left = g.xres / 2 - button[nbuttons].r.width / 2;
-    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2 + offset;
-    button[nbuttons].r.right = button[nbuttons].r.left +
-                               button[nbuttons].r.width;
-    button[nbuttons].r.top = button[nbuttons].r.bot +
-                             button[nbuttons].r.height;
-    button[nbuttons].r.centerx = (button[nbuttons].r.left +
-                                  button[nbuttons].r.right) / 2;
-    button[nbuttons].r.centery = (button[nbuttons].r.bot +
-                                  button[nbuttons].r.top) / 2;
-    strcpy(button[nbuttons].text, "Blackjack");
-    button[nbuttons].down = 0;
-    button[nbuttons].click = 0;
-    button[nbuttons].color[0] = 0.0f;
-    button[nbuttons].color[1] = 0.2f;
-    button[nbuttons].color[2] = 0.6f;
-    button[nbuttons].hcolor[0] = 1.0f;
-    button[nbuttons].hcolor[1] = 0.78f;
-    button[nbuttons].hcolor[2] = 0.17f;
-    button[nbuttons].dcolor[0] = button[nbuttons].color[0] * 0.5f;
-    button[nbuttons].dcolor[1] = button[nbuttons].color[1] * 0.5f;
-    button[nbuttons].dcolor[2] = button[nbuttons].color[2] * 0.5f;
-    button[nbuttons].text_color = 0x00ffc72c;
-    nbuttons++;
-    offset -= 60;
- 
-    // poker
-    button[nbuttons].r.width = 200;
-    button[nbuttons].r.height = 50;
-    button[nbuttons].r.left = g.xres / 2 - button[nbuttons].r.width / 2;
-    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2 + offset;
-    button[nbuttons].r.right = button[nbuttons].r.left +
-                               button[nbuttons].r.width;
-    button[nbuttons].r.top = button[nbuttons].r.bot +
-                             button[nbuttons].r.height;
-    button[nbuttons].r.centerx = (button[nbuttons].r.left +
-                                  button[nbuttons].r.right) / 2;
-    button[nbuttons].r.centery = (button[nbuttons].r.bot +
-                                  button[nbuttons].r.top) / 2;
-    strcpy(button[nbuttons].text, "Poker");
-    button[nbuttons].down = 0;
-    button[nbuttons].click = 0;
-    button[nbuttons].color[0] = 0.0f;
-    button[nbuttons].color[1] = 0.2f;
-    button[nbuttons].color[2] = 0.6f;
-    button[nbuttons].hcolor[0] = 1.0f;
-    button[nbuttons].hcolor[1] = 0.78f;
-    button[nbuttons].hcolor[2] = 0.17f;
-    button[nbuttons].dcolor[0] = button[nbuttons].color[0] * 0.5f;
-    button[nbuttons].dcolor[1] = button[nbuttons].color[1] * 0.5f;
-    button[nbuttons].dcolor[2] = button[nbuttons].color[2] * 0.5f;
-    button[nbuttons].text_color = 0x00ffc72c;
-    nbuttons++;
-    offset -= 60;
-
-
-    //Cee-lo
-    button[nbuttons].r.width = 200;
-    button[nbuttons].r.height = 50;
-    button[nbuttons].r.left = g.xres / 2 - button[nbuttons].r.width / 2;
-    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2 + offset;
-    button[nbuttons].r.right = button[nbuttons].r.left +
-                               button[nbuttons].r.width;
-    button[nbuttons].r.top = button[nbuttons].r.bot +
-                             button[nbuttons].r.height;
-    button[nbuttons].r.centerx = (button[nbuttons].r.left +
-                                  button[nbuttons].r.right) / 2;
-    button[nbuttons].r.centery = (button[nbuttons].r.bot +
-                                  button[nbuttons].r.top) / 2;
-    strcpy(button[nbuttons].text, "Cee-lo");
-    button[nbuttons].down = 0;
-    button[nbuttons].click = 0;
-    button[nbuttons].color[0] = 0.0f;
-    button[nbuttons].color[1] = 0.2f;
-    button[nbuttons].color[2] = 0.6f;
-    button[nbuttons].hcolor[0] = 1.0f;
-    button[nbuttons].hcolor[1] = 0.78f;
-    button[nbuttons].hcolor[2] = 0.17f;
-    button[nbuttons].dcolor[0] = button[nbuttons].color[0] * 0.5f;
-    button[nbuttons].dcolor[1] = button[nbuttons].color[1] * 0.5f;
-    button[nbuttons].dcolor[2] = button[nbuttons].color[2] * 0.5f;
-    button[nbuttons].text_color = 0x00ffc72c;
-    nbuttons++;
-    offset -= 60;
-
-    // exit
-    button[nbuttons].r.width = 200;
-    button[nbuttons].r.height = 50;
-    button[nbuttons].r.left = g.xres / 2 - button[nbuttons].r.width / 2;
-    button[nbuttons].r.bot = g.yres / 2 - button[nbuttons].r.height / 2 + offset;
-    button[nbuttons].r.right = button[nbuttons].r.left +
-                               button[nbuttons].r.width;
-    button[nbuttons].r.top = button[nbuttons].r.bot +
-                             button[nbuttons].r.height;
-    button[nbuttons].r.centerx = (button[nbuttons].r.left +
-                                  button[nbuttons].r.right) / 2;
-    button[nbuttons].r.centery = (button[nbuttons].r.bot +
-                                  button[nbuttons].r.top) / 2;
-    strcpy(button[nbuttons].text, "Exit");
-    button[nbuttons].down = 0;
-    button[nbuttons].click = 0;
-    button[nbuttons].color[0] = 0.0f;
-    button[nbuttons].color[1] = 0.2f;
-    button[nbuttons].color[2] = 0.6f;
-    button[nbuttons].hcolor[0] = 1.0f;
-    button[nbuttons].hcolor[1] = 0.78f;
-    button[nbuttons].hcolor[2] = 0.17f;
-    button[nbuttons].dcolor[0] = button[nbuttons].color[0] * 0.5f;
-    button[nbuttons].dcolor[1] = button[nbuttons].color[1] * 0.5f;
-    button[nbuttons].dcolor[2] = button[nbuttons].color[2] * 0.5f;
-    button[nbuttons].text_color = 0x00ffc72c;
-    nbuttons++;
+    for (int i = 0; i < nbuttons; i++) {
+        button[i].r.width = 200;
+        button[i].r.height = 50;
+        button[i].r.left = g.xres / 2 - button[i].r.width / 2;
+        button[i].r.bot = g.yres / 2 - button[i].r.height / 2 + offset;
+        button[i].r.right = button[i].r.left + button[i].r.width;
+        button[i].r.top = button[i].r.bot + button[i].r.height;
+        button[i].r.centerx = (button[i].r.left + button[i].r.right) / 2;
+        button[i].r.centery = (button[i].r.bot + button[i].r.top) / 2;
+        switch (i) {
+            case 0:
+                strcpy(button[i].text, "Roadrunner Racing");
+                break;
+            case 1:
+                strcpy(button[i].text, "Blackjack");
+                break;
+            case 2:
+                strcpy(button[i].text, "Poker");
+                break;
+            case 3:
+                strcpy(button[i].text, "Cee-lo");
+                break;
+            case 4:
+                strcpy(button[i].text, "Shop");
+                break;
+            case 5:
+                strcpy(button[i].text, "Exit");
+                break;
+        }
+        button[i].down = 0;
+        button[i].click = 0;
+        for (int j = 0; j < COLOR_SIZE; j++) {
+            button[i].color[j] = jg.theme.primary1[j];
+            button[i].hcolor[j] = jg.theme.secondary1[j];
+            button[i].dcolor[j] = jg.theme.primary1[j] * 0.5f;
+        }
+        button[i].text_color = jg.theme.secondary2;
+        offset -= 60;
+    }
 }
 
 void mouse_click(int action)
@@ -440,8 +336,10 @@ void mouse_click(int action)
                         g.gamemode = MODE_CEELO;
                     }
                     if (i == 4) {
+                        g.gamemode = MODE_SHOP;
+                    }
+                    if (i == 5) {
                         g.done = 1;
-
                     }
                 }
             }
@@ -451,33 +349,115 @@ void mouse_click(int action)
                     jg.button[i].down  = 1;
                     jg.button[i].click = 1;
                     if (i == 0) {
+                        // unpause
                         g.paused = !g.paused;
                     }
                     if (i == 1) {
+                        // go to menu
                         g.paused = 0;
                         g.gamemode = MODE_MENU;
+                        jg.win = 0;
+                        jg.setup = 0;
+                        jg.chosen = 0;
+                        // reset roadrunners
+                        for (int i = 0; i < 3; i++) {
+                            jg.rr[i].x = 250;
+                            jg.rr[i].y = 250;
+                            jg.rr[i].vel[0] = jg.rr[i].vel[1] = 0.0f;
+                        }
                     }
                     if (i == 2) {
+                        // exit
                         g.done = 1;
                     }
                 }
             }
         } else if (g.gamemode == MODE_RACING) {
-            for (int i = 3; i < jg_nbuttons; i++) {
+            for (int i = 3; i < 6; i++) {
                 if (jg.button[i].over) {
                     jg.button[i].down  = 1;
                     jg.button[i].click = 1;
                     if (i == 3) {
-                        rr_chosen = 0;
-                        rr_setup = 1;
+                        jg.chosen = 0;
+                        jg.setup = 1;
                     }
                     if (i == 4) {
-                        rr_chosen = 1;
-                        rr_setup = 1;
+                        jg.chosen = 1;
+                        jg.setup = 1;
                     }
                     if (i == 5) {
-                        rr_chosen = 2;
-                        rr_setup = 1;
+                        jg.chosen = 2;
+                        jg.setup = 1;
+                    }
+                }
+            }
+        } else if (g.gamemode == MODE_SHOP) {
+            for (int i = 6; i < jg_nbuttons; i++) {
+                if (jg.button[i].over) {
+                    jg.button[i].down  = 1;
+                    jg.button[i].click = 1;
+                    if (i == 6) {
+                        if (money >= 100) {
+                            money -= 100.0;
+                            jg.theme = csub;
+                            init();
+                        }
+                    }
+                    if (i == 7) {
+                        if (money >= 100) {
+                            money -= 100.0;
+                            jg.theme = light;
+                            init();
+                        }
+                    }
+                    if (i == 8) {
+                        if (money >= 100) {
+                            money -= 100.0;
+                            jg.theme = dark;
+                            init();
+                        }
+                    }
+                    if (i == 9) {
+                        if (money >= 100) {
+                            money -= 100.0;
+                            jg.theme = strawberry;
+                            init();
+                        }
+                    }
+                    if (i == 10) {
+                        if (money >= 100) {
+                            money -= 100.0;
+                            jg.theme = charcoal;
+                            init();
+                        }
+                    }
+                    if (i == 11) {
+                        if (money >= 100) {
+                            money -= 100.0;
+                            jg.theme = mint;
+                            init();
+                        }
+                    }
+                    if (i == 12) {
+                        if (money >= 100) {
+                            money -= 100.0;
+                            jg.theme = royal;
+                            init();
+                        }
+                    }
+                    if (i == 13) {
+                        if (money >= 100) {
+                            money -= 100.0;
+                            jg.theme = peach;
+                            init();
+                        }
+                    }
+                    if (i == 14) {
+                        if (money >= 100) {
+                            money -= 100.0;
+                            jg.theme = slate;
+                            init();
+                        }
                     }
                 }
             }
@@ -495,7 +475,12 @@ void mouse_click(int action)
                 jg.button[i].click = 0;
             }
         } else if (g.gamemode == MODE_RACING) {
-            for (int i = 3; i < jg_nbuttons; i++) {                       
+            for (int i = 3; i < 6; i++) {                       
+                jg.button[i].down = 0;
+                jg.button[i].click = 0;
+            }
+        } else if (g.gamemode == MODE_SHOP) {
+            for (int i = 6; i < jg_nbuttons; i++) {                       
                 jg.button[i].down = 0;
                 jg.button[i].click = 0;
             }
@@ -573,7 +558,24 @@ void check_mouse(XEvent *e)
             mouse_click(1);
     } else if (g.gamemode == MODE_RACING) {
         // mouse over buttons?
-        for (int i = 3; i < jg_nbuttons; i++) {
+        for (int i = 3; i < 6; i++) {
+            jg.button[i].over = 0;
+            jg.button[i].down = 0;
+            if (x >= jg.button[i].r.left &&
+                x <= jg.button[i].r.right &&
+                y >= jg.button[i].r.bot &&
+                y <= jg.button[i].r.top) {
+                jg.button[i].over = 1;
+                break;
+            }
+        }
+        if (lbutton)
+            mouse_click(1);
+        if (rbutton)
+            mouse_click(1);
+    } else if (g.gamemode == MODE_SHOP) {
+        // mouse over buttons?
+        for (int i = 6; i < jg_nbuttons; i++) {
             jg.button[i].over = 0;
             jg.button[i].down = 0;
             if (x >= jg.button[i].r.left &&
@@ -619,7 +621,7 @@ void check_keys(XEvent *e)
                 g.paused = !g.paused;
             break;
 
-	 case XK_space:
+     case XK_space:
                 g.gamecheck = true;
             break;
      case XK_p:
@@ -640,10 +642,11 @@ void physics()
     if (g.gamemode == MODE_MENU)
         return;
     if (g.paused) {
-        // no physics
+        // paused, dont do physics
     } else {
         // all physics go here
-        joshua_physics();
+        if (jg.setup)
+            joshua_physics();
     }
     /*
     if (!g.paused) {
@@ -679,8 +682,8 @@ void render_main_menu()
     r.left = g.xres / 2;
     r.bot  = g.yres - g.yres / 6;
     r.center = 1;
-    ggprint40(&r, 50, 0x000000ff, "Roadrunner Desert");
-    ggprint40(&r, 0, 0x000000ff, "Casino");
+    ggprint40(&r, 50, jg.theme.primary2, "Roadrunner Desert");
+    ggprint40(&r, 0, jg.theme.primary2, "Casino");
 
     for (int i = 0; i < nbuttons; i++) {
         if (button[i].over) {
@@ -727,14 +730,17 @@ void render()
     if (g.gamemode == MODE_MENU) {
         // menu
         render_main_menu();
+    } else if (g.gamemode == MODE_SHOP) {
+        render_shop();
     } else if (g.gamemode == MODE_RACING) {
         // roadrunner racing
-        if (!rr_setup)
+        if (!jg.setup)
             render_setup();
         else
             render_racing();
     } else if (g.gamemode == MODE_BLACKJACK) {
         // blackjack
+        //mcarrillo_init();
         mcarrillo_render();
         mcarrilloFeature();
     } else if (g.gamemode == MODE_POKER) {
@@ -750,7 +756,7 @@ void render()
         glBindTexture(GL_TEXTURE_2D, 0);
         render_poker(g.xres, g.yres);
     } else if (g.gamemode == MODE_CEELO) {
-	    glColor3f(1.0, 1.0, 1.0); // pure white
+        glColor3f(1.0, 1.0, 1.0); // pure white
         glBindTexture(GL_TEXTURE_2D, g.felt_texture);
         glBegin(GL_QUADS);
             glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
@@ -778,6 +784,5 @@ void render()
     r.left = 20;
     r.bot  = 20;
     r.center = 0;
-    ggprint40(&r, 0, (money < 0) ? 0x00ff0000 : 0x0000ff00,
-            "$%.2f", money);
+    ggprint40(&r, 0, (money < 0) ? 0x00ff0000 : 0x0000ff00, "$%.2f", money);
 }
