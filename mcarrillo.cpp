@@ -29,7 +29,7 @@ using namespace std;
 int monique_show = 0;
 
 string dealer[2] = {"None","None"};
-string player[2] = {"None", "None"};
+string mplayer[2] = {"None", "None"};
 string val = "None";
 
 int hit = 0;
@@ -140,7 +140,7 @@ void initializeDeck()
     int index = 0;
     for (int suit = 0; suit < 4; ++suit) {
         for (int rank = 0; rank < 13; ++rank) {
-            deck[index++] = {values[rank], suits[suit], names[rank]};
+            //deck[index++] = {values[rank], suits[suit], names[rank]};
         }
     }
 }
@@ -973,7 +973,7 @@ void BJ(int x_res, int y_res) {
     r.bot = y_res - ((3 * y_res) / 4);
     r.center = 1;
     for (int i = 0; i < 2; i++) {
-        ggprint16(&r, 20, 0x00000000, player[i].c_str());
+        ggprint16(&r, 20, 0x00000000, mplayer[i].c_str());
     }
 
     r.left = x_res / 2;
@@ -1007,7 +1007,7 @@ void mcarrilloFeature()
 
     for (int i=0; i<2; i++) {
         printf("%d ", playerHand[i].value);
-        player[i] = con(playerHand[i].value);
+        mplayer[i] = con(playerHand[i].value);
     }
 */
 
