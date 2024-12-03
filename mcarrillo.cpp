@@ -35,6 +35,7 @@ class Global {
         int paused;
         int gamemode;
         int done;
+        int win;
         GLuint bgTexture;
         Image *felt_image;
         GLuint felt_texture;
@@ -42,9 +43,10 @@ class Global {
         GLuint card_texture;
         GLuint card_img[52];
         Global() {
-            //done = 0;
+            done = 0;
             //gamemode = MODE_MENU;
-            //paused = 0;
+            paused = 0;
+            win = 0;
             xres = 800;
             yres = 600;
         }
@@ -123,7 +125,7 @@ void initializeDeck()
 {
     string suits[] = {"Hearts", "Diamonds", "Clubs", "Spades"};
     string names[] = {"2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", 
-                      "Queen", "King", "Ace"};
+        "Queen", "King", "Ace"};
     // Ace initially 11
     int values[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11};  
 
@@ -202,7 +204,7 @@ void mcarrillo_init(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE,
-                 m.felt_image->data);
+            m.felt_image->data);
 
     // card - Ace of Clubs for starter 
     m.card_image = &pic[1];
@@ -902,42 +904,34 @@ void mcarrillo_render()
     glClear(GL_COLOR_BUFFER_BIT);
 
     glColor3f(1.0, 1.0, 1.0);
-        glBindTexture(GL_TEXTURE_2D, m.felt_texture);
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      m.yres);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(m.xres, m.yres);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(m.xres, 0);
-        glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
+    glBindTexture(GL_TEXTURE_2D, m.felt_texture);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
+    glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      m.yres);
+    glTexCoord2f(1.0f, 1.0f); glVertex2i(m.xres, m.yres);
+    glTexCoord2f(1.0f, 0.0f); glVertex2i(m.xres, 0);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-        glBindTexture(GL_TEXTURE_2D, m.card_texture);
+    glBindTexture(GL_TEXTURE_2D, m.card_texture);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
+    glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
+    glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
+    glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
+    glEnd();
+    glBindTexture(GL_TEXTURE_2D, 0);
+
+    for (int i = 0; i < 52; i++) {
+        glBindTexture(GL_TEXTURE_2D, m.card_img[0]);
         glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
+        glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
+        glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
+        glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
+        glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-        
-        //for (int i = 0; i < 52; i++) {
-            glBindTexture(GL_TEXTURE_2D, m.card_img[0]);
-            glBegin(GL_QUADS);
-                glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
-                glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
-                glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
-                glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
-            glEnd();
-            glBindTexture(GL_TEXTURE_2D, 0);
-        //}
-            glBindTexture(GL_TEXTURE_2D, m.card_img[1]);
-            glBegin(GL_QUADS);
-                glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
-                glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
-                glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
-                glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
-            glEnd();
-            glBindTexture(GL_TEXTURE_2D, 0);
+    }   
 }
 
 void mcarrilloFeature() 
@@ -950,40 +944,45 @@ void mcarrilloFeature()
     glLoadIdentity();
     glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
     glMatrixMode(GL_MODELVIEW);
-    
+
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, m.felt_texture);
     glColor3f(1.0, 1.0, 1.0);
 
     glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
+    glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
+    glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
+    glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
+    glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
-
 
     float xOffset = -0.95f;
     for (int i = 0; i < 2; ++i) {
         glBindTexture(GL_TEXTURE_2D, m.card_img[i]);
         glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
-            glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
-            glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
-            glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
         glEnd();
         xOffset += 0.25f;
     }
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    Rect r;
-    r.bot = 290;
-    r.left = 20;
-    r.center = 0;
-    glColor3f(1.0, 1.0, 1.0);
+    xOffset = -0.01f;
+    for (int i = 0; i < 2; ++i) {
+        glBindTexture(GL_TEXTURE_2D, m.card_img[i+2]);
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
+        glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
+        glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
+        glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
+        glEnd();
+        xOffset += 0.25f;
+    }
+    glBindTexture(GL_TEXTURE_2D, 0);
 
-    ggprint16(&r, 16, 0x00ffffff, "BlackJack");
 
     srand(static_cast<unsigned int>(time(0)));
 
@@ -1003,23 +1002,32 @@ void mcarrilloFeature()
     cout << "Player's hand: ";
     displayHand(playerHand, playerHandSize);
     cout << "Dealer's hand: " << dealerHand[0].name << " of " 
-         << dealerHand[0].suit << " and [Hidden]" << endl;
+        << dealerHand[0].suit << " and [Hidden]" << endl;
 
     // Player's turn
     char choice;
+    bool playerBusted = false; 
     while (true) {
         int playerTotal = calculateHandValue(playerHand, playerHandSize);
         cout << "Player's total: " << playerTotal << endl;
 
         if (playerTotal > 21) {
             cout << "Player busts! Dealer wins." << endl;
+            playerBusted = true;
+            m.win = 2;
             break;
         }
 
-        cout << "Hit (h) or Stand (s)? ";
+        cout << "Hit (h) or Stand (s) or exit(e)? ";
         cin >> choice;
 
-        if (choice == 's') break;
+        if (choice == 's') { 
+            break;
+        }
+
+        if (choice == 'e') { 
+            exit(0);
+        }
 
         dealCards(playerHand, playerHandSize, 1, deckIndex);
         cout << "Player's hand: ";
@@ -1027,27 +1035,76 @@ void mcarrilloFeature()
     }
 
     // Dealer's turn
-    cout << "\nDealer's hand: ";
-    displayHand(dealerHand, dealerHandSize);
-    while (calculateHandValue(dealerHand, dealerHandSize) < 17) {
-        dealCards(dealerHand, dealerHandSize, 1, deckIndex);
-        cout << "Dealer's hand: ";
+    if (!playerBusted) { 
+        cout << "\nDealer's hand: ";
         displayHand(dealerHand, dealerHandSize);
+        while (calculateHandValue(dealerHand, dealerHandSize) < 17) {
+            dealCards(dealerHand, dealerHandSize, 1, deckIndex);
+            cout << "Dealer's hand: ";
+            displayHand(dealerHand, dealerHandSize);
+        }
     }
 
     // Final results
-    int playerTotal = calculateHandValue(playerHand, playerHandSize);
-    int dealerTotal = calculateHandValue(dealerHand, dealerHandSize);
-    cout << "\nPlayer's total: " << playerTotal << endl;
-    cout << "Dealer's total: " << dealerTotal << endl;
+    if (!playerBusted) { 
+        int playerTotal = calculateHandValue(playerHand, playerHandSize);
+        int dealerTotal = calculateHandValue(dealerHand, dealerHandSize);
+        cout << "\nPlayer's total: " << playerTotal << endl;
+        cout << "Dealer's total: " << dealerTotal << endl;
 
-    if (dealerTotal > 21 || playerTotal > dealerTotal) {
-        cout << "Player wins!" << endl;
-    } else if (dealerTotal > playerTotal) {
-        cout << "Dealer wins!" << endl;
-    } else {
-        cout << "It's a tie!" << endl;
+        if (playerBusted) {
+            cout << "Dealer wins!" << endl;
+        } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
+            cout << "Player wins!" << endl;
+            m.win = 1;
+        } else if (dealerTotal > playerTotal) {
+            cout << "Dealer wins!" << endl;
+            m.win = 2;
+        } else {
+            cout << "It's a tie!" << endl;
+        }
+
     }
+    
+   // m.xres = 800;
+   // m.yres = 600;
+    Rect r;
+    r.bot = (m.yres / 2) + 30;
+    r.left = m.xres / 2;
+    r.center = 1;
+    glColor3f(1.0, 1.0, 1.0);
+    if (m.win == 1) {
+        glBegin(GL_QUADS);
+        glColor4ub(0, 0, 0, 200);
+            glVertex2i(0, 0);
+            glVertex2i(0, m.yres);
+            glVertex2i(m.xres, m.yres);
+            glVertex2i(m.xres, 0);
+        glEnd();
+
+        r.bot = m.yres / 2;
+        r.left = m.xres / 2;
+        r.center = 1;
+        ggprint40(&r, 50, 0x0000ff00, "YOU WIN :)");
+        ggprint40(&r, 0, 0x0000ff00, "+$100");
+    } else if (m.win == 2) {
+        glBegin(GL_QUADS);
+        glColor4ub(0, 0, 0, 200);
+            glVertex2i(0, 0);
+            glVertex2i(0, m.yres);
+            glVertex2i(m.xres, m.yres);
+            glVertex2i(m.xres, 0);
+        glEnd();
+
+        r.bot = m.yres / 2;
+        r.left = m.xres / 2;
+        r.center = 1;
+        ggprint40(&r, 50, 0x00ff0000, "YOU LOST :(");
+        ggprint40(&r, 0, 0x00ff0000, "-$50");
+    }
+
+    //glDisable(GL_BLEND);
+    
 
 }
 
