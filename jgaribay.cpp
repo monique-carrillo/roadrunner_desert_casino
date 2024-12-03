@@ -3,6 +3,7 @@
  * date: fall 2024
  */
 
+#include <iostream>
 #include <GL/glx.h>
 #include <X11/Xlib.h>
 #include <cstdlib>
@@ -81,9 +82,12 @@ float slate_p[3] = { 0.44f, 0.5f, 0.56f };
 float slate_s[3] = { 0.62f, 0.71f, 0.8f };
 Theme slate(slate_p, 0x708090, slate_s, 0x9FB6CD);
 
+std::string theme_names[9] = { "CSUB", "Light", "Dark", "Strawberry",
+    "Charcoal", "Mint", "Royal", "Peach", "Slate" };
 JGlobal jg;
 
-JGlobal::JGlobal() : theme(csub) {
+JGlobal::JGlobal() : theme(csub)
+{
     win = 0;
     camera[0] = camera[1] = 0.0f;
     frame = 0;
@@ -154,31 +158,31 @@ void joshua_init()
                 strcpy(jg.button[i].text, "Blue");
                 break;
             case 6:
-                strcpy(jg.button[i].text, "CSUB");
+                strcpy(jg.button[i].text, "$100 - CSUB");
                 break;
             case 7:
-                strcpy(jg.button[i].text, "Light");
+                strcpy(jg.button[i].text, "$100 - Light");
                 break;
             case 8:
-                strcpy(jg.button[i].text, "Dark");
+                strcpy(jg.button[i].text, "$100 - Dark");
                 break;
             case 9:
-                strcpy(jg.button[i].text, "Strawberry");
+                strcpy(jg.button[i].text, "$100 - Strawberry");
                 break;
             case 10:
-                strcpy(jg.button[i].text, "Charcoal");
+                strcpy(jg.button[i].text, "$100 - Charcoal");
                 break;
             case 11:
-                strcpy(jg.button[i].text, "Mint");
+                strcpy(jg.button[i].text, "$100 - Mint");
                 break;
             case 12:
-                strcpy(jg.button[i].text, "Royal");
+                strcpy(jg.button[i].text, "$100 - Royal");
                 break;
             case 13:
-                strcpy(jg.button[i].text, "Peach");
+                strcpy(jg.button[i].text, "$100 - Peach");
                 break;
             case 14:
-                strcpy(jg.button[i].text, "Slate");
+                strcpy(jg.button[i].text, "$100 - Slate");
                 break;
         }
         jg.button[i].down = 0;
@@ -192,9 +196,9 @@ void joshua_init()
         if (i == 2)
             offset = 75;
         if (i == 5)
-            offset = 100;
+            offset = 125;
         else
-            offset -= 60;
+            offset -= 55;
     }
 }
 
@@ -544,7 +548,6 @@ void render_shop()
     }
 }
 
-// FIGURE UOT HOW TO RESTART PHYSICS AND NOT RETAIN VALUES
 void render_racing()
 {
     Rect r;

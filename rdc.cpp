@@ -24,6 +24,8 @@
 #include "images.h"
 #include "mcarrillo.h"
 
+#define NCARDS 52
+
 //Setup timers
 const double physicsRate = 1.0 / 30.0;
 const double oobillion = 1.0 / 1e9;
@@ -47,10 +49,38 @@ Button button[MAXBUTTONS];
 int nbuttons = 6;
 float money = 0.0;
 
-Image img[3] = {
+Image img[2] = {
     background_time(),
-    "./images/felt.jpg",
-    "./images/cards/c_A.jpg"
+    "./images/felt.jpg"
+};
+
+Image card_images[NCARDS] = {
+    "./images/cards/c_A.jpg",  "./images/cards/d_A.jpg",
+    "./images/cards/c_2.jpg",  "./images/cards/d_2.jpg",
+    "./images/cards/c_3.jpg",  "./images/cards/d_3.jpg",
+    "./images/cards/c_4.jpg",  "./images/cards/d_4.jpg",
+    "./images/cards/c_5.jpg",  "./images/cards/d_5.jpg",
+    "./images/cards/c_6.jpg",  "./images/cards/d_6.jpg",
+    "./images/cards/c_7.jpg",  "./images/cards/d_7.jpg",
+    "./images/cards/c_8.jpg",  "./images/cards/d_8.jpg",
+    "./images/cards/c_9.jpg",  "./images/cards/d_9.jpg",
+    "./images/cards/c_10.jpg", "./images/cards/d_10.jpg",
+    "./images/cards/c_J.jpg",  "./images/cards/d_J.jpg",
+    "./images/cards/c_Q.jpg",  "./images/cards/d_Q.jpg",
+    "./images/cards/c_K.jpg",  "./images/cards/d_K.jpg",
+    "./images/cards/h_A.jpg",  "./images/cards/s_A.jpg",
+    "./images/cards/h_2.jpg",  "./images/cards/s_2.jpg",
+    "./images/cards/h_3.jpg",  "./images/cards/s_3.jpg",
+    "./images/cards/h_4.jpg",  "./images/cards/s_4.jpg",
+    "./images/cards/h_5.jpg",  "./images/cards/s_5.jpg",
+    "./images/cards/h_6.jpg",  "./images/cards/s_6.jpg",
+    "./images/cards/h_7.jpg",  "./images/cards/s_7.jpg",
+    "./images/cards/h_8.jpg",  "./images/cards/s_8.jpg",
+    "./images/cards/h_9.jpg",  "./images/cards/s_9.jpg",
+    "./images/cards/h_10.jpg", "./images/cards/s_10.jpg",
+    "./images/cards/h_J.jpg",  "./images/cards/s_J.jpg",
+    "./images/cards/h_Q.jpg",  "./images/cards/s_Q.jpg",
+    "./images/cards/h_K.jpg",  "./images/cards/s_K.jpg",
 };
 
 enum {
@@ -73,8 +103,8 @@ class Global {
         GLuint bgTexture;
         Image *felt_image;
         GLuint felt_texture;
-        Image *card_image;
-        GLuint card_texture;
+        Image *card_image[NCARDS];
+        GLuint card_texture[NCARDS];
         Global() {
             done = 0;
             gamemode = MODE_MENU;
@@ -209,6 +239,22 @@ int main()
     return 0;
 }
 
+void init_cards()
+{
+    for (int i = 0; i < NCARDS; i++) {
+        g.card_image[i] = &card_images[i];
+        glGenTextures(1, &g.card_texture[i]);
+        int w = g.card_image[i]->width;
+        int h = g.card_image[i]->height;
+        glBindTexture(GL_TEXTURE_2D, g.card_texture[i]);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        unsigned char *card_data = buildAlphaData(&card_images[i]);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
+            GL_UNSIGNED_BYTE, card_data);
+        free(card_data);
+    }
+}
 void init_opengl(void)
 {
     //OpenGL initialization
@@ -232,6 +278,7 @@ void init_opengl(void)
     joshua_init_opengl();    
     init_felttex();
     //init_card_textures();
+    init_cards();
 
     glGenTextures(1, &g.bgTexture);
     
@@ -252,20 +299,8 @@ void init_opengl(void)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE,
                  g.felt_image->data);
-
-    // card
-    g.card_image = &img[2];
-    glGenTextures(1, &g.card_texture);
-    w = g.card_image->width;
-    h = g.card_image->height;
-    glBindTexture(GL_TEXTURE_2D, g.card_texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    unsigned char *card_data = buildAlphaData(&img[2]);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA,
-            GL_UNSIGNED_BYTE, card_data);
-    free(card_data);
 }
+
 
 void init_sounds() { }
 
@@ -311,7 +346,7 @@ void init()
             button[i].dcolor[j] = jg.theme.primary1[j] * 0.5f;
         }
         button[i].text_color = jg.theme.secondary2;
-        offset -= 60;
+        offset -= 55;
     }
 }
 
@@ -729,6 +764,28 @@ void render_main_menu()
     }
 }
 
+void render_cards()
+{
+    int xoffset = 0;
+    int yoffset = 0;
+    for (int i = 0; i < NCARDS; i++) {
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, g.card_texture[i]);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(10 + xoffset,  200 + yoffset);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(100 + xoffset,  200 + yoffset);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(100 + xoffset, 10 + yoffset);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(10 + xoffset, 10 + yoffset);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        if (i % 6 == 0 && i != 0) {
+            yoffset += 210;
+            xoffset = 0;
+        }
+        xoffset += 110;
+    }
+}
+
 void render()
 {
     Rect r;
@@ -760,15 +817,8 @@ void render()
             glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glBindTexture(GL_TEXTURE_2D, g.card_texture);
-        glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
-        glEnd();
-        glBindTexture(GL_TEXTURE_2D, 0);
+        render_cards();
+
         BJ(g.xres, g.yres);
         //mcarrilloFeature();
     } else if (g.gamemode == MODE_POKER) {
