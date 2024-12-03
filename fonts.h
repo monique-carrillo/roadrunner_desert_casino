@@ -19,6 +19,7 @@ typedef struct t_rect {
 typedef struct t_button {
     Rect r;
     char text[32];
+    int urgent;
     int over;
     int down;
     int click;

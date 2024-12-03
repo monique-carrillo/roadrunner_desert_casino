@@ -1,6 +1,13 @@
 /*
- * name: joshua garibay
- * date: fall 2024
+ *    name: joshua garibay
+ *    date: fall 2024
+ * purpose: personal source file for 3350 group project
+ *   notes:
+ *          roadrunner sprite source: https://www.spriters-resource.com/arcade
+ *          /roadrun/sheet/11658/
+ *          shop background image source: https://www.freepik.com/free-vector/
+ *          flat-design-poker-table-background_88532181.htm#fromView=search&
+ *          page=1&position=2&uuid=eb890701-051d-4744-b293-c702abde4895
  */
 
 #include <iostream>
@@ -14,12 +21,6 @@
 
 int jg_nbuttons = 15;
 
-// roadrunner sprite source:
-// https://www.spriters-resource.com/arcade/roadrun/sheet/11658/
-// shop background image obtained from freepik:
-// Designed by Freepik: https://www.freepik.com/free-vector/
-// flat-design-poker-table-background_88532181.htm
-// #fromView=search&page=1&position=2&uuid=eb890701-051d-4744-b293-c702abde4895
 Image jimg[5] = {
     "./images/logo.jpg",
     "./images/desert.jpg",
@@ -29,11 +30,11 @@ Image jimg[5] = {
 };
 
 Roadrunner::Roadrunner() {
-    x = 250;  // cx
-    y = 250;  // cy
-    vel[0] = vel[1] = 0.0f;
+    x = 250; // center x
+    y = 250; // center y
     w = 30;  // width
     h = 40;  // height
+    vel[0] = vel[1] = 0.0f;
 };
 
 Theme::Theme(const float *p1, unsigned int p2, const float *s1, unsigned int s2)
@@ -46,50 +47,43 @@ Theme::Theme(const float *p1, unsigned int p2, const float *s1, unsigned int s2)
     secondary2 = s2;
 }
 
+// defining themes
 float csub_p1[3] = { 0.0f, 0.2f, 0.58f };
 float csub_s1[3] = { 1.0f, 0.78f, 0.17f };
 Theme csub(csub_p1, 0x00003594, csub_s1, 0x00ffc72c);
-
 float light_p[3] = { 0.95f, 0.95f, 0.95f };
 float light_s[3] = { 0.8f, 0.8f, 0.8f };
 Theme light(light_p, 0xF2F2F2, light_s, 0xCCCCCC);
-
 float dark_p[3] = { 0.1f, 0.1f, 0.1f };
 float dark_s[3] = { 0.2f, 0.2f, 0.2f };
 Theme dark(dark_p, 0x1A1A1A, dark_s, 0x333333);
-
 float strawberry_p[3] = { 1.0f, 0.18f, 0.33f };
 float strawberry_s[3] = { 1.0f, 0.67f, 0.74f };
 Theme strawberry(strawberry_p, 0xFF2E55, strawberry_s, 0xFFABB9);
-
 float charcoal_p[3] = { 0.17f, 0.17f, 0.17f };
 float charcoal_s[3] = { 0.3f, 0.3f, 0.3f };
 Theme charcoal(charcoal_p, 0x2B2B2B, charcoal_s, 0x4C4C4C);
-
 float mint_p[3] = { 0.6f, 1.0f, 0.8f };
 float mint_s[3] = { 0.5f, 0.94f, 0.7f };
 Theme mint(mint_p, 0x99FFCC, mint_s, 0x80F0B3);
-
 float royal_p[3] = { 0.25f, 0.41f, 0.88f };
 float royal_s[3] = { 0.0f, 0.14f, 0.4f };
 Theme royal(royal_p, 0x4169E1, royal_s, 0x002366);
-
 float peach_p[3] = { 1.0f, 0.85f, 0.73f };
 float peach_s[3] = { 1.0f, 0.72f, 0.58f };
 Theme peach(peach_p, 0xFFDAB9, peach_s, 0xFFA07A);
-
 float slate_p[3] = { 0.44f, 0.5f, 0.56f };
 float slate_s[3] = { 0.62f, 0.71f, 0.8f };
 Theme slate(slate_p, 0x708090, slate_s, 0x9FB6CD);
 
-std::string theme_names[9] = { "CSUB", "Light", "Dark", "Strawberry",
-    "Charcoal", "Mint", "Royal", "Peach", "Slate" };
+//std::string theme_names[9] = { "CSUB", "Light", "Dark", "Strawberry",
+//    "Charcoal", "Mint", "Royal", "Peach", "Slate" };
 JGlobal jg;
 
 JGlobal::JGlobal() : theme(csub)
 {
     win = 0;
-    camera[0] = camera[1] = 0.0f;
+    //camera[0] = camera[1] = 0.0f;
     frame = 0;
     pf.w = 650;
     pf.h = 175;
@@ -106,14 +100,8 @@ void joshua_init()
     int offset = 0;
     // positioning
     jg.pf.w = jg.xres;
-    //jg.pf.h = y / 3;
-    // TODO: make colors random
+    
     // roadrunner colors
-    /*
-    for (int i = 0; i < 3; i++) {
-        jg.rr[i].alt_color = rand();
-    }
-    */
     jg.rr[0].color[0] = 1.0f;
     jg.rr[0].color[1] = 0.0f;
     jg.rr[0].color[2] = 0.0f;
@@ -147,6 +135,7 @@ void joshua_init()
                 break;
             case 2:
                 strcpy(jg.button[i].text, "Quit");
+                jg.button[i].urgent = 1;
                 break;
             case 3:
                 strcpy(jg.button[i].text, "Red");
@@ -188,11 +177,19 @@ void joshua_init()
         jg.button[i].down = 0;
         jg.button[i].click = 0;
         for (int j = 0; j < COLOR_SIZE; j++) {
-            jg.button[i].color[j] = jg.theme.primary1[j];
-            jg.button[i].hcolor[j] = jg.theme.secondary1[j];
+            if (jg.button[i].urgent) {
+                jg.button[i].color[j] = jg.theme.secondary1[j];
+                jg.button[i].hcolor[j] = jg.theme.primary1[j];
+            } else {
+                jg.button[i].color[j] = jg.theme.primary1[j];
+                jg.button[i].hcolor[j] = jg.theme.secondary1[j];
+            }
             jg.button[i].dcolor[j] = jg.theme.primary1[j] * 0.5f;
         }
-        jg.button[i].text_color = jg.theme.secondary2;
+        if (jg.button[i].urgent)
+            jg.button[i].text_color = jg.theme.primary2;
+        else
+            jg.button[i].text_color = jg.theme.secondary2;
         if (i == 2)
             offset = 75;
         if (i == 5)
@@ -276,42 +273,6 @@ void joshua_init_opengl()
 
 void joshua_physics()
 {
-    /*
-    for (int i = 0; i < 3; i++) {
-        jg.rr[i].vel[1] += GRAVITY;
-        if (jg.rr[i].vel[0] > 0) {
-            jg.rr[i].vel[0] -= 0.005;
-            if (jg.rr[i].vel[0] < 0)
-                    jg.rr[i].vel[0] = 0.0;
-        }
-        if (jg.rr[i].last_x != jg.rr[i].x || jg.rr[i].last_y != jg.rr[i].y) {
-            // moving
-            jg.rr[i].last_x = jg.rr[i].x;
-            jg.rr[i].last_y = jg.rr[i].y;
-            // change frame
-            jg.frame += 1;
-            // move background
-            jg.bg.xc[0] += 0.005;
-            jg.bg.xc[1] += 0.005;
-            jg.pf.xc[0] += 0.01;
-            jg.pf.xc[1] += 0.01;
-        }
-
-        jg.rr[i].x += jg.rr[i].vel[0]; // move x pos
-        jg.rr[i].y += jg.rr[i].vel[1]; // move y pos
-        
-        // collision detection
-        if (jg.rr[i].y - jg.rr[i].h < jg.pf.y + jg.pf.h &&
-            jg.rr[i].y + jg.rr[i].h > jg.pf.y - jg.pf.h &&
-            jg.rr[i].x + jg.rr[i].w > jg.pf.x - jg.pf.w &&
-            jg.rr[i].x - jg.rr[i].w < jg.pf.x + jg.pf.w) {
-            
-            // collision happened
-            jg.rr[i].y = jg.rr[i].last_y;
-            jg.rr[i].vel[1] = -jg.rr[i].vel[1] * 0.5;
-        }
-    }
-    */
     if (jg.win)
         return;
     jg.bg.xc[0] += 0.005;
@@ -357,7 +318,6 @@ void joshua_physics()
             jg.rr[i].y + jg.rr[i].h > jg.pf.y - jg.pf.h &&
             jg.rr[i].x + jg.rr[i].w > jg.pf.x - jg.pf.w &&
             jg.rr[i].x - jg.rr[i].w < jg.pf.x + jg.pf.w) {
-            
             // collision happened
             jg.rr[i].y = jg.rr[i].last_y;
             jg.rr[i].vel[1] = -jg.rr[i].vel[1] * 0.5;
@@ -373,8 +333,8 @@ void render_setup()
     
     glBegin(GL_QUADS);
     glColor3f(0.3f, 0.3f, 0.7f);
-        glVertex2i(0, 0);
-        glVertex2i(0, jg.yres);
+        glVertex2i(0,       0);
+        glVertex2i(0,       jg.yres);
         glVertex2i(jg.xres, jg.yres);
         glVertex2i(jg.xres, 0);
     glEnd();
@@ -601,17 +561,17 @@ void render_racing()
         glPopMatrix();
         glBindTexture(GL_TEXTURE_2D, 0);
         if (i == jg.chosen) {
-            r.bot = jg.rr[i].y + jg.rr[i].h;
+            r.bot  = jg.rr[i].y + jg.rr[i].h;
             r.left = jg.rr[i].x;
             r.center = 1;
             ggprint16(&r, -20, jg.rr[i].alt_color, "\\/");
             ggprint16(&r, -20, jg.rr[i].alt_color, "|");
-            ggprint16(&r, 0, jg.rr[i].alt_color, "You");
+            ggprint16(&r,   0, jg.rr[i].alt_color, "You");
         }
     }
  
     // render leaderboard
-    r.bot = jg.yres - 30;
+    r.bot  = jg.yres - 30;
     r.left = 20;
     r.center = 0;
     ggprint13(&r, 16, 0x00003594, "Leaderboard");
@@ -623,31 +583,31 @@ void render_racing()
     if (jg.win == 1) {
         glBegin(GL_QUADS);
         glColor4ub(0, 0, 0, 200);
-            glVertex2i(0, 0);
-            glVertex2i(0, jg.yres);
+            glVertex2i(0,       0);
+            glVertex2i(0,       jg.yres);
             glVertex2i(jg.xres, jg.yres);
             glVertex2i(jg.xres, 0);
         glEnd();
         
-        r.bot = jg.yres / 2;
+        r.bot  = jg.yres / 2;
         r.left = jg.xres / 2;
         r.center = 1;
         ggprint40(&r, 50, 0x0000ff00, "YOU WIN :)");
-        ggprint40(&r, 0, 0x0000ff00, "+$100");
+        ggprint40(&r, 0,  0x0000ff00, "+$100");
     } else if (jg.win == 2) {
         glBegin(GL_QUADS);
         glColor4ub(0, 0, 0, 200);
-            glVertex2i(0, 0);
-            glVertex2i(0, jg.yres);
+            glVertex2i(0,       0);
+            glVertex2i(0,       jg.yres);
             glVertex2i(jg.xres, jg.yres);
             glVertex2i(jg.xres, 0);
         glEnd();
         
-        r.bot = jg.yres / 2;
+        r.bot  = jg.yres / 2;
         r.left = jg.xres / 2;
         r.center = 1;
         ggprint40(&r, 50, 0x00ff0000, "YOU LOST :(");
-        ggprint40(&r, 0, 0x00ff0000, "-$50");
+        ggprint40(&r, 0,  0x00ff0000, "-$50");
     }
     
     glDisable(GL_BLEND);
