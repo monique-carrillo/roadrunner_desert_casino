@@ -28,6 +28,8 @@ extern int db_show;
 extern string hand_values[10];
 extern float money_prize;
 extern int p_pressed;
+extern int mesa[5];
+extern int jugador[2];
 
 // Structures
 struct Hand {

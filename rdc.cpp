@@ -772,10 +772,14 @@ void render_cards()
         glBindTexture(GL_TEXTURE_2D, 0);
         glBindTexture(GL_TEXTURE_2D, g.card_texture[i]);
         glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f); glVertex2i(10 + xoffset,  200 + yoffset);
-            glTexCoord2f(1.0f, 0.0f); glVertex2i(100 + xoffset,  200 + yoffset);
-            glTexCoord2f(1.0f, 1.0f); glVertex2i(100 + xoffset, 10 + yoffset);
-            glTexCoord2f(0.0f, 1.0f); glVertex2i(10 + xoffset, 10 + yoffset);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(10 + xoffset,  
+                    200 + yoffset);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(100 + xoffset,  
+                    200 + yoffset);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(100 + xoffset, 
+                    10 + yoffset);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(10 + xoffset, 
+                    10 + yoffset);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
         if (i % 6 == 0 && i != 0) {
@@ -784,6 +788,40 @@ void render_cards()
         }
         xoffset += 110;
     }
+}
+
+void renduh_cards(int position, int limit)
+{
+    int xoffset = 0;
+    int yoffset = 0;
+    if (limit == 5) {
+        xoffset = 0;
+        yoffset = 150;
+    } else if (limit == 2) {
+        xoffset = 0;
+        yoffset = 50;
+    }
+    for (int i = 0; i < limit; i++) {
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, g.card_texture[position]);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(10 + xoffset,
+                    200 + yoffset);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(100 + xoffset,
+                    200 + yoffset);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(100 + xoffset,
+                    10 + yoffset);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(10 + xoffset,
+                    10 + yoffset);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        if (i % 6 == 0 && i != 0) {
+            yoffset += 210;
+            xoffset = 0;
+        }
+        xoffset += 110;
+    }
+
 }
 
 void render()
@@ -832,6 +870,12 @@ void render()
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
+        for (int i = 0; i < 5; i++) {
+            renduh_cards(mesa[i], 5);
+        }
+        for (int i = 0; i < 2; i++) {
+            renduh_cards(jugador[i], 2);
+        }
         render_poker(g.xres, g.yres);
     } else if (g.gamemode == MODE_CEELO) {
         glColor3f(1.0, 1.0, 1.0); // pure white
