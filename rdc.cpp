@@ -740,6 +740,7 @@ void render()
             render_racing();
     } else if (g.gamemode == MODE_BLACKJACK) {
         // blackjack
+        //mcarrillo_init();
         mcarrillo_render();
         mcarrilloFeature();
     } else if (g.gamemode == MODE_POKER) {

@@ -931,7 +931,7 @@ void mcarrillo_render()
         glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-    }
+    }   
 }
 
 void mcarrilloFeature() 
@@ -956,7 +956,6 @@ void mcarrilloFeature()
     glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
     glEnd();
     glBindTexture(GL_TEXTURE_2D, 0);
-
 
     float xOffset = -0.95f;
     for (int i = 0; i < 2; ++i) {
@@ -984,13 +983,6 @@ void mcarrilloFeature()
     }
     glBindTexture(GL_TEXTURE_2D, 0);
 
-    Rect r;
-    r.bot = 290;
-    r.left = 20;
-    r.center = 0;
-    glColor3f(1.0, 1.0, 1.0);
-
-    ggprint16(&r, 16, 0x00ffffff, "BlackJack");
 
     srand(static_cast<unsigned int>(time(0)));
 
@@ -1026,10 +1018,16 @@ void mcarrilloFeature()
             break;
         }
 
-        cout << "Hit (h) or Stand (s)? ";
+        cout << "Hit (h) or Stand (s) or exit(e)? ";
         cin >> choice;
 
-        if (choice == 's') break;
+        if (choice == 's') { 
+            break;
+        }
+
+        if (choice == 'e') { 
+            exit(0);
+        }
 
         dealCards(playerHand, playerHandSize, 1, deckIndex);
         cout << "Player's hand: ";
@@ -1068,8 +1066,13 @@ void mcarrilloFeature()
 
     }
     
-    //m.xres = 250;
-    //m.yres = 250;
+   // m.xres = 800;
+   // m.yres = 600;
+    Rect r;
+    r.bot = (m.yres / 2) + 30;
+    r.left = m.xres / 2;
+    r.center = 1;
+    glColor3f(1.0, 1.0, 1.0);
     if (m.win == 1) {
         glBegin(GL_QUADS);
         glColor4ub(0, 0, 0, 200);
