@@ -45,16 +45,6 @@ Theme::Theme(const float *p1, unsigned int p2, const float *s1, unsigned int s2)
     secondary2 = s2;
 }
 
-Theme::Theme(Theme &t)
-{
-    for (int i = 0; i < COLOR_SIZE; i++) {
-        primary1[i] = t.primary1[i];
-        secondary1[i] = t.secondary1[i];
-    }
-    primary2 = t.primary2;
-    secondary2 = t.secondary2;
-}
-
 float csub_p1[3] = { 0.0f, 0.2f, 0.58f };
 float csub_s1[3] = { 1.0f, 0.78f, 0.17f };
 Theme csub(csub_p1, 0x00003594, csub_s1, 0x00ffc72c);

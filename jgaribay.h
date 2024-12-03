@@ -33,7 +33,6 @@ class Theme {
         unsigned int primary2;
         float secondary1[3];
         unsigned int secondary2;
-        Theme(Theme &);
         Theme(const float *, unsigned int, const float *, unsigned int);
 };
 
