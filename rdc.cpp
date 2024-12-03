@@ -634,6 +634,16 @@ void check_keys(XEvent *e)
                     break;
                 }
             break;
+     case XK_b:
+                hit++;
+                if (g.gamemode == MODE_BLACKJACK) {
+                    mcarrilloFeature();
+                    money += prize;
+
+                } else {
+                    break;
+                }
+            break;
     }
 }
 
@@ -741,8 +751,26 @@ void render()
     } else if (g.gamemode == MODE_BLACKJACK) {
         // blackjack
         //mcarrillo_init();
-        mcarrillo_render();
-        mcarrilloFeature();
+        //mcarrillo_render();
+        glColor3f(1.0, 1.0, 1.0); // pure white
+        glBindTexture(GL_TEXTURE_2D, g.felt_texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(0,      0);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(0,      g.yres);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindTexture(GL_TEXTURE_2D, g.card_texture);
+        glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f); glVertex2i(10,  200);
+            glTexCoord2f(1.0f, 0.0f); glVertex2i(100,  200);
+            glTexCoord2f(1.0f, 1.0f); glVertex2i(100, 10);
+            glTexCoord2f(0.0f, 1.0f); glVertex2i(10, 10);
+        glEnd();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        BJ(g.xres, g.yres);
+        //mcarrilloFeature();
     } else if (g.gamemode == MODE_POKER) {
         // poker
         glColor3f(1.0, 1.0, 1.0);

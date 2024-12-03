@@ -28,6 +28,13 @@
 using namespace std;
 int monique_show = 0;
 
+string dealer[2] = {"None","None"};
+string player[2] = {"None", "None"};
+string val = "None";
+
+int hit = 0;
+float prize = 0.00;
+
 class Global {
     public:
         float money;
@@ -43,10 +50,10 @@ class Global {
         GLuint card_texture;
         GLuint card_img[52];
         Global() {
-            done = 0;
+            //done = 0;
             //gamemode = MODE_MENU;
-            paused = 0;
-            win = 0;
+            //paused = 0;
+            //win = 0;
             xres = 800;
             yres = 600;
         }
@@ -112,10 +119,11 @@ Image card[52] = {
     "./images/cards/s_J.jpg"
 };
 
+
 struct Card {
     int value;  
     string suit;  
-    string name; 
+    string name;
 };
 
 
@@ -135,6 +143,18 @@ void initializeDeck()
             deck[index++] = {values[rank], suits[suit], names[rank]};
         }
     }
+}
+
+string con(int card_pos) {
+    // Map card positions to human-readable names
+    static const string suits[] = {"Clubs", "Diamonds", "Hearts", "Spades"};
+    static const string values[] = {
+        "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+        "Jack", "Queen", "King"
+    };
+    int value = (card_pos - 1) % 13;
+    int suit = (card_pos - 1) / 13;
+    return values[value] + " of " + suits[suit];
 }
 
 void shuffleDeck() 
@@ -934,58 +954,40 @@ void mcarrillo_render()
     }   
 }
 
+void BJ(int x_res, int y_res) {
+    Rect r;
+
+    r.left = x_res / 2;
+    r.bot = y_res - (y_res / 4);
+    r.center = 1;
+    ggprint40(&r, 15, 0x00000000, "Press 'b' to play a game!");
+
+    r.left = x_res / 2;
+    r.bot = y_res - (y_res / 2);
+    r.center = 1;
+    for (int i = 0; i < 2; i++) {
+        ggprint16(&r, 20, 0x00000000, dealer[i].c_str());
+    }
+
+    r.left = x_res / 2;
+    r.bot = y_res - ((3 * y_res) / 4);
+    r.center = 1;
+    for (int i = 0; i < 2; i++) {
+        ggprint16(&r, 20, 0x00000000, player[i].c_str());
+    }
+
+    r.left = x_res / 2;
+    r.bot = 50;
+    r.center = 1;
+    ggprint16(&r, 0, 0x00000000, val.c_str());
+}
+
 void mcarrilloFeature() 
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glLoadIdentity();
-
-    glViewport(0, 0, 800, 600);
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-    glMatrixMode(GL_MODELVIEW);
-
-    glEnable(GL_TEXTURE_2D);
-    glBindTexture(GL_TEXTURE_2D, m.felt_texture);
-    glColor3f(1.0, 1.0, 1.0);
-
-    glBegin(GL_QUADS);
-    glTexCoord2f(0.0f, 0.0f); glVertex2f(-1.0f, -1.0f);
-    glTexCoord2f(1.0f, 0.0f); glVertex2f(1.0f, -1.0f);
-    glTexCoord2f(1.0f, 1.0f); glVertex2f(1.0f, 1.0f);
-    glTexCoord2f(0.0f, 1.0f); glVertex2f(-1.0f, 1.0f);
-    glEnd();
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    float xOffset = -0.95f;
-    for (int i = 0; i < 2; ++i) {
-        glBindTexture(GL_TEXTURE_2D, m.card_img[i]);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
-        glEnd();
-        xOffset += 0.25f;
-    }
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-    xOffset = -0.01f;
-    for (int i = 0; i < 2; ++i) {
-        glBindTexture(GL_TEXTURE_2D, m.card_img[i+2]);
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f); glVertex2f(xOffset, -0.3f);
-        glTexCoord2f(1.0f, 0.0f); glVertex2f(xOffset + 0.2f, -0.3f);
-        glTexCoord2f(1.0f, 1.0f); glVertex2f(xOffset + 0.2f, 0.3f);
-        glTexCoord2f(0.0f, 1.0f); glVertex2f(xOffset, 0.3f);
-        glEnd();
-        xOffset += 0.25f;
-    }
-    glBindTexture(GL_TEXTURE_2D, 0);
-
-
     srand(static_cast<unsigned int>(time(0)));
 
+    //mcarrillo_init();
+    //mcarrillo_render();
     initializeDeck();
     shuffleDeck();
 
@@ -997,6 +999,17 @@ void mcarrilloFeature()
     // Initial deal
     dealCards(playerHand, playerHandSize, 2, deckIndex);
     dealCards(dealerHand, dealerHandSize, 2, deckIndex);
+   /* 
+    for (int i=0; i<2; i++) {
+        printf("%d ", dealerHand[i].value);
+        dealer[i] = con(dealerHand[i].value);
+    }
+
+    for (int i=0; i<2; i++) {
+        printf("%d ", playerHand[i].value);
+        player[i] = con(playerHand[i].value);
+    }
+*/
 
     // Display initial hands
     cout << "Player's hand: ";
@@ -1014,7 +1027,8 @@ void mcarrilloFeature()
         if (playerTotal > 21) {
             cout << "Player busts! Dealer wins." << endl;
             playerBusted = true;
-            m.win = 2;
+            //m.win = 2;
+            prize -= 15.00;
             break;
         }
 
@@ -1054,12 +1068,16 @@ void mcarrilloFeature()
 
         if (playerBusted) {
             cout << "Dealer wins!" << endl;
+            //m.win = 2;
+            prize -= 15.00;
         } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
             cout << "Player wins!" << endl;
-            m.win = 1;
+            //m.win = 1;
+            prize += 150.00;
         } else if (dealerTotal > playerTotal) {
             cout << "Dealer wins!" << endl;
-            m.win = 2;
+            //m.win = 2;
+            prize -= 15.00;
         } else {
             cout << "It's a tie!" << endl;
         }
@@ -1104,7 +1122,7 @@ void mcarrilloFeature()
     }
 
     //glDisable(GL_BLEND);
-    
+   
 
 }
 
