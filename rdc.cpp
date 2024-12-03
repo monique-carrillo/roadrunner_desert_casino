@@ -675,10 +675,10 @@ void check_keys(XEvent *e)
                     mcarrilloFeature();
                     money += prize;
 
-                } else {
-                    break;
-                }
-            break;
+                } //else {
+                    //break;
+                //}
+            //break;
     }
 }
 
