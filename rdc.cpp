@@ -855,7 +855,11 @@ void render()
             glTexCoord2f(1.0f, 1.0f); glVertex2i(g.xres, g.yres);
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
-        render_cards();
+        //render_cards();
+        if (hit) {
+            renduh_cards(deal, 2);
+            renduh_cards(play, 2);
+        }
 
         BJ(g.xres, g.yres);
         //mcarrilloFeature();
