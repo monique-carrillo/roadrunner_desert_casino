@@ -3,6 +3,8 @@
 
 extern float prize;
 extern int hit;
+extern int deal[2];
+extern int play[2];
 
 void BJ(int x_res, int y_res);
 void initializeDeck();
