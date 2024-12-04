@@ -673,18 +673,16 @@ void check_keys(XEvent *e)
                 hit++;
                 if (g.gamemode == MODE_BLACKJACK) {
                     mcarrilloFeature();
-                    if (hit) {
-                        case XK_h:
-                            break;
-                        case XK_s:
-                            break;
-                    }
+                    //case XK_h:
+                      //  break;
+                    //case XK_s:
+                      //  break;
                     money += prize;
 
-                } //else {
-                    //break;
-                //}
-            //break;
+                } else {
+                    break;
+                }
+            break;
     }
 }
 
