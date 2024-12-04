@@ -896,7 +896,7 @@ void render()
         r.bot = g.yres - 30;
         r.left = 20;
         r.center = 0;
-        ggprint13(&r, 16, 0x00FFFFFF, "Cee-lo");
+        ggprint13(&r, 16, 0x00FFFFFF, "winner take all Cee-lo");
 
         s.bot = g.yres - 50;
         s.left = 20;
