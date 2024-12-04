@@ -47,10 +47,6 @@ class Global {
     public:
         float money;
         int xres, yres;
-        int paused;
-        int gamemode;
-        int done;
-        int win;
         GLuint bgTexture;
         Image *felt_image;
         GLuint felt_texture;
@@ -58,10 +54,6 @@ class Global {
         GLuint card_textures[52];
         GLuint card_img[52];
         Global() {
-            //done = 0;
-            //gamemode = MODE_MENU;
-            //paused = 0;
-            //win = 0;
             xres = 800;
             yres = 600;
         }
@@ -223,17 +215,6 @@ string con(int card_pos)
         default: return "Unknown Card";
     }
 }
-/*
-void shuffleDeck(int *decks) 
-{
-    int n = rand() % 1000 + 1000;
-    for (int i=0; i<n; i++) {
-        int a = rand() % 52;
-        int b = rand() % 52;
-        swap(decks[a], decks[b]);
-    }
-}
-*/
 
 void shuffleDeck()
 {
@@ -243,17 +224,6 @@ void shuffleDeck()
     }
 }
 
-/*
-void dealCards(Card *hand, Card *deck, int cardsToDeal) 
-{
-    for (int i = 0; i < cardsToDeal; ++i) {
-        hand[i].texmap = deck[i].texmap;
-        hand[i].value = deck[i].value; 
-        hand[i].suit = deck[i].suit;   
-        i++; 
-    }
-}
-*/
 
 void dealCards(Card *hand, int &handSize, int cardsToDeal, int &deckIndex) 
 {
@@ -280,64 +250,6 @@ int calculateHandValue(Card *hand, int handSize)
 
     return total;
 }
-
-/*
-int calculateHandValue(Card *hand, Card *hand2) 
-{
-    int handSize;
-    int temp;
-    int temp_hand[10];
-    int temp_suits[4] = {0};
-
-    int total = 0;
-    int aceCount = 0;
-
-    for (int i=0; i<5; i++) {
-        temp_hand[i] = hand[i].value;
-    }
-
-    for (int i=0; i<2; i++) {
-        temp_hand[i+2] = hand2[i].value;
-    }
-
-    for (int i=0; i<5; i++) {
-        temp_suits[hand[i].suit]++;
-    }
-    for (int i=0; i<5; i++) {
-        temp_suits[hand2[i].suit]++;
-    }
-
-     for (int i=0; i<6; i++) {
-        for (int j=0; j<6; j++) {
-            if (temp_hand[j] > temp_hand[j+1]) {
-                swap(temp_hand[j], temp_hand[j+1]);
-            }
-        }
-    }
-
-    for (int i = 0; i < handSize; ++i) {
-        total += hand[i].value;
-        if (hand[i].name == "Ace") {
-            ++aceCount;
-        }
-    }
-
-    // Adjust Ace value if total > 21
-    while (total > 21 && aceCount > 0) {
-        total -= 10;  // Convert Ace from 11 to 1
-        --aceCount;
-    }
-
-    for (int i=0; i<6; i++) {
-       if (temp_hand[i] == temp_hand[i+1]) {
-           temp = total;
-           i++;
-       }
-    }
-
-    return total;
-}
-*/
 
 void sort(Card *hand, int size_hand) 
 {
@@ -392,28 +304,6 @@ void BJ(int x_res, int y_res)
     ggprint40(&r, 15, 0x00000000, "Press 'h' to grab a card!");
     r.bot = y_res - (y_res / 3);
     ggprint40(&r, 15, 0x00000000, "Press 's' to stand!");
-/*
-    r.left = x_res / 2;
-    r.bot = y_res - (y_res / 2);
-    r.center = 1;
-    for (int i = 0; i < 5; i++) {
-        ggprint16(&r, 20, 0x00000000, dealer[i].c_str());
-        mcarrillo_init(d[i], deal[i]);
-    }
-
-    r.left = x_res / 2;
-    r.bot = y_res - ((3 * y_res) / 4);
-    r.center = 1;
-    //ggprint16(&r, 15, 0x00000000, "Player's hand:");
-    for (int i = 0; i < 5; i++) {
-        ggprint16(&r, 20, 0x00000000, mplayer[i].c_str());
-        mcarrillo_init(p[i], play[i]);
-    }
-
-    r.left = x_res / 2;
-    r.bot = 50;
-    r.center = 1;
-    ggprint16(&r, 0, 0x00000000, val.c_str());*/
 }
 
 void mcarrilloFeature() 
@@ -424,66 +314,16 @@ void mcarrilloFeature()
     //mcarrillo_render();
     initializeDeck();
     shuffleDeck();
-/*
-    int decks[52];
 
-    for (int i=0; i<52; i++) {
-        decks[i] = i + 1;
-    }
-
-    shuffleDeck(decks);
-*/
     // Game variables
     Card playerHand[5], dealerHand[5];
     int playerHandSize = 0, dealerHandSize = 0;
     int deckIndex = 0;
 
-    //dealCards(playerHand, deck, 2);
-    //dealCards(dealerHand, deck, 2);
-
-    //sort(playerHand, 5);
-    //sort(dealerHand, 5);
-
     // Initial deal
     dealCards(playerHand, playerHandSize, 2, deckIndex);
     dealCards(dealerHand, dealerHandSize, 2, deckIndex);
   
-    //for (int i=0; i<5; i++) {
-      //  printf("%d ", dealerHand[i].value);
-  //      dealer[i] = con(dealerHand[i].texmap);
-    //    d[i] = dealerHand[i].texmap - 1;
-    //}
-
-    //for (int i=0; i<5; i++) {
-      //  printf("%d ", playerHand[i].value);
-    //    mplayer[i] = con(playerHand[i].texmap);
-    //    p[i] = playerHand[i].texmap - 1;
-    //}
-    
-/*
-    bool playerBusted = false; 
-
-    int p_total = calculateHandValue(playerHand, dealerHand);
-    int d_total = calculateHandValue(playerHand, dealerHand);
-
-    while(true) {
-        if (p_total > 21) {
-            playerBusted = true;
-            break;
-        }
-        dealCards(dealerHand, deck, 2);
-    }
-
-    if (playerBusted) {
-        prize -= 50.00;
-    } else if (d_total > 21 || p_total > d_total) {
-        prize += 150.00;
-    } else if (d_total > p_total) {
-        prize -= 50.00;
-    } else {
-        prize -= 0.00;
-    }
-*/
     // Display initial hands
     cout << "\nPlayer's hand: ";
     displayHand(playerHand, playerHandSize);
