@@ -126,34 +126,65 @@ string conversion(int card_position)
     }
 }
 
-/*GLuint load_texture(const char *filename) {
-    Image img(filename);
-    if (img.data == NULL) {
-        printf("Failed to load texture: %s\n", filename);
-        return 0;
-    }
-    GLuint texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0,
-            GL_RGB, GL_UNSIGNED_BYTE, img.data);
-    glBindTexture(GL_TEXTURE_2D, 0);
-    return texture;
-}
-
-void init_card_textures() {
-    for (int i = 0; i < 52; ++i) {
-        card_textures[i] = load_texture(card_filenames[i]);
-        if (card_textures[i] == 0) {
-            printf("Failed to load texture: %s\n", card_filenames[i]);
-        } else {
-            printf("Successfully loaded texture for card %d\n", i);
-        }
+/*int convert_back(string card_name)
+{
+        if "Ace of Clubs": return 0;
+        if "2 of Clubs": return 1;
+        if "3 of Clubs": return 2;
+        case "4 of Clubs": return 3;
+        case "5 of Clubs": return 4;
+        case "6 of Clubs": return 5;
+        case "7 of Clubs": return 6;
+        case "8 of Clubs": return 7;
+        case "9 of Clubs": return 8;
+        case "10 of Clubs": return 9;
+        case "J of Clubs": return 10;
+        case "Q of Clubs": return 11;
+        case "K of Clubs": return 12;
+        case "Ace of Diamonds": return 13;
+        case "2 of Diamonds": return 14;
+        case "3 of Diamonds": return 15;
+        case "4 of Diamonds": return 16;
+        case "5 of Diamonds": return 17;
+        case "6 of Diamonds": return 18;
+        case "7 of Diamonds": return 19;
+        case "8 of Diamonds": return 20;
+        case "9 of Diamonds": return 21;
+        case "10 of Diamonds": return 22;
+        case "J of Diamonds": return 23;
+        case "Q of Diamonds": return 24;
+        case "K of Diamonds": return 25;
+        case "Ace of Hearts": return 26;
+        case "2 of Hearts": return 27;
+        case "3 of Hearts": return 28;
+        case "4 of Hearts": return 29;
+        case "5 of Hearts": return 30;
+        case "6 of Hearts": return 31;
+        case "7 of Hearts": return 32;
+        case "8 of Hearts": return 33;
+        case "9 of Hearts": return 34;
+        case "10 of Hearts": return 35;
+        case "J of Hearts": return 36;
+        case "Q of Hearts": return 37;
+        case "K of Hearts": return 38;
+        case "Ace of Spades": return 39;
+        case "2 of Spades": return 40;
+        case "3 of Spades": return 41;
+        case "4 of Spades": return 42;
+        case "5 of Spades": return 43;
+        case "6 of Spades": return 44;
+        case "7 of Spades": return 45;
+        case "8 of Spades": return 46;
+        case "9 of Spades": return 47;
+        case "10 of Spades": return 48;
+        case "J of Spades": return 49;
+        case "Q of Spades": return 50;
+        case "K of Spades": return 51;
+        default: return 0;
     }
 }
 */
+
 void render_da_cards(GLuint deck, int i) 
 {
     Image *card_image = &card_filenames[i];
@@ -183,8 +214,9 @@ void render_poker(int xres, int yres)
     r.bot = yres - (yres / 2);
     r.center = 1;
     for (int i = 0; i < 5; i++) {
-        ggprint16(&r, 20, 0x00000000, tabled[i].c_str());
+        //ggprint16(&r, 20, 0x00000000, tabled[i].c_str());
         render_da_cards(tables[i], mesa[i]);
+        //mesa[i] = convert_back(tabled[i]);
     }
 
     // Player
@@ -192,15 +224,16 @@ void render_poker(int xres, int yres)
     r.bot = yres - ((3 * yres) / 4);
     r.center = 1;
     for (int i = 0; i < 2; i++) {
-        ggprint16(&r, 20, 0x00000000, playered[i].c_str());
+        //ggprint16(&r, 20, 0x00000000, playered[i].c_str());
         render_da_cards(players[i], jugador[i]);
+        //jugador[i] = convert_back(playered[i]);
     }
 
     // Value
     r.left = xres / 2;
     r.bot = 50;
     r.center = 1;
-    ggprint16(&r, 0, 0x00000000, last_value.c_str());
+    ggprint40(&r, 0, 0x00000000, last_value.c_str());
 }
 
 void show_db()
@@ -231,14 +264,14 @@ void show_db()
     sorting(table, 5);
     sorting(player, 2);
     for (int i=0; i<5; i++) {
-        printf("%d ", table[i].num);
+        //printf("%d ", table[i].num);
         tabled[i] = conversion(table[i].texmap);
         mesa[i] = table[i].texmap - 1;
         //cout << table[i].num << " ";
         //ggprint16(&r, 16, 0x00ffffff, "%d ", table[i].num);
     }
     for (int i=0; i<2; i++) {
-        printf("%d ", player[i].num);
+        //printf("%d ", player[i].num);
         playered[i] = conversion(player[i].texmap);
         jugador[i] = player[i].texmap - 1;
         //cout << player[i].num << " ";
@@ -246,8 +279,8 @@ void show_db()
     }
 
     // Calculate
-    printf("Highest Hand: %s \n", 
-            hand_values[calculating(table, player)].c_str());
+    //printf("Highest Hand: %s \n", 
+    //        hand_values[calculating(table, player)].c_str());
     last_value = hand_values[calculating(table, player)];
     if (last_value == "None") {
         money_prize = -10.00;

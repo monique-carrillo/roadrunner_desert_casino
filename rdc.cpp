@@ -55,32 +55,32 @@ Image img[2] = {
 };
 
 Image card_images[NCARDS] = {
-    "./images/cards/c_A.jpg",  "./images/cards/d_A.jpg",
-    "./images/cards/c_2.jpg",  "./images/cards/d_2.jpg",
-    "./images/cards/c_3.jpg",  "./images/cards/d_3.jpg",
-    "./images/cards/c_4.jpg",  "./images/cards/d_4.jpg",
-    "./images/cards/c_5.jpg",  "./images/cards/d_5.jpg",
-    "./images/cards/c_6.jpg",  "./images/cards/d_6.jpg",
-    "./images/cards/c_7.jpg",  "./images/cards/d_7.jpg",
-    "./images/cards/c_8.jpg",  "./images/cards/d_8.jpg",
-    "./images/cards/c_9.jpg",  "./images/cards/d_9.jpg",
-    "./images/cards/c_10.jpg", "./images/cards/d_10.jpg",
-    "./images/cards/c_J.jpg",  "./images/cards/d_J.jpg",
-    "./images/cards/c_Q.jpg",  "./images/cards/d_Q.jpg",
-    "./images/cards/c_K.jpg",  "./images/cards/d_K.jpg",
-    "./images/cards/h_A.jpg",  "./images/cards/s_A.jpg",
-    "./images/cards/h_2.jpg",  "./images/cards/s_2.jpg",
-    "./images/cards/h_3.jpg",  "./images/cards/s_3.jpg",
-    "./images/cards/h_4.jpg",  "./images/cards/s_4.jpg",
-    "./images/cards/h_5.jpg",  "./images/cards/s_5.jpg",
-    "./images/cards/h_6.jpg",  "./images/cards/s_6.jpg",
-    "./images/cards/h_7.jpg",  "./images/cards/s_7.jpg",
-    "./images/cards/h_8.jpg",  "./images/cards/s_8.jpg",
-    "./images/cards/h_9.jpg",  "./images/cards/s_9.jpg",
-    "./images/cards/h_10.jpg", "./images/cards/s_10.jpg",
-    "./images/cards/h_J.jpg",  "./images/cards/s_J.jpg",
-    "./images/cards/h_Q.jpg",  "./images/cards/s_Q.jpg",
-    "./images/cards/h_K.jpg",  "./images/cards/s_K.jpg",
+    "./images/cards/c_A.jpg", "./images/cards/c_2.jpg",
+    "./images/cards/c_3.jpg", "./images/cards/c_4.jpg",
+    "./images/cards/c_5.jpg", "./images/cards/c_6.jpg",
+    "./images/cards/c_7.jpg", "./images/cards/c_8.jpg",
+    "./images/cards/c_9.jpg", "./images/cards/c_10.jpg",
+    "./images/cards/c_J.jpg", "./images/cards/c_Q.jpg",
+    "./images/cards/c_K.jpg", "./images/cards/d_A.jpg",
+    "./images/cards/d_2.jpg", "./images/cards/d_3.jpg",
+    "./images/cards/d_4.jpg", "./images/cards/d_5.jpg",
+    "./images/cards/d_6.jpg", "./images/cards/d_7.jpg",
+    "./images/cards/d_8.jpg", "./images/cards/d_9.jpg",
+    "./images/cards/d_10.jpg", "./images/cards/d_J.jpg",
+    "./images/cards/d_Q.jpg", "./images/cards/d_K.jpg",
+    "./images/cards/h_A.jpg", "./images/cards/h_2.jpg",
+    "./images/cards/h_3.jpg", "./images/cards/h_4.jpg",
+    "./images/cards/h_5.jpg", "./images/cards/h_6.jpg",
+    "./images/cards/h_7.jpg", "./images/cards/h_8.jpg",
+    "./images/cards/h_9.jpg", "./images/cards/h_10.jpg",
+    "./images/cards/h_J.jpg", "./images/cards/h_Q.jpg",
+    "./images/cards/h_K.jpg", "./images/cards/s_A.jpg",
+    "./images/cards/s_2.jpg", "./images/cards/s_3.jpg",
+    "./images/cards/s_4.jpg", "./images/cards/s_5.jpg",
+    "./images/cards/s_6.jpg", "./images/cards/s_7.jpg",
+    "./images/cards/s_8.jpg", "./images/cards/s_9.jpg",
+    "./images/cards/s_10.jpg", "./images/cards/s_J.jpg",
+    "./images/cards/s_Q.jpg", "./images/cards/s_K.jpg"
 };
 
 enum {
@@ -871,12 +871,8 @@ void render()
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
         if (p_pressed) {
-            //for (int i = 0; i < 5; i++) {
-                renduh_cards(mesa, 5);
-            //}
-            //for (int i = 0; i < 2; i++) {
-                renduh_cards(jugador, 2);
-            //}
+            renduh_cards(mesa, 5);
+            renduh_cards(jugador, 2);
         }
         render_poker(g.xres, g.yres);
     } else if (g.gamemode == MODE_CEELO) {
