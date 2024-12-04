@@ -790,7 +790,7 @@ void render_cards()
     }
 }
 
-void renduh_cards(int position, int limit)
+void renduh_cards(int *position, int limit)
 {
     int xoffset = 0;
     int yoffset = 0;
@@ -803,7 +803,7 @@ void renduh_cards(int position, int limit)
     }
     for (int i = 0; i < limit; i++) {
         glBindTexture(GL_TEXTURE_2D, 0);
-        glBindTexture(GL_TEXTURE_2D, g.card_texture[position]);
+        glBindTexture(GL_TEXTURE_2D, g.card_texture[position[i]]);
         glBegin(GL_QUADS);
             glTexCoord2f(0.0f, 0.0f); glVertex2i(10 + xoffset,
                     200 + yoffset);
@@ -870,11 +870,13 @@ void render()
             glTexCoord2f(1.0f, 0.0f); glVertex2i(g.xres, 0);
         glEnd();
         glBindTexture(GL_TEXTURE_2D, 0);
-        for (int i = 0; i < 5; i++) {
-            renduh_cards(mesa[i], 5);
-        }
-        for (int i = 0; i < 2; i++) {
-            renduh_cards(jugador[i], 2);
+        if (p_pressed) {
+            //for (int i = 0; i < 5; i++) {
+                renduh_cards(mesa, 5);
+            //}
+            //for (int i = 0; i < 2; i++) {
+                renduh_cards(jugador, 2);
+            //}
         }
         render_poker(g.xres, g.yres);
     } else if (g.gamemode == MODE_CEELO) {
