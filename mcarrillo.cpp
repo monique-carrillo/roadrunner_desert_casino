@@ -50,7 +50,7 @@ class Global {
         Image *felt_image;
         GLuint felt_texture;
         Image *card_image;
-        GLuint card_texture;
+        GLuint card_textures[52];
         GLuint card_img[52];
         Global() {
             //done = 0;
@@ -62,8 +62,8 @@ class Global {
         }
 } m;
 
-GLuint d[2];
-GLuint p[2];
+GLuint d[5];
+GLuint p[5];
 
 Image pic[2] = {
     "./images/felt.jpg",
@@ -284,7 +284,7 @@ void mcarrillo_init(GLuint stack, int i)
                 GL_UNSIGNED_BYTE, card_data);
     free(card_data);
 }
-
+/*
 void mcarrillo_render() 
 {
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -320,7 +320,7 @@ void mcarrillo_render()
         glBindTexture(GL_TEXTURE_2D, 0);
     }   
 }
-
+*/
 void BJ(int x_res, int y_res) {
     Rect r;
 
@@ -381,14 +381,16 @@ void mcarrilloFeature()
     dealCards(playerHand, playerHandSize, 2, deckIndex);
     dealCards(dealerHand, dealerHandSize, 2, deckIndex);
     
-    for (int i=0; i<2; i++) {
+    for (int i=0; i<5; i++) {
         printf("%d ", dealerHand[i].value);
-        dealer[i] = con(dealerHand[i].value);
+        dealer[i] = con(dealerHand[i].texmap);
+        d[i] = dealerHand[i].texmap - 1;
     }
 
-    for (int i=0; i<2; i++) {
+    for (int i=0; i<5; i++) {
         printf("%d ", playerHand[i].value);
-        mplayer[i] = con(playerHand[i].value);
+        mplayer[i] = con(playerHand[i].texmap);
+        p[i] = playerHand[i].texmap - 1;
     }
 
 
