@@ -28,12 +28,12 @@
 using namespace std;
 int monique_show = 0;
 
-string dealer[2] = {"None","None"};
-string mplayer[2] = {"None", "None"};
+string dealer[5] = {"None","None","None","None","None"};
+string mplayer[5] = {"None","None","None","None","None"};
 string val = "None";
 
-int deal[2] = {0, 0};
-int play[2] = {0, 0};
+int deal[5] = {0, 0, 0, 0, 0};
+int play[5] = {0, 0, 0, 0, 0};
 
 int hit = 0;
 float prize = 0.00;
@@ -130,6 +130,8 @@ struct Card {
     int value;  
     string suit;  
     string name;
+    int texmap;
+    int num;
 };
 
 
@@ -146,35 +148,96 @@ void initializeDeck()
     int index = 0;
     for (int suit = 0; suit < 4; ++suit) {
         for (int rank = 0; rank < 13; ++rank) {
-            deck[index++] = {values[rank], suits[suit], names[rank]};
+            deck[index++] = {values[rank], suits[suit], names[rank], 0, index};
         }
     }
 }
 
-string con(int card_pos) {
-    // Map card positions to human-readable names
-    static const string suits[] = {"Clubs", "Diamonds", "Hearts", "Spades"};
+string con(int card_pos) 
+{
+    /*static const string suits[] = {"Clubs", "Diamonds", "Hearts", "Spades"};
     static const string values[] = {
         "Ace", "2", "3", "4", "5", "6", "7", "8", "9", "10",
         "Jack", "Queen", "King"
     };
     int value = (card_pos - 1) % 13;
     int suit = (card_pos - 1) / 13;
-    return values[value] + " of " + suits[suit];
+    return values[value] + " of " + suits[suit];*/
+    switch (card_pos) {
+        case 1: return "Ace of Clubs";
+        case 2: return "2 of Clubs";
+        case 3: return "3 of Clubs";
+        case 4: return "4 of Clubs";
+        case 5: return "5 of Clubs";
+        case 6: return "6 of Clubs";
+        case 7: return "7 of Clubs";
+        case 8: return "8 of Clubs";
+        case 9: return "9 of Clubs";
+        case 10: return "10 of Clubs";
+        case 11: return "J of Clubs";
+        case 12: return "Q of Clubs";
+        case 13: return "K of Clubs";
+        case 14: return "Ace of Diamonds";
+        case 15: return "2 of Diamonds";
+        case 16: return "3 of Diamonds";
+        case 17: return "4 of Diamonds";
+        case 18: return "5 of Diamonds";
+        case 19: return "6 of Diamonds";
+        case 20: return "7 of Diamonds";
+        case 21: return "8 of Diamonds";
+        case 22: return "9 of Diamonds";
+        case 23: return "10 of Diamonds";
+        case 24: return "J of Diamonds";
+        case 25: return "Q of Diamonds";
+        case 26: return "K of Diamonds";
+        case 27: return "Ace of Hearts";
+        case 28: return "2 of Hearts";
+        case 29: return "3 of Hearts";
+        case 30: return "4 of Hearts";
+        case 31: return "5 of Hearts";
+        case 32: return "6 of Hearts";
+        case 33: return "7 of Hearts";
+        case 34: return "8 of Hearts";
+        case 35: return "9 of Hearts";
+        case 36: return "10 of Hearts";
+        case 37: return "J of Hearts";
+        case 38: return "Q of Hearts";
+        case 39: return "K of Hearts";
+        case 40: return "Ace of Spades";
+        case 41: return "2 of Spades";
+        case 42: return "3 of Spades";
+        case 43: return "4 of Spades";
+        case 44: return "5 of Spades";
+        case 45: return "6 of Spades";
+        case 46: return "7 of Spades";
+        case 47: return "8 of Spades";
+        case 48: return "9 of Spades";
+        case 49: return "10 of Spades";
+        case 50: return "J of Spades";
+        case 51: return "Q of Spades";
+        case 52: return "K of Spades";
+        default: return "Unknown Card";
+    }
 }
 
-void shuffleDeck() 
+void shuffleDeck(int *decks) 
 {
-    for (int i = 0; i < 52; ++i) {
-        int randomIndex = rand() % 52;
-        swap(deck[i], deck[randomIndex]);
+    int n = rand() % 1000 + 1000;
+    for (int i=0; i<n; i++) {
+        int a = rand() % 52;
+        int b = rand() % 52;
+        swap(decks[a], decks[b]);
     }
 }
 
 void dealCards(Card *hand, int &handSize, int cardsToDeal, int &deckIndex) 
 {
     for (int i = 0; i < cardsToDeal; ++i) {
-        hand[handSize++] = deck[deckIndex++];
+        int cardValue = deck[deckIndex++].num;
+        hand[handSize].texmap = cardValue;
+        hand[handSize].num = (cardValue - 1) % 13 + 1; 
+        hand[handSize].suit = (cardValue - 1) / 13;   
+        ++handSize; 
     }
 }
 
@@ -262,14 +325,18 @@ void BJ(int x_res, int y_res) {
     Rect r;
 
     r.left = x_res / 2;
-    r.bot = y_res - (y_res / 4);
+    r.bot = y_res - (y_res / 6);
     r.center = 1;
     ggprint40(&r, 15, 0x00000000, "Press 'b' to play a game!");
+    r.bot = y_res - (y_res / 4);
+    ggprint40(&r, 15, 0x00000000, "Press 'h' to grab a card!");
+    r.bot = y_res - (y_res / 3);
+    ggprint40(&r, 15, 0x00000000, "Press 's' to stand!");
 
     r.left = x_res / 2;
     r.bot = y_res - (y_res / 2);
     r.center = 1;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 5; i++) {
         ggprint16(&r, 20, 0x00000000, dealer[i].c_str());
         mcarrillo_init(d[i], deal[i]);
     }
@@ -277,7 +344,7 @@ void BJ(int x_res, int y_res) {
     r.left = x_res / 2;
     r.bot = y_res - ((3 * y_res) / 4);
     r.center = 1;
-    for (int i = 0; i < 2; i++) {
+    for (int i = 0; i < 5; i++) {
         ggprint16(&r, 20, 0x00000000, mplayer[i].c_str());
         mcarrillo_init(p[i], play[i]);
     }
@@ -295,7 +362,15 @@ void mcarrilloFeature()
     //mcarrillo_init();
     //mcarrillo_render();
     initializeDeck();
-    shuffleDeck();
+    //shuffleDeck();
+
+    int decks[52];
+
+    for (int i=0; i<52; i++) {
+        decks[i] = i + 1;
+    }
+
+    shuffleDeck(decks);
 
     // Game variables
     Card playerHand[10], dealerHand[10];
@@ -333,8 +408,7 @@ void mcarrilloFeature()
         if (playerTotal > 21) {
             cout << "Player busts! Dealer wins." << endl;
             playerBusted = true;
-            //m.win = 2;
-            prize -= 15.00;
+            prize -= 50.00;
             break;
         }
 
@@ -374,61 +448,17 @@ void mcarrilloFeature()
 
         if (playerBusted) {
             cout << "Dealer wins!" << endl;
-            //m.win = 2;
-            prize -= 15.00;
+            prize -= 50.00;
         } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
             cout << "Player wins!" << endl;
-            //m.win = 1;
             prize += 150.00;
         } else if (dealerTotal > playerTotal) {
             cout << "Dealer wins!" << endl;
-            //m.win = 2;
-            prize -= 15.00;
+            prize -= 50.00;
         } else {
             cout << "It's a tie!" << endl;
         }
 
     }
-    
-   // m.xres = 800;
-   // m.yres = 600;
-    Rect r;
-    r.bot = (m.yres / 2) + 30;
-    r.left = m.xres / 2;
-    r.center = 1;
-    glColor3f(1.0, 1.0, 1.0);
-    if (m.win == 1) {
-        glBegin(GL_QUADS);
-        glColor4ub(0, 0, 0, 200);
-            glVertex2i(0, 0);
-            glVertex2i(0, m.yres);
-            glVertex2i(m.xres, m.yres);
-            glVertex2i(m.xres, 0);
-        glEnd();
-
-        r.bot = m.yres / 2;
-        r.left = m.xres / 2;
-        r.center = 1;
-        ggprint40(&r, 50, 0x0000ff00, "YOU WIN :)");
-        ggprint40(&r, 0, 0x0000ff00, "+$100");
-    } else if (m.win == 2) {
-        glBegin(GL_QUADS);
-        glColor4ub(0, 0, 0, 200);
-            glVertex2i(0, 0);
-            glVertex2i(0, m.yres);
-            glVertex2i(m.xres, m.yres);
-            glVertex2i(m.xres, 0);
-        glEnd();
-
-        r.bot = m.yres / 2;
-        r.left = m.xres / 2;
-        r.center = 1;
-        ggprint40(&r, 50, 0x00ff0000, "YOU LOST :(");
-        ggprint40(&r, 0, 0x00ff0000, "-$50");
-    }
-
-    //glDisable(GL_BLEND);
-   
-
 }
 
