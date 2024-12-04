@@ -904,17 +904,43 @@ void render()
         ggprint13(&s, 16, 0x00FFFFFF, "press space to roll");
 
 
+	float payout;
+        float charge;
+        if (money < 100) {
+                payout = 40;
+                charge = 10;
+        }
+
+
+        if (money > 100 && money < 500) {
+                payout = 80;
+                charge = 20;
+        }
+
+        if (money > 500 && money < 1000) {
+                payout = 200;
+                charge = 50;
+        }
+
+        if (money > 1000) {
+                payout = 100;
+                charge = 5;
+        }
+
+
+
+
 
         int win = 0;
         render_word();
         if (g.gamecheck == true) {
-            money = money - 10;
-            win = ceelo(g.xres, g.yres);
+            money = money - charge;
+            win = ceelo(g.xres, g.yres, money);
             render_win(win);
             g.gamecheck = false;
         }
         if (win == 1) {
-            money = money + 100;
+            money = money + payout;
         }
     }
 
