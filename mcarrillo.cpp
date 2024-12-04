@@ -999,7 +999,7 @@ void mcarrilloFeature()
     // Initial deal
     dealCards(playerHand, playerHandSize, 2, deckIndex);
     dealCards(dealerHand, dealerHandSize, 2, deckIndex);
-   /* 
+    
     for (int i=0; i<2; i++) {
         printf("%d ", dealerHand[i].value);
         dealer[i] = con(dealerHand[i].value);
@@ -1009,10 +1009,10 @@ void mcarrilloFeature()
         printf("%d ", playerHand[i].value);
         mplayer[i] = con(playerHand[i].value);
     }
-*/
+
 
     // Display initial hands
-    cout << "Player's hand: ";
+    cout << "\nPlayer's hand: ";
     displayHand(playerHand, playerHandSize);
     cout << "Dealer's hand: " << dealerHand[0].name << " of " 
         << dealerHand[0].suit << " and [Hidden]" << endl;
